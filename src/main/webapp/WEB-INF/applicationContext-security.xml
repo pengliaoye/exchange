@@ -1,0 +1,32 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<http auto-config='true'>
+		<intercept-url pattern="/**" access="ROLE_USER" />
+	</http>
+
+	<beans:bean id="esapiSpringAuthenticatorPropertyPlaceholder"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<beans:property name="location"
+			value="classpath:/SpringAuthenticator.properties" />
+	</beans:bean>
+
+	<beans:import
+		resource="classpath*:/org/owasp/esapi/contrib/spring/authenticator/esapi-spring-security-context.xml" />
+
+	<beans:bean id="authenticationProvider"
+		class="com.dm.exchange.authenticator.MyAuthenticator" scope="singleton">
+		<beans:property name="authenticationStrategy">
+			<beans:bean class="com.dm.exchange.authenticator.MyAuthenticationStrategy" />
+		</beans:property>
+		<beans:property name="authoritiesPopulator">
+			<beans:bean class="com.dm.exchange.authenticator.MyAuthoritiesPopulator" />
+		</beans:property>
+		<beans:property name="userDetailsService">
+			<beans:bean class="com.dm.exchange.authenticator.MyUserDetailsService" />
+		</beans:property>
+	</beans:bean>
+
+</beans:beans>
