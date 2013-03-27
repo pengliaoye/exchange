@@ -2,50 +2,73 @@ package com.dm;
 
 import java.util.Date;
 
+import org.owasp.esapi.ESAPI;
+import org.owasp.esapi.Logger;
 import org.owasp.esapi.contrib.spring.authenticator.UserProfile;
+import org.owasp.esapi.errors.AuthenticationHostException;
 
 public class User implements UserProfile {
 
+	/** The logger used by the class. */
+	private transient final Logger logger = ESAPI.getLogger("User");
+
+	/** This user's account id. */
+	long accountId = 0;
+
+	/** This user's account name. */
+	private String accountName = "";
+
+	/** Whether this user's account is enabled. */
+	private boolean enabled = false;
+
+	/** The expiration date/time for this user's account. */
+	private Date expirationDate = new Date(Long.MAX_VALUE);
+	
+	/** The failed login count for this user's account. */
+	private int failedLoginCount = 0;
+	
+    /** The last host address used by this user. */
+    private String lastHostAddress;
+    
+	/** The last failed login time for this user. */
+	private Date lastFailedLoginTime = new Date(0);
+
 	@Override
 	public void setEnabled(boolean enabled) {
-		// TODO Auto-generated method stub
-
+		this.enabled = enabled;
 	}
 
 	@Override
 	public long getId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return accountId;
 	}
 
 	@Override
 	public String getAccountName() {
-		// TODO Auto-generated method stub
-		return null;
+		return accountName;
 	}
 
 	@Override
 	public Date getExpirationDate() {
-		// TODO Auto-generated method stub
-		return null;
+		return (Date)expirationDate.clone();
 	}
 
 	@Override
 	public int getFailedLoginCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return failedLoginCount;
 	}
 
 	@Override
 	public String getLastHostAddress() {
-		// TODO Auto-generated method stub
-		return null;
+		if ( lastHostAddress == null ) {
+			return "unknown";
+		}
+        return lastHostAddress;
 	}
 
 	@Override
 	public Date getLastFailedLoginTime() {
-		// TODO Auto-generated method stub
-		return null;
+		return (Date)lastFailedLoginTime.clone();
 	}
 
 	@Override
@@ -68,8 +91,7 @@ public class User implements UserProfile {
 
 	@Override
 	public void setFailedLoginCount(int count) {
-		// TODO Auto-generated method stub
-
+		failedLoginCount = count;
 	}
 
 	@Override
@@ -80,8 +102,7 @@ public class User implements UserProfile {
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		return enabled;
 	}
 
 	@Override
@@ -104,14 +125,21 @@ public class User implements UserProfile {
 
 	@Override
 	public void setAccountName(String accountName) {
-		// TODO Auto-generated method stub
-
+		String old = getAccountName();
+		this.accountName = accountName.toLowerCase();
+		if (old != null) {
+			if (old.equals("")) {
+				old = "[nothing]";
+			}
+			logger.info(Logger.SECURITY_SUCCESS, "Account name changed from "
+					+ old + " to " + getAccountName());
+		}
 	}
 
 	@Override
-	public void setExpirationDate(Date expirationTime) {
-		// TODO Auto-generated method stub
-
+	public void setExpirationDate(Date expirationDate) {
+		this.expirationDate = new Date( expirationDate.getTime() );
+		logger.info(Logger.SECURITY_SUCCESS, "Account expiration date set to " + expirationDate + " for " + getAccountName());
 	}
 
 	@Override
@@ -122,14 +150,17 @@ public class User implements UserProfile {
 
 	@Override
 	public void setLastFailedLoginTime(Date lastFailedLoginTime) {
-		// TODO Auto-generated method stub
-
+		this.lastFailedLoginTime = lastFailedLoginTime;
+		logger.info(Logger.SECURITY_SUCCESS, "Set last failed login time to " + lastFailedLoginTime + " for " + getAccountName() );
 	}
 
 	@Override
 	public void setLastHostAddress(String remoteHost) {
-		// TODO Auto-generated method stub
-
+		if ( lastHostAddress != null && !lastHostAddress.equals(remoteHost)) {
+        	// returning remote address not remote hostname to prevent DNS lookup
+			throw new AuthenticationHostException("Host change", "User session just jumped from " + lastHostAddress + " to " + remoteHost );
+		}
+		lastHostAddress = remoteHost;
 	}
 
 	@Override
