@@ -17,6 +17,15 @@ public class User implements UserProfile {
 
 	/** This user's account name. */
 	private String accountName = "";
+	
+	/** This user's screen name (account name alias). */
+	private String screenName = "";
+	
+	/** Whether this user's account is locked. */
+	private boolean locked = false;
+	
+	/** Whether this user is logged in. */
+	private boolean loggedIn = true;
 
 	/** Whether this user's account is enabled. */
 	private boolean enabled = false;
@@ -29,6 +38,12 @@ public class User implements UserProfile {
 	
     /** The last host address used by this user. */
     private String lastHostAddress;
+    
+	/** The last password change time for this user. */
+	private Date lastPasswordChangeTime = new Date(0);
+    
+	/** The last login time for this user. */
+	private Date lastLoginTime = new Date(0);
     
 	/** The last failed login time for this user. */
 	private Date lastFailedLoginTime = new Date(0);
@@ -73,20 +88,17 @@ public class User implements UserProfile {
 
 	@Override
 	public Date getLastLoginTime() {
-		// TODO Auto-generated method stub
-		return null;
+		return (Date)lastLoginTime.clone();
 	}
 
 	@Override
 	public Date getLastPasswordChangeTime() {
-		// TODO Auto-generated method stub
-		return null;
+		return (Date)lastPasswordChangeTime.clone();
 	}
 
 	@Override
 	public String getScreenName() {
-		// TODO Auto-generated method stub
-		return null;
+		return screenName;
 	}
 
 	@Override
@@ -107,20 +119,17 @@ public class User implements UserProfile {
 
 	@Override
 	public boolean isLocked() {
-		// TODO Auto-generated method stub
-		return false;
+		return locked;
 	}
 
 	@Override
 	public boolean isLoggedIn() {
-		// TODO Auto-generated method stub
-		return false;
+		return loggedIn;
 	}
 
 	@Override
-	public void setLocked(boolean b) {
-		// TODO Auto-generated method stub
-
+	public void setLocked(boolean locked) {
+		this.locked = locked;
 	}
 
 	@Override
@@ -144,8 +153,8 @@ public class User implements UserProfile {
 
 	@Override
 	public void setScreenName(String screenName) {
-		// TODO Auto-generated method stub
-
+		this.screenName = screenName;
+		logger.info(Logger.SECURITY_SUCCESS, "ScreenName changed to " + screenName + " for " + getAccountName() );
 	}
 
 	@Override
@@ -165,14 +174,14 @@ public class User implements UserProfile {
 
 	@Override
 	public void setLastLoginTime(Date lastLoginTime) {
-		// TODO Auto-generated method stub
-
+		this.lastLoginTime = lastLoginTime;
+		logger.info(Logger.SECURITY_SUCCESS, "Set last successful login time to " + lastLoginTime + " for " + getAccountName() );
 	}
 
 	@Override
 	public void setLastPasswordChangeTime(Date lastPasswordChangeTime) {
-		// TODO Auto-generated method stub
-
+		this.lastPasswordChangeTime = lastPasswordChangeTime;
+		logger.info(Logger.SECURITY_SUCCESS, "Set last password change time to " + lastPasswordChangeTime + " for " + getAccountName() );
 	}
 
 	@Override
