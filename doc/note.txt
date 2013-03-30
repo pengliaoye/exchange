@@ -1,0 +1,25 @@
+  	 drools expert
+  	 owasp 
+  	 alfresco
+  	 exchange
+  	 ds  	
+  	 camunda 
+  	 user/role/permissions manage
+  	 forgotpassword username
+  	 remember
+  	 MongoDB
+  	 One Note
+  	 
+  	 mvn install:install-file -Dfile=C:\Users\guoyong.peng\Downloads\spring-security-samples-tutorial\spring-security-samples-tutorial\WebRoot\WEB-INF\lib\recaptcha4j-0.0.8.jar -DgroupId=net.tanesha.recaptcha4j -DartifactId=recaptcha4j -Dversion=0.0.8 -Dpackaging=jar
+  	 
+  	 
+  	 SwingSet
+  	 
+  	 http://mrbool.com/security-in-java-applications/19340
+  	 
+  	 http://www.jtmelton.com/tag/esapi/
+  	 
+  	 http://www.mossle.com/
+  	 
+  	  JDBC ResultSet
+  	  The try-with-resources Statement
