@@ -13,8 +13,7 @@
 			value="classpath:/SpringAuthenticator.properties" />
 	</beans:bean>
 
-	<beans:import
-		resource="classpath*:/org/owasp/esapi/contrib/spring/authenticator/esapi-spring-security-context.xml" />
+	<beans:import resource="classpath*:/org/owasp/esapi/contrib/spring/authenticator/esapi-spring-security-context.xml" />
 
 	<beans:bean id="authenticationProvider"
 		class="com.dm.exchange.authenticator.MyAuthenticator" scope="singleton">
