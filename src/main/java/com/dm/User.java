@@ -47,6 +47,23 @@ public class User implements UserProfile {
     
 	/** The last failed login time for this user. */
 	private Date lastFailedLoginTime = new Date(0);
+	
+	/**
+	 * Instantiates a new user.
+	 *
+	 * @param accountName
+	 * 		The name of this user's account.
+	 */
+	public User(String accountName) {
+		this.accountName = accountName.toLowerCase();
+		while( true ) {
+			long id = Math.abs( ESAPI.randomizer().getRandomLong() );
+			if ( ESAPI.authenticator().getUser( id ) == null && id != 0 ) {
+				this.accountId = id;
+				break;
+			}
+		}
+	}
 
 	@Override
 	public void setEnabled(boolean enabled) {
