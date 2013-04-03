@@ -36,8 +36,8 @@ public class User implements UserProfile {
 	/** The failed login count for this user's account. */
 	private int failedLoginCount = 0;
 	
-    /** The last host address used by this user. */
-    private String lastHostAddress;
+        /** The last host address used by this user. */
+        private String lastHostAddress;
     
 	/** The last password change time for this user. */
 	private Date lastPasswordChangeTime = new Date(0);
@@ -184,7 +184,7 @@ public class User implements UserProfile {
 	public void setLastHostAddress(String remoteHost) {
 		if ( lastHostAddress != null && !lastHostAddress.equals(remoteHost)) {
         	// returning remote address not remote hostname to prevent DNS lookup
-			throw new AuthenticationHostException("Host change", "User session just jumped from " + lastHostAddress + " to " + remoteHost );
+		//	throw new AuthenticationHostException("Host change", "User session just jumped from " + lastHostAddress + " to " + remoteHost );
 		}
 		lastHostAddress = remoteHost;
 	}

@@ -36,7 +36,7 @@ public class MyAuthenticationStrategy implements AuthenticationStrategy<String> 
 	public User createUser(String accountName, String password) {
       
         if (getUser(accountName) != null) {
-            throw new AuthenticationAccountsException("Account creation failed", "Duplicate user creation denied for " + accountName);
+            //throw new AuthenticationAccountsException("Account creation failed", "Duplicate user creation denied for " + accountName);
         }      
         
         DefaultUser user = new DefaultUser(accountName);
@@ -44,7 +44,7 @@ public class MyAuthenticationStrategy implements AuthenticationStrategy<String> 
         try {
             setHashedPassword(user, hashPassword(password, accountName));
         } catch (EncryptionException ee) {
-            throw new org.owasp.esapi.errors.AuthenticationException("Internal error", "Error hashing password for " + accountName, ee);
+           //throw new org.owasp.esapi.errors.AuthenticationException("Internal error", "Error hashing password for " + accountName, ee);
         }
 
         //saveUsers();

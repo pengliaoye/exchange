@@ -18,7 +18,7 @@
 --%>
 <%@ page isErrorPage="true" %>
 <%@ page import="java.io.*" %>
-<%@ page import="org.springframework.extensions.webscripts.ui.common.StringUtils" %>
+<%@ page import="org.owasp.esapi.ESAPI" %>
 <%@ page import="org.apache.commons.logging.LogFactory" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -88,7 +88,7 @@ out.println("<!--");
 StringWriter sw = new StringWriter();
 PrintWriter pw = new PrintWriter(sw);
 exception.printStackTrace(pw);
-out.print(StringUtils.encode(sw.toString()));
+out.print(ESAPI.encoder().encodeForHTML(sw.toString()));
 sw.close();
 pw.close();
 out.println("-->");
