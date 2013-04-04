@@ -1,7 +1,11 @@
   	 drools expert
+  	 activiti
   	 owasp 
   	 alfresco
-  	 exchange
+  	 obfiz
+  	 liferay
+  	 Pentaho
+  	 exchange  	 
   	 ds  	
   	 camunda 
   	 user/role/permissions manage
