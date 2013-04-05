@@ -1,4 +1,8 @@
   	 drools expert
+  	 apache solr
+  	 Apache ActiveMQ
+  	 Apache Camel
+  	 fusesource
   	 activiti
   	 owasp 
   	 alfresco
