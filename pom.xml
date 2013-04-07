@@ -11,6 +11,10 @@
 			<id>Alfresco Maven Repository</id>
 			<url>https://maven.alfresco.com/nexus/content/groups/public/</url>
 		</repository>
+		<repository>
+	      <id>typesafe</id>
+	      <url>http://repo.typesafe.com/typesafe/repo/</url>
+	    </repository>
 	</repositories>
 
 	<build>
@@ -76,6 +80,16 @@
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-engine</artifactId>
 			<version>5.12</version>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.3.170</version>
+		</dependency>
+		<dependency>
+		  <groupId>postgresql</groupId>
+		  <artifactId>postgresql</artifactId>
+		  <version>9.2-1002.jdbc4</version>
 		</dependency>
 		<dependency>
 			<groupId>javax</groupId>

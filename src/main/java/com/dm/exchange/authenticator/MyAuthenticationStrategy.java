@@ -1,6 +1,7 @@
 package com.dm.exchange.authenticator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -8,12 +9,13 @@ import java.util.Map;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Logger;
 import org.owasp.esapi.User;
+import org.owasp.esapi.contrib.spring.authenticator.AuthenticatedUser;
 import org.owasp.esapi.contrib.spring.authenticator.AuthenticationStrategy;
-import org.owasp.esapi.errors.AuthenticationAccountsException;
 import org.owasp.esapi.errors.EncryptionException;
-import org.owasp.esapi.reference.DefaultUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+
+import com.dm.Subject;
 
 public class MyAuthenticationStrategy implements AuthenticationStrategy<String> {
 	
@@ -21,6 +23,11 @@ public class MyAuthenticationStrategy implements AuthenticationStrategy<String> 
      * The logger.
      */
     private final Logger logger = ESAPI.getLogger("Authenticator");
+    
+    /**
+     * The user map.
+     */
+    private Map<Long, User> userMap = new HashMap<Long, User>();
     
     // Map<User, List<String>>, where the strings are password hashes, with the current hash in entry 0
     private Map<User, List<String>> passwordMap = new Hashtable<User, List<String>>();
@@ -39,7 +46,8 @@ public class MyAuthenticationStrategy implements AuthenticationStrategy<String> 
             //throw new AuthenticationAccountsException("Account creation failed", "Duplicate user creation denied for " + accountName);
         }      
         
-        DefaultUser user = new DefaultUser(accountName);
+        Subject subject = new Subject(accountName);
+        AuthenticatedUser user = new AuthenticatedUser(subject);
 
         try {
             setHashedPassword(user, hashPassword(password, accountName));
@@ -47,6 +55,7 @@ public class MyAuthenticationStrategy implements AuthenticationStrategy<String> 
            //throw new org.owasp.esapi.errors.AuthenticationException("Internal error", "Error hashing password for " + accountName, ee);
         }
 
+        userMap.put(user.getAccountId(), user);
         //saveUsers();
         logger.info(Logger.SECURITY_SUCCESS, "New user created: " + accountName);        
         return user;

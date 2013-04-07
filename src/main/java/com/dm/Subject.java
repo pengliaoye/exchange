@@ -7,7 +7,7 @@ import org.owasp.esapi.Logger;
 import org.owasp.esapi.contrib.spring.authenticator.UserProfile;
 import org.owasp.esapi.errors.AuthenticationHostException;
 
-public class User implements UserProfile {
+public class Subject implements UserProfile {
 
 	/** The logger used by the class. */
 	private transient final Logger logger = ESAPI.getLogger("User");
@@ -54,7 +54,7 @@ public class User implements UserProfile {
 	 * @param accountName
 	 * 		The name of this user's account.
 	 */
-	public User(String accountName) {
+	public Subject(String accountName) {
 		this.accountName = accountName.toLowerCase();
 		while( true ) {
 			long id = Math.abs( ESAPI.randomizer().getRandomLong() );
