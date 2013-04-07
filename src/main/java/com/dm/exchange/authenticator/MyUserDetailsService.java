@@ -3,10 +3,12 @@ package com.dm.exchange.authenticator;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.owasp.esapi.contrib.spring.authenticator.AuthenticatedUser;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,13 +23,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
 
+import com.dm.Subject;
+
 public class MyUserDetailsService extends JdbcDaoSupport implements UserDetailsService {
     //~ Static fields/initializers =====================================================================================
 
     public static final String DEF_USERS_BY_USERNAME_QUERY =
-            "select *" +
+            "select id,accountname,password,expirationdate,failedlogincount,lasthostaddress," +
+            "lastfailedlogintime,lastlogintime,lastpasswordchangetime,screenname,enabled,locked " +
             "from users " +
-            "where username = ?";
+            "where accountname = ?";
     public static final String DEF_AUTHORITIES_BY_USERNAME_QUERY =
             "select username,authority " +
             "from authorities " +
@@ -122,10 +127,23 @@ public class MyUserDetailsService extends JdbcDaoSupport implements UserDetailsS
     protected List<UserDetails> loadUsersByUsername(String username) {
         return getJdbcTemplate().query(usersByUsernameQuery, new String[] {username}, new RowMapper<UserDetails>() {
             public UserDetails mapRow(ResultSet rs, int rowNum) throws SQLException {
-                String username = rs.getString(1);
-                String password = rs.getString(2);
-                boolean enabled = rs.getBoolean(3);
-                return new User(username, password, enabled, true, true, true, AuthorityUtils.NO_AUTHORITIES);
+                long id = rs.getLong(1);
+                String accountname = rs.getString(2);
+                String password = rs.getString(3);
+                Date expirationdate = rs.getDate(4);
+                int failedlogincount = rs.getInt(5);
+                String lasthostaddress = rs.getString(6);
+                Date lastfailedlogintime = rs.getDate(7);
+                Date lastlogintime = rs.getDate(8);
+                Date lastpasswordchangetime = rs.getDate(9);
+                String screenname = rs.getString(10);                
+                boolean enabled = rs.getBoolean(11);
+                boolean locked = rs.getBoolean(12);
+                
+                Subject subject = new Subject(accountname);
+                subject.setAccountId(id);
+                AuthenticatedUser authenticatedUser = new AuthenticatedUser(subject);
+                return authenticatedUser;
             }
 
         });

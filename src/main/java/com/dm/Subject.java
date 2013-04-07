@@ -70,6 +70,11 @@ public class Subject implements UserProfile {
 		this.enabled = enabled;
 	}
 
+	public void setAccountId(long accountId)
+        {
+            this.accountId = accountId;
+        }
+
 	@Override
 	public long getId() {
 		return accountId;
