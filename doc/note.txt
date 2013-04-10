@@ -5,6 +5,10 @@
   	 fusesource
   	 activiti
   	 owasp 
+  	 Enterprise Security API (ESAPI)
+  	 AntiSamy
+  	 CSRF Guard
+  	 Java EE Clickjacking Filter
   	 alfresco
   	 obfiz
   	 liferay
