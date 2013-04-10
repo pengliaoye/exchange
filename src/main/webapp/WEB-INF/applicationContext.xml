@@ -4,7 +4,8 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<context:property-placeholder location="classpath:init.properties,classpath:/SpringAuthenticator.properties" />
+	<context:property-placeholder
+		location="classpath:init.properties,classpath:/SpringAuthenticator.properties" />
 
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -22,5 +23,8 @@
 		</property>
 	</bean>
 
+	<bean id="queryRunner" class="org.apache.commons.dbutils.QueryRunner">
+		<constructor-arg ref="dataSource" />
+	</bean>
 	<import resource="applicationContext-security.xml" />
 </beans>

@@ -13,7 +13,9 @@
 	<beans:bean id="authenticationProvider"
 		class="com.dm.exchange.authenticator.MyAuthenticator" scope="singleton">
 		<beans:property name="authenticationStrategy">
-			<beans:bean class="com.dm.exchange.authenticator.MyAuthenticationStrategy" />
+			<beans:bean class="com.dm.exchange.authenticator.MyAuthenticationStrategy">
+				<beans:property name="queryRunner" ref="queryRunner" />
+			</beans:bean>
 		</beans:property>
 		<beans:property name="authoritiesPopulator">
 			<beans:bean class="com.dm.exchange.authenticator.MyAuthoritiesPopulator" />

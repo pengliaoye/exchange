@@ -6,6 +6,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.dbutils.QueryLoader;
+import org.apache.commons.dbutils.QueryRunner;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Logger;
 import org.owasp.esapi.User;
@@ -23,6 +25,8 @@ public class MyAuthenticationStrategy implements AuthenticationStrategy<String> 
      * The logger.
      */
     private final Logger logger = ESAPI.getLogger("Authenticator");
+    
+    private QueryRunner queryRunner;
     
     /**
      * The user map.
@@ -56,9 +60,21 @@ public class MyAuthenticationStrategy implements AuthenticationStrategy<String> 
         }
 
         userMap.put(user.getAccountId(), user);
-        //saveUsers();
+        saveUser(subject);
         logger.info(Logger.SECURITY_SUCCESS, "New user created: " + accountName);        
         return user;
+	}
+	
+	public void saveUser(Subject subject){
+		try{
+			Map<String, String> queryMap = QueryLoader.instance().load("/Queries.properties");
+			String sql = queryMap.get("DEF_CREATE_USER_SQL");
+			queryRunner.update(sql, subject.getId(), subject.getAccountName(), subject.getPassword(), subject.getExpirationDate()
+					,subject.getFailedLoginCount(), subject.getLastHostAddress(), subject.getLastFailedLoginTime(), subject.getLastLoginTime()
+					,subject.getLastPasswordChangeTime(), subject.getScreenName(), subject.isEnabled(), subject.isLocked());
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	public synchronized User getUser(String accountName) {
@@ -131,6 +147,10 @@ public class MyAuthenticationStrategy implements AuthenticationStrategy<String> 
 	public boolean userExists(String username) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public void setQueryRunner(QueryRunner queryRunner) {
+		this.queryRunner = queryRunner;
 	}
 
 }
