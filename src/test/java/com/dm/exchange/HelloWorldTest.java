@@ -8,15 +8,16 @@ import org.owasp.esapi.errors.AuthenticationException;
 
 public class HelloWorldTest {
 	@Test
-	public void testIsValidEmail() {
+	public void testIsValidEmail() throws Exception {
 		Validator instance = ESAPI.validator();
 		Assert.assertTrue(instance.isValidInput("test",
 				"jeff.williams@aspectsecurity.com", "Email", 100, false));
-
+		
 		try {
-			ESAPI.authenticator().createUser("admin", "1", "1");
+			ESAPI.authenticator().createUser("admin", "!Abc123", "!Abc123");
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
 		}
+				
 	}
 }
