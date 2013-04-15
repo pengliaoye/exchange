@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import org.owasp.esapi.Authenticator;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.EncoderConstants;
 import org.owasp.esapi.User;
@@ -18,6 +19,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class MyAuthenticator extends SpringSecurityAuthenticatorAdaptor<String> {
 	
 	private static final int MAX_ACCOUNT_NAME_LENGTH = 250;
+	
+	private static Authenticator INSTANCE;
 
 	@Override
 	public String generateStrongPassword() {
@@ -127,11 +130,14 @@ public class MyAuthenticator extends SpringSecurityAuthenticatorAdaptor<String> 
         	throw new AuthenticationCredentialsException("Invalid password", "Password matches account name, irrespective of case");
         }
 	}
+	
+	public static Authenticator getInstance() {
+	      return INSTANCE;
+	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		// TODO Auto-generated method stub
-		
+		INSTANCE = this;
 	}
 
 	@Override
