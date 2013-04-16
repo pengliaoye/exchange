@@ -6,6 +6,9 @@ import org.junit.runner.RunWith;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.Validator;
 import org.owasp.esapi.errors.AuthenticationException;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -17,12 +20,15 @@ public class HelloWorldTest {
 		Validator instance = ESAPI.validator();
 		Assert.assertTrue(instance.isValidInput("test",
 				"jeff.williams@aspectsecurity.com", "Email", 100, false));
-		
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setSession(new MockHttpSession());
+		ESAPI.httpUtilities().setCurrentHTTP(request,
+				new MockHttpServletResponse());
 		try {
 			ESAPI.authenticator().createUser("admin", "!Abc123", "!Abc123");
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
 		}
-				
+
 	}
 }

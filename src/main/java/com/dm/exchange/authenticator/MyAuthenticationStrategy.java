@@ -20,21 +20,22 @@ import org.springframework.security.core.AuthenticationException;
 import com.dm.Subject;
 
 public class MyAuthenticationStrategy implements AuthenticationStrategy<String> {
-	
-    /**
-     * The logger.
-     */
-    private final Logger logger = ESAPI.getLogger("Authenticator");
-    
-    private QueryRunner queryRunner;
-    
-    /**
-     * The user map.
-     */
-    private Map<Long, User> userMap = new HashMap<Long, User>();
-    
-    // Map<User, List<String>>, where the strings are password hashes, with the current hash in entry 0
-    private Map<User, List<String>> passwordMap = new Hashtable<User, List<String>>();
+
+	/**
+	 * The logger.
+	 */
+	private final Logger logger = ESAPI.getLogger("Authenticator");
+
+	private QueryRunner queryRunner;
+
+	/**
+	 * The user map.
+	 */
+	private Map<Long, User> userMap = new HashMap<Long, User>();
+
+	// Map<User, List<String>>, where the strings are password hashes, with the
+	// current hash in entry 0
+	private Map<User, List<String>> passwordMap = new Hashtable<User, List<String>>();
 
 	@Override
 	public String authenticate(Authentication authentication)
@@ -44,92 +45,126 @@ public class MyAuthenticationStrategy implements AuthenticationStrategy<String> 
 	}
 
 	@Override
-	public User createUser(String accountName, String password) {
-      
-        if (getUser(accountName) != null) {
-            //throw new AuthenticationAccountsException("Account creation failed", "Duplicate user creation denied for " + accountName);
-        }      
-        
-        Subject subject = new Subject(accountName);
-        AuthenticatedUser user = new AuthenticatedUser(subject);
+	public synchronized User createUser(String accountName, String password) {
 
-        try {
-            setHashedPassword(user, hashPassword(password, accountName));
-        } catch (EncryptionException ee) {
-           //throw new org.owasp.esapi.errors.AuthenticationException("Internal error", "Error hashing password for " + accountName, ee);
-        }
+		if (getUser(accountName) != null) {
+			// throw new
+			// AuthenticationAccountsException("Account creation failed",
+			// "Duplicate user creation denied for " + accountName);
+		}
 
-        userMap.put(user.getAccountId(), user);
-        saveUser(subject);
-        logger.info(Logger.SECURITY_SUCCESS, "New user created: " + accountName);        
-        return user;
+		Subject subject = new Subject(accountName);
+		AuthenticatedUser user = new AuthenticatedUser(subject);
+
+		try {
+			setHashedPassword(user, hashPassword(password, accountName));
+		} catch (EncryptionException ee) {
+			// throw new
+			// org.owasp.esapi.errors.AuthenticationException("Internal error",
+			// "Error hashing password for " + accountName, ee);
+		}
+
+		userMap.put(user.getAccountId(), user);
+		saveUser(user);
+		logger.info(Logger.SECURITY_SUCCESS, "New user created: " + accountName);
+		return user;
 	}
-	
-	public void saveUser(Subject subject){
-		try{
-			Map<String, String> queryMap = QueryLoader.instance().load("/Queries.properties");
+
+	public void saveUser(AuthenticatedUser user) {
+		try {
+			Map<String, String> queryMap = QueryLoader.instance().load(
+					"/Queries.properties");
 			String sql = queryMap.get("DEF_CREATE_USER_SQL");
-			queryRunner.update(sql, subject.getId(), subject.getAccountName(), subject.getPassword(), subject.getExpirationDate()
-					,subject.getFailedLoginCount(), subject.getLastHostAddress(), subject.getLastFailedLoginTime(), subject.getLastLoginTime()
-					,subject.getLastPasswordChangeTime(), subject.getScreenName(), subject.isEnabled(), subject.isLocked());
-		} catch (Exception e){
+			queryRunner.update(sql, user.getAccountId(), user.getAccountName(),
+					getHashedPassword(user), user.getExpirationTime()
+							.getTime(), user.getFailedLoginCount(), user
+							.getLastHostAddress(), new java.sql.Date(user
+							.getLastFailedLoginTime().getTime()),
+					new java.sql.Date(user.getLastLoginTime().getTime()),
+					new java.sql.Date(user.getLastPasswordChangeTime()
+							.getTime()), user.getScreenName(), user
+							.isEnabled(), user.isLocked());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public synchronized User getUser(String accountName) {
 		return null;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @throws EncryptionException
+	 */
+	public String hashPassword(String password, String accountName)
+			throws EncryptionException {
+		String salt = accountName.toLowerCase();
+		return ESAPI.encryptor().hash(password, salt);
+	}
+
+	/**
+	 * Add a hash to a User's hashed password list. This method is used to store
+	 * a user's old password hashes to be sure that any new passwords are not
+	 * too similar to old passwords.
+	 * 
+	 * @param user
+	 *            the user to associate with the new hash
+	 * @param hash
+	 *            the hash to store in the user's password hash list
+	 */
+	private void setHashedPassword(User user, String hash) {
+		List<String> hashes = getAllHashedPasswords(user, true);
+		hashes.add(0, hash);
+		if (hashes.size() > ESAPI.securityConfiguration()
+				.getMaxOldPasswordHashes()) {
+			hashes.remove(hashes.size() - 1);
+		}
+		logger.info(Logger.SECURITY_SUCCESS, "New hashed password stored for "
+				+ user.getAccountName());
+	}
 	
     /**
-     * {@inheritDoc}
+     * Return the specified User's current hashed password.
      *
-     * @throws EncryptionException
+     * @param user this User's current hashed password will be returned
+     * @return the specified User's current hashed password
      */
-    public String hashPassword(String password, String accountName) throws EncryptionException {
-        String salt = accountName.toLowerCase();
-        return ESAPI.encryptor().hash(password, salt);
+    String getHashedPassword(User user) {
+        List hashes = getAllHashedPasswords(user, false);
+        return (String) hashes.get(0);
     }
-    
-    /**
-     * Add a hash to a User's hashed password list.  This method is used to store a user's old password hashes
-     * to be sure that any new passwords are not too similar to old passwords.
-     *
-     * @param user the user to associate with the new hash
-     * @param hash the hash to store in the user's password hash list
-     */
-    private void setHashedPassword(User user, String hash) {
-        List<String> hashes = getAllHashedPasswords(user, true);
-        hashes.add(0, hash);
-        if (hashes.size() > ESAPI.securityConfiguration().getMaxOldPasswordHashes()) {
-            hashes.remove(hashes.size() - 1);
-        }
-        logger.info(Logger.SECURITY_SUCCESS, "New hashed password stored for " + user.getAccountName());
-    }
-    
-    /**
-     * Returns all of the specified User's hashed passwords.  If the User's list of passwords is null,
-     * and create is set to true, an empty password list will be associated with the specified User
-     * and then returned. If the User's password map is null and create is set to false, an exception
-     * will be thrown.
-     *
-     * @param user   the User whose old hashes should be returned
-     * @param create true - if no password list is associated with this user, create one
-     *               false - if no password list is associated with this user, do not create one
-     * @return a List containing all of the specified User's password hashes
-     */
-    List<String> getAllHashedPasswords(User user, boolean create) {
-        List<String> hashes = passwordMap.get(user);
-        if (hashes != null) {
-            return hashes;
-        }
-        if (create) {
-            hashes = new ArrayList<String>();
-            passwordMap.put(user, hashes);
-            return hashes;
-        }
-        throw new RuntimeException("No hashes found for " + user.getAccountName() + ". Is User.hashcode() and equals() implemented correctly?");
-    }
+
+	/**
+	 * Returns all of the specified User's hashed passwords. If the User's list
+	 * of passwords is null, and create is set to true, an empty password list
+	 * will be associated with the specified User and then returned. If the
+	 * User's password map is null and create is set to false, an exception will
+	 * be thrown.
+	 * 
+	 * @param user
+	 *            the User whose old hashes should be returned
+	 * @param create
+	 *            true - if no password list is associated with this user,
+	 *            create one false - if no password list is associated with this
+	 *            user, do not create one
+	 * @return a List containing all of the specified User's password hashes
+	 */
+	List<String> getAllHashedPasswords(User user, boolean create) {
+		List<String> hashes = passwordMap.get(user);
+		if (hashes != null) {
+			return hashes;
+		}
+		if (create) {
+			hashes = new ArrayList<String>();
+			passwordMap.put(user, hashes);
+			return hashes;
+		}
+		throw new RuntimeException("No hashes found for "
+				+ user.getAccountName()
+				+ ". Is User.hashcode() and equals() implemented correctly?");
+	}
 
 	@Override
 	public void changePassword(String username, String newPassword) {

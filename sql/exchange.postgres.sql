@@ -1,8 +1,8 @@
 create table users(
-    id integer primary key,
+    id bigint primary key,
     accountname varchar(50) not null unique,
-    password varchar(50) not null,
-    expirationdate timestamp,
+    password varchar(255) not null,
+    expirationdate bigint,
     failedlogincount integer,
     lasthostaddress varchar(255),
     lastfailedlogintime timestamp,
