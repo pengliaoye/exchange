@@ -12,6 +12,20 @@
 	</listener>
 
 	<filter>
+		<filter-name>SimpleESAPIFilter</filter-name>
+		<filter-class>com.dm.filter.SimpleESAPIFilter</filter-class>
+	</filter>
+
+	<!-- this filter is VERY IMPORTANT since without it the ThreadLocal User 
+		variable can become reusable by other requests! -->
+	<filter-mapping>
+		<filter-name>SimpleESAPIFilter</filter-name>
+		<url-pattern>/*</url-pattern><!-- "/*" is safer than "/main" since there 
+			are already pages outside of main like admin_lab.jsp or any new page that 
+			is created outside of main. -->
+	</filter-mapping>
+
+	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
