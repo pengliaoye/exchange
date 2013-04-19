@@ -16,7 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class MyAuthenticator extends SpringSecurityAuthenticatorAdaptor<String> {
+public class MyAuthenticator extends SpringSecurityAuthenticatorAdaptor<Authentication> {
 	
 	private static final int MAX_ACCOUNT_NAME_LENGTH = 250;
 	
@@ -141,10 +141,9 @@ public class MyAuthenticator extends SpringSecurityAuthenticatorAdaptor<String> 
 	}
 
 	@Override
-	public Authentication getAuthentication(String user,
-			UserDetails userDetails, List<GrantedAuthority> authorities) {
-		// TODO Auto-generated method stub
-		return null;
+	public Authentication getAuthentication(Authentication authenticatedUser,
+			UserDetails userDetails, List<GrantedAuthority> authorities) {	    
+		return authenticatedUser;
 	}
 
 }

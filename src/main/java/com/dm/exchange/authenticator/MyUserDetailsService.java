@@ -34,9 +34,9 @@ public class MyUserDetailsService extends JdbcDaoSupport implements UserDetailsS
             "from users " +
             "where accountname = ?";
     public static final String DEF_AUTHORITIES_BY_USERNAME_QUERY =
-            "select username,authority " +
-            "from authorities " +
-            "where username = ?";
+            "select accountname,authority " +
+            "from userauthorities " +
+            "where accountname = ?";
     public static final String DEF_GROUP_AUTHORITIES_BY_USERNAME_QUERY =
             "select g.id, g.group_name, ga.authority " +
             "from groups g, group_members gm, group_authorities ga " +
