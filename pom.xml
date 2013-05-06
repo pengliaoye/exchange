@@ -85,7 +85,7 @@
 		<dependency>
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-engine</artifactId>
-			<version>5.12</version>
+			<version>5.12.1</version>
 		</dependency>
 		<dependency>
 		    <groupId>commons-dbutils</groupId>
