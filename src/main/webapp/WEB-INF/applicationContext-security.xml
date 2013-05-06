@@ -44,7 +44,7 @@
 		</beans:property>
 		<beans:property name="groupAuthoritiesByUsernameQuery">
 			<beans:value>
-				select u.accountname, r.role_name
+				select u.accountname, r.id, r.role_name
 				from users u, users_roles ur, roles r
 				where u.id = ur.user_id and ur.role_id = r.id
 				and u.accountname = ?
