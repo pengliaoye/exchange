@@ -3,10 +3,13 @@ package com.dm.exchange.authenticator;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.owasp.esapi.contrib.spring.authenticator.AuthenticatedUser;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 
@@ -53,5 +56,14 @@ public class MyUserDetailsService extends JdbcDaoImpl{
 	protected String getRolePrefix() {
 		return "ROLE_";
 	}
+	
+	@Override
+    protected UserDetails createUserDetails(String username, UserDetails userFromUserQuery,
+            List<GrantedAuthority> combinedAuthorities) {
+		Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>(combinedAuthorities);
+		AuthenticatedUser authenticatedUser = (AuthenticatedUser)userFromUserQuery;
+		authenticatedUser.setAuthorities(authorities);
+		return authenticatedUser;
+    }
 	
 }
