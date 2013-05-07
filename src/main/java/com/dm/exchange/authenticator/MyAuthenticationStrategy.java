@@ -530,6 +530,25 @@ public class MyAuthenticationStrategy implements
     {
         this.queryRunner = queryRunner;
     }
+    
+    /**
+     * The source of salts to use when decoding passwords. <code>null</code>
+     * is a valid value, meaning the <code>DaoAuthenticationProvider</code>
+     * will present <code>null</code> to the relevant <code>PasswordEncoder</code>.
+     * <p>
+     * Instead, it is recommended that you use an encoder which uses a random salt and combines it with
+     * the password field. This is the default approach taken in the
+     * {@code org.springframework.security.crypto.password} package.
+     *
+     * @param saltSource to use when attempting to decode passwords via the <code>PasswordEncoder</code>
+     */
+    public void setSaltSource(SaltSource saltSource) {
+        this.saltSource = saltSource;
+    }
+
+    protected SaltSource getSaltSource() {
+        return saltSource;
+    }
 
     public void setUserDetailsService(UserDetailsService userDetailsService)
     {

@@ -36,6 +36,7 @@ public class MyUserDetailsService extends JdbcDaoImpl{
                 
                 Subject subject = new Subject(accountName);
                 subject.setAccountId(id);
+                subject.setPassword(password);
                 subject.setExpirationDate(expirationDate);
                 subject.setFailedLoginCount(count);
                 subject.setLastHostAddress(remoteHost);

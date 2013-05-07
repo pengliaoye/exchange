@@ -3,9 +3,10 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
+	<debug/>
 	<http auto-config='true'>
-		<intercept-url pattern="/**" access="ROLE_USER" />
-	</http>
+		<intercept-url pattern="/**" access="ROLE_USER" />	
+	</http>	
 
 	<beans:import
 		resource="classpath*:/org/owasp/esapi/contrib/spring/authenticator/esapi-spring-security-context.xml" />
@@ -16,6 +17,17 @@
 			<beans:bean class="com.dm.exchange.authenticator.MyAuthenticationStrategy">
 				<beans:property name="queryRunner" ref="queryRunner" />
 				<beans:property name="userDetailsService" ref="userDetailsService" />
+				<beans:property name="passwordEncoder">
+					<beans:bean class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+						<beans:constructor-arg value="512"/>
+						<beans:property name="encodeHashAsBase64" value="true"/>
+					</beans:bean>
+				</beans:property>
+				<beans:property name="saltSource">
+					<beans:bean class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+						<beans:property name="userPropertyToUse" value="username"/>
+					</beans:bean>
+				</beans:property>
 			</beans:bean>
 		</beans:property>
 		<beans:property name="authoritiesPopulator">

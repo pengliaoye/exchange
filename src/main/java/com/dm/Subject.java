@@ -21,6 +21,8 @@ public class Subject implements UserProfile {
 	/** This user's screen name (account name alias). */
 	private String screenName = "";
 	
+	private String password;
+	
 	/** Whether this user's account is locked. */
 	private boolean locked = false;
 	
@@ -130,8 +132,11 @@ public class Subject implements UserProfile {
 
 	@Override
 	public String getPassword() {
-		// TODO Auto-generated method stub
-		return null;
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@Override
