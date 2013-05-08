@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+html,body {
+	height: 100%;
+}
+</style>
+<script type="text/javascript">
+	function allowDrop(ev) {
+		ev.preventDefault();
+	}
+
+	function drag(ev) {
+		ev.dataTransfer.setData("Text", ev.target.id);
+	}
+
+	function drop(ev) {
+		ev.preventDefault();
+		var files = ev.dataTransfer.files;
+		if (files.length > 0) {
+			startRead(files[0]);
+		}
+	}
+
+	function startRead(file) {
+		if (file) {
+			getAsText(file);
+		}
+	}
+
+	function sendFile(file) {
+		var uri = "/index.php";
+		var xhr = new XMLHttpRequest();
+		var fd = new FormData();
+
+		xhr.open("POST", uri, true);
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState == 4 && xhr.status == 200) {
+				// Handle response.
+				alert(xhr.responseText); // handle response.
+			}
+		};
+		fd.append('myFile', file);
+		// Initiate a multipart/form-data upload
+		xhr.send(fd);
+	}
+
+	function getAsText(readFile) {
+
+		var reader = new FileReader();
+
+		// Read file into memory as UTF-16      
+		reader.readAsText(readFile);//, "UTF-16");
+
+		// Handle progress, success, and errors
+		reader.onprogress = updateProgress;
+		reader.onload = loaded;
+		reader.onerror = errorHandler;
+	}
+
+	function updateProgress(evt) {
+		if (evt.lengthComputable) {
+			// evt.loaded and evt.total are ProgressEvent properties
+			var loaded = (evt.loaded / evt.total);
+			if (loaded < 1) {
+				// Increase the prog bar length
+				// style.width = (loaded * 200) + "px";
+			}
+		}
+	}
+
+	function loaded(evt) {
+		// Obtain the read file data    
+		var fileString = evt.target.result;
+		// Handle UTF-16 file dump
+		if (utils.regexp.isChinese(fileString)) {
+			//Chinese Characters + Name validation
+		} else {
+			// run other charset test
+		}
+		// xhr.send(fileString)     
+	}
+
+	function errorHandler(evt) {
+		if (evt.target.error.name == "NotReadableError") {
+			// The file could not be read
+		}
+	}
+</script>
+</head>
+<body ondrop="drop(event)" ondragover="allowDrop(event)">
+
+</body>
+</html>
