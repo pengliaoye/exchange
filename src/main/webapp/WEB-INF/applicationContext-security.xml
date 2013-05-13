@@ -18,10 +18,7 @@
 				<beans:property name="queryRunner" ref="queryRunner" />
 				<beans:property name="userDetailsService" ref="userDetailsService" />
 				<beans:property name="passwordEncoder">
-					<beans:bean class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
-						<beans:constructor-arg value="512"/>
-						<beans:property name="encodeHashAsBase64" value="true"/>
-					</beans:bean>
+					<beans:bean class="com.dm.exchange.authenticator.MyPasswordEncoder"/>
 				</beans:property>
 				<beans:property name="saltSource">
 					<beans:bean class="org.springframework.security.authentication.dao.ReflectionSaltSource">
