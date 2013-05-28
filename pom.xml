@@ -103,6 +103,11 @@
 		  <version>9.2-1002.jdbc4</version>
 		</dependency>
 		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.11.1</version>
+		</dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>3.0-alpha-1</version>
