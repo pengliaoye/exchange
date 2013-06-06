@@ -1,0 +1,27 @@
+* {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.button,.button_on,.disabledButton {
+	width: 65px;
+	height: 22px;
+	margin: 1px 3px;
+}
+
+.button {
+	background: url(../img/button/buttonh.gif);
+	cursor: pointer;
+	background-position: 0 0;
+}
+
+.button:hover {
+	background: url(../img/button/buttonh.gif);
+	background-position: 0 -22px;
+}
+
+.disabledButton {
+	background: url(../img/button/button_disable.gif);
+	cursor: default;
+}
