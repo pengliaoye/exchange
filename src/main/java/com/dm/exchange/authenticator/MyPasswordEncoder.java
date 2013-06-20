@@ -11,7 +11,7 @@ public class MyPasswordEncoder implements PasswordEncoder {
 		String encPass = null;
 		try {
 			encPass = ESAPI.encryptor().hash(rawPass, salt.toString());
-		} catch (EncryptionException e) {
+		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -258,7 +258,7 @@ public class MyAuthenticationStrategy implements
     private void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         Assert.notNull(passwordEncoder, "passwordEncoder cannot be null");
 
-        this.userNotFoundEncodedPassword = passwordEncoder.encodePassword(USER_NOT_FOUND_PASSWORD, null);
+        //this.userNotFoundEncodedPassword = passwordEncoder.encodePassword(USER_NOT_FOUND_PASSWORD, null);
         this.passwordEncoder = passwordEncoder;
     }
 
