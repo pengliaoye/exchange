@@ -8,7 +8,7 @@ import javax.servlet.ServletContextListener;
 import org.activiti.engine.ProcessEngines;
 import org.apache.commons.dbutils.QueryLoader;
 
-public class ProcessEnginesServletContextListener implements
+public class AppServletContextListener implements
 		ServletContextListener {
 
 	@Override
