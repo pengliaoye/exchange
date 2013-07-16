@@ -38,3 +38,13 @@
   	  
 mule esb
 restlet
+
+简单工厂             传入操作符，产生不同的操作类
+工厂方法    Mybatis UnpooledDataSourceFactory PooledDataSourceFactory
+         JMS QueueConnectionFactory TopicConnectionFactory
+抽象方法
+		DriverManager 生成一系列相关对象，如oracle.jdbc.OracleDriver oracle.jdbc.OracleConnection
+单例
+	饱汉，饿汉
+原型模式
+    Cloneable clone		
