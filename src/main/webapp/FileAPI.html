@@ -27,6 +27,9 @@ html,body {
 
 	function startRead(file) {
 		if (file) {
+			console.log(file.size);
+			console.log(file.type);
+			console.log(file.name);
 			getAsText(file);
 		}
 	}
@@ -92,6 +95,6 @@ html,body {
 </script>
 </head>
 <body ondrop="drop(event)" ondragover="allowDrop(event)">
-
+	<input type="file" multiple/>
 </body>
 </html>
