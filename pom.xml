@@ -88,6 +88,11 @@
             <version>5.13</version>
         </dependency>
         <dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-core</artifactId>
+			<version>6.0.0.Beta5</version>
+		</dependency>
+        <dependency>
             <groupId>commons-dbutils</groupId>
             <artifactId>commons-dbutils</artifactId>
             <version>1.5</version>
