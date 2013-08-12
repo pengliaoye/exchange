@@ -1,6 +1,7 @@
 YUI.add('atwho', function(Y) {
 	
     var Lang = Y.Lang,    
+    Node = Y.Node,
     INPUT_NODE          = 'inputNode';
     
     function AtWho(config){
@@ -15,6 +16,7 @@ YUI.add('atwho', function(Y) {
         }
     };
     
+    AtWho.CONTAINER  = "<div id='atwho-container'></div>";
     AtWho.AT_DIV = "<div id='at-view' class='at-view'><ul id='at-view-ul'></ul></div>";
     AtWho.DEFAULT_TPL = "<li data-value='${name}'>${name}</li>";
     
@@ -41,20 +43,70 @@ YUI.add('atwho', function(Y) {
 	    	    };
 	    		
 	    	    Y.on('io:complete', complete, Y, ['lorem', 'ipsum']);
-	    		var request = Y.io(uri);
+	    		var request = Y.io(data);
 	    	}
 	    },
 	
 	    destructor : function() {},
 	
-	    renderUI : function() {},
-	
-	    bindUI : function() {
-	    	this.get(INPUT_NODE).on
+	    renderUI : function() {
+	    	var bodyNode = Y.one(document.body);	    	
+	    	bodyNode.append(AtWho.CONTAINER);
 	    },
 	
-	    syncUI : function() {}
+	    bindUI : function() {	 
+	    	
+	    	var sub = {
+	    		keyup : this._on_keyup,
+	    		keydown : this._on_keydown,
+	    		scroll : function(e){
+	    			console.log("scroll");
+	    		},
+	    		blur : function(e){
+	    			console.log("blur");
+	    		}
+	    	};
+	    	
+	    	Y.on(sub, this.get(INPUT_NODE))
+	    },
+	
+	    syncUI : function() {},
+	    
+	    _on_keyup : function(e){
+	    	console.log("keyup");
+	        var KEY_CODE = {
+	        	      DOWN: 40,
+	        	      UP: 38,
+	        	      ESC: 27,
+	        	      TAB: 9,
+	        	      ENTER: 13
+	        	    };
+	        
+	        switch(e.keyCode){
+	        	case KEY_CODE.ESC:
+	        		break;
+	        	default : 
+	        		break;
+	        }
+	    	
+	    },
+	    _on_keydown : function(e){
+	    	console.log("keydown");
+	    },
+	    _dispatch : function(){
+	    	this._look_up();
+	    },
+	    _look_up : function(){
+	    	var data = this.get("data");
+	    	this._render_view(data);
+	    },
+	    _render_view : function(data){
+	    	
+	    },
+	    _render : function(){
+	    	
+	    }
     });
     
     Y.AtWho = AtWho;
-}, "0.0.1", {requires : ["widget"]});
+}, "0.0.1", {requires : ["widget", "io-base"]});
