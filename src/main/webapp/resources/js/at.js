@@ -18,7 +18,7 @@ YUI.add('atwho', function(Y) {
     
     AtWho.CONTAINER  = "<div id='atwho-container'></div>";
     AtWho.AT_DIV = "<div id='at-view' class='at-view'><ul id='at-view-ul'></ul></div>";
-    AtWho.DEFAULT_TPL = "<li data-value='${name}'>${name}</li>";
+    AtWho.DEFAULT_TPL = "<li data-value='{name}'>{name}</li>";
     
     Y.extend(AtWho, Y.Widget, {   
     	
@@ -101,7 +101,9 @@ YUI.add('atwho', function(Y) {
 	    	this._render_view(data);
 	    },
 	    _render_view : function(data){
-	    	
+	    	for(var i = 0; i < data.length; i++){
+	    		var li = Node.create(Y.Lang.sub(AtWho.DEFAULT_TPL, {name: data[i]}));
+	    	}
 	    },
 	    _render : function(){
 	    	
