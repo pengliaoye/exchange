@@ -32,7 +32,7 @@ import org.owasp.esapi.errors.AuthenticationException;
 
 public class SimpleESAPIFilter implements Filter {
 
-	private static final Logger logger = ESAPI.getLogger( "SwingsetFilter" );
+	private static final Logger logger = ESAPI.getLogger( "SimpleESAPIFilter" );
 
 	private static final String[] ignore = { "password" };
 
