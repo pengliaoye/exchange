@@ -6,8 +6,10 @@ package com.dm.system;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.User;
 import org.owasp.esapi.errors.AuthenticationException;
@@ -16,7 +18,7 @@ import org.owasp.esapi.errors.AuthenticationException;
  *
  * @author Administrator
  */
-@ManagedBean
+@Named
 @RequestScoped
 public class UserBean {
 
@@ -39,8 +41,16 @@ public class UserBean {
     }
 
     public void login() {
-        User user = ESAPI.authenticator().login();
+        
+        User user = null;
+        try {
+            user = ESAPI.authenticator().login();
+        } catch (AuthenticationException ex) {
+            Logger.getLogger(UserBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         if (user != null) {
+            HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
             if (request.getParameter("remember") != null) {
                 ESAPI.httpUtilities().setRememberToken(request.getParameter("password"), 8000, "", "");
             }
