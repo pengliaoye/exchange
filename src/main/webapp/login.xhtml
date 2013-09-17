@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:jsf="http://xmlns.jcp.org/jsf">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8"/>
 <title>Login Page</title>
-<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css">
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css"/>
 </head>
 <body jsf:id="body">
 
@@ -12,8 +12,8 @@
 			<legend>Login</legend>
 
                         <label for="email">Email</label> <input jsf:id="email" type="email" name="username"
-				placeholder="Email"> <label for="password">Password</label>
-			<input jsf:id="password" type="password" name="password" placeholder="Password">
+				placeholder="Email"/> <label for="password">Password</label>
+			<input jsf:id="password" type="password" name="password" placeholder="Password"/>
 
 			<script type="text/javascript"
 				src="http://www.google.com/recaptcha/api/challenge?k=6Ld7Xt0SAAAAAAkUWTPDZzx81hu5ff65gN3FSXck">
@@ -23,18 +23,18 @@
 				<iframe
 					src="http://www.google.com/recaptcha/api/noscript?k=6Ld7Xt0SAAAAAAkUWTPDZzx81hu5ff65gN3FSXck"
 					height="300" width="500" frameborder="0"></iframe>
-				<br>
+				<br/>
 				<textarea name="recaptcha_challenge_field" rows="3" cols="40">
        </textarea>
 				<input type="hidden" name="recaptcha_response_field"
-					value="manual_challenge">
+					value="manual_challenge"/>
 			</noscript>
 
 			<label for="remember" class="pure-checkbox"> <input
-				id="remember" name="remember" type="checkbox"> Remember me
+				id="remember" name="remember" type="checkbox"/> Remember me
 			</label>
 
-			<button type="submit" class="pure-button pure-button-primary" jsf:action="userBean.login">Sign
+			<button type="submit" class="pure-button pure-button-primary" jsf:action="#{userBean.login}">Sign
 				in</button>
 		</fieldset>
 	</form>
