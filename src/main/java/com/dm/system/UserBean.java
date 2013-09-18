@@ -35,7 +35,7 @@ public class UserBean {
         try {
             ESAPI.authenticator().createUser(username, password, password);
         } catch (AuthenticationException ex) {
-            Logger.getLogger(UserBean.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserBean.class.getName()).log(Level.SEVERE, ex.getLogMessage(), ex);
         }
     }
 
@@ -52,10 +52,10 @@ public class UserBean {
                 }
             }
             
-            return "success";
+            return "index";
         } catch (AuthenticationException ex) {
             Logger.getLogger(UserBean.class.getName()).log(Level.SEVERE, null, ex);
-            return "failure";
+            return null;
         }
 
     }
