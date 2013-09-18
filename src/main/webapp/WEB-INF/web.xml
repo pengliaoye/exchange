@@ -1,25 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
-
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <!--
     <listener>
         <listener-class>com.dm.AppServletContextListener</listener-class>
     </listener>
       -->
-    
     <!-- CD 2011-04-12 -->
     <!-- this filter is VERY IMPORTANT since without it the ThreadLocal User variable can become reusable by other requests! -->
     <filter>
-            <filter-name>SimpleESAPIFilter</filter-name>
-            <filter-class>com.dm.filter.SimpleESAPIFilter</filter-class>
+        <filter-name>SimpleESAPIFilter</filter-name>
+        <filter-class>com.dm.filter.SimpleESAPIFilter</filter-class>
     </filter>
-
     <!-- this filter is VERY IMPORTANT since without it the ThreadLocal User variable can become reusable by other requests! -->
     <filter-mapping>
-            <filter-name>SimpleESAPIFilter</filter-name>
-            <url-pattern>/*</url-pattern><!-- "/*" is safer than "/main" since there are already pages outside of main like admin_lab.jsp or any new page that is created outside of main. -->
+        <filter-name>SimpleESAPIFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <!-- "/*" is safer than "/main" since there are already pages outside of main like admin_lab.jsp or any new page that is created outside of main. -->
     </filter-mapping>
-    
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
@@ -40,4 +37,13 @@
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
+    
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error500.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>404></error-code>
+        <location></location>
+    </error-page>
 </web-app>
