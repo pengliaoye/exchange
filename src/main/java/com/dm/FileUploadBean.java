@@ -7,16 +7,15 @@ package com.dm;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
+
+import javax.enterprise.inject.Model;
 import javax.servlet.http.Part;
 
 /**
  *
  * @author Administrator
  */
-@Named
-@RequestScoped
+@Model
 public class FileUploadBean {
 
     private Part uploadedFile;
