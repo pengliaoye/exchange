@@ -6,10 +6,11 @@ package com.dm.system;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.RequestScoped;
+
+import javax.enterprise.inject.Model;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.User;
 import org.owasp.esapi.errors.AuthenticationException;
@@ -18,8 +19,7 @@ import org.owasp.esapi.errors.AuthenticationException;
  *
  * @author Administrator
  */
-@Named
-@RequestScoped
+@Model
 public class UserBean {
 
     private String username;
