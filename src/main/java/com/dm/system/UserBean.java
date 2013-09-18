@@ -39,21 +39,25 @@ public class UserBean {
         }
     }
 
-    public void login() {
+    public String login() {
         
         User user = null;
         try {
             user = ESAPI.authenticator().login();
+            
+            if (user != null) {
+                HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+                if (request.getParameter("remember") != null) {
+                    ESAPI.httpUtilities().setRememberToken(request.getParameter("password"), 8000, "", "");
+                }
+            }
+            
+            return "success";
         } catch (AuthenticationException ex) {
             Logger.getLogger(UserBean.class.getName()).log(Level.SEVERE, null, ex);
+            return "failure";
         }
-        
-        if (user != null) {
-            HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-            if (request.getParameter("remember") != null) {
-                ESAPI.httpUtilities().setRememberToken(request.getParameter("password"), 8000, "", "");
-            }
-        }
+
     }
 
     public String getUsername() {
