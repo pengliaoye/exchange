@@ -21,6 +21,8 @@ import org.owasp.esapi.errors.AuthenticationException;
  */
 @Model
 public class UserBean {
+	
+	private Logger logger = Logger.getLogger(UserBean.class.getName());
 
     private String username;
     private String password;
@@ -35,7 +37,7 @@ public class UserBean {
         try {
             ESAPI.authenticator().createUser(username, password, password);
         } catch (AuthenticationException ex) {
-            Logger.getLogger(UserBean.class.getName()).log(Level.SEVERE, ex.getLogMessage(), ex);
+            logger.log(Level.SEVERE, ex.getLogMessage(), ex);
         }
     }
 
@@ -54,7 +56,7 @@ public class UserBean {
             
             return "index";
         } catch (AuthenticationException ex) {
-            Logger.getLogger(UserBean.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
             return null;
         }
 
