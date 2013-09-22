@@ -55,11 +55,6 @@ public class DaoAuthenticator extends AbstractAuthenticator{
     private final Logger logger = ESAPI.getLogger("Authenticator");
 
     /**
-     * The file that contains the user db
-     */
-    private File userDB = null;
-
-    /**
      * How frequently to check the user db for external modifications
      */
     private long checkInterval = 60 * 1000;
