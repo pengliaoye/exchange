@@ -1,23 +1,20 @@
 package org.owasp.esapi.reference;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.QueryRunner;
 import org.owasp.esapi.Authenticator;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.EncoderConstants;
@@ -29,9 +26,6 @@ import org.owasp.esapi.errors.AuthenticationAccountsException;
 import org.owasp.esapi.errors.AuthenticationCredentialsException;
 import org.owasp.esapi.errors.AuthenticationException;
 import org.owasp.esapi.errors.EncryptionException;
-import org.owasp.esapi.reference.AbstractAuthenticator;
-import org.owasp.esapi.reference.DefaultUser;
-import org.owasp.esapi.reference.FileBasedAuthenticator;
 
 public class DaoAuthenticator extends AbstractAuthenticator{
 
@@ -40,7 +34,7 @@ public class DaoAuthenticator extends AbstractAuthenticator{
     public static Authenticator getInstance()
     {
         if ( singletonInstance == null ) {
-            synchronized ( FileBasedAuthenticator.class ) {
+            synchronized ( DaoAuthenticator.class ) {
                 if ( singletonInstance == null ) {
                     singletonInstance = new DaoAuthenticator();
                 }
@@ -53,21 +47,6 @@ public class DaoAuthenticator extends AbstractAuthenticator{
      * The logger.
      */
     private final Logger logger = ESAPI.getLogger("Authenticator");
-
-    /**
-     * How frequently to check the user db for external modifications
-     */
-    private long checkInterval = 60 * 1000;
-
-    /**
-     * The last modified time we saw on the user db.
-     */
-    private long lastModified = 0;
-
-    /**
-     * The last time we checked if the user db had been modified externally
-     */
-    private long lastChecked = 0;
 
     private static final int MAX_ACCOUNT_NAME_LENGTH = 250;
 
@@ -104,10 +83,9 @@ public class DaoAuthenticator extends AbstractAuthenticator{
             auth.setHashedPassword(user, newHash);
             user.addRole(role);
             user.enable();
-            user.unlock();
-            auth.userMap.put(user.getAccountId(), user);
+            user.unlock();            
             System.out.println("New user created: " + accountName);
-            auth.saveUsers();
+            auth.saveUser(user);
             System.out.println("User account " + user.getAccountName() + " updated");
         } else {
             System.err.println("User account " + user.getAccountName() + " already exists!");
@@ -194,11 +172,6 @@ public class DaoAuthenticator extends AbstractAuthenticator{
         return Collections.emptyList();
     }
 
-    /**
-     * The user map.
-     */
-    private Map<Long, User> userMap = new HashMap<Long, User>();
-
     // Map<User, List<String>>, where the strings are password hashes, with the current hash in entry 0
     private Map<User, List<String>> passwordMap = new Hashtable<User, List<String>>();
 
@@ -216,7 +189,7 @@ public class DaoAuthenticator extends AbstractAuthenticator{
      * {@inheritDoc}
      */
     public synchronized User createUser(String accountName, String password1, String password2) throws AuthenticationException {
-        loadUsersIfNecessary();
+        
         if (accountName == null) {
             throw new AuthenticationAccountsException("Account creation failed", "Attempt to create user with null accountName");
         }
@@ -243,9 +216,9 @@ public class DaoAuthenticator extends AbstractAuthenticator{
         } catch (EncryptionException ee) {
             throw new AuthenticationException("Internal error", "Error hashing password for " + accountName, ee);
         }
-        userMap.put(user.getAccountId(), user);
+        
         logger.info(Logger.SECURITY_SUCCESS, "New user created: " + accountName);
-        saveUsers();
+        saveUser(user);
         return user;
     }
 
@@ -301,7 +274,7 @@ public class DaoAuthenticator extends AbstractAuthenticator{
             setHashedPassword(user, newHash);
             logger.info(Logger.SECURITY_SUCCESS, "Password changed for user: " + accountName);
             // jtm - 11/2/2010 - added to resolve http://code.google.com/p/owasp-esapi-java/issues/detail?id=13
-            saveUsers();
+            saveUser(user);
         } catch (EncryptionException ee) {
             throw new AuthenticationException("Password change failed", "Encryption exception changing password for " + accountName, ee);
         }
@@ -346,8 +319,8 @@ public class DaoAuthenticator extends AbstractAuthenticator{
         if (accountId == 0) {
             return User.ANONYMOUS;
         }
-        loadUsersIfNecessary();
-        return userMap.get(accountId);
+        
+        return null;
     }
 
     /**
@@ -356,27 +329,12 @@ public class DaoAuthenticator extends AbstractAuthenticator{
     public synchronized User getUser(String accountName) {
         if (accountName == null) {
             return User.ANONYMOUS;
-        }
-        loadUsersIfNecessary();
-        for (User u : userMap.values()) {
-            if (u.getAccountName().equalsIgnoreCase(accountName)) {
-                return u;
-            }
-        }
+        }        
         return null;
     }
-
- 
-
-    /**
-     * {@inheritDoc}
-     */
-    public synchronized Set getUserNames() {
-        loadUsersIfNecessary();
+    
+    public synchronized Set getUserNames() {        
         HashSet<String> results = new HashSet<String>();
-        for (User u : userMap.values()) {
-            results.add(u.getAccountName());
-        }
         return results;
     }
 
@@ -388,75 +346,6 @@ public class DaoAuthenticator extends AbstractAuthenticator{
     public String hashPassword(String password, String accountName) throws EncryptionException {
         String salt = accountName.toLowerCase();
         return ESAPI.encryptor().hash(password, salt);
-    }
-
-    /**
-     * Load users if they haven't been loaded in a while.
-     */
-    protected void loadUsersIfNecessary() {
-        if (userDB == null) {
-            userDB = ESAPI.securityConfiguration().getResourceFile("users.txt");
-        }
-        if (userDB == null) {
-            userDB = new File(System.getProperty("user.home") + "/.esapi", "users.txt");
-            try {
-                if (!userDB.createNewFile()) throw new IOException("Unable to create the user file");
-                logger.warning(Logger.SECURITY_SUCCESS, "Created " + userDB.getAbsolutePath());
-            } catch (IOException e) {
-                logger.fatal(Logger.SECURITY_FAILURE, "Could not create " + userDB.getAbsolutePath(), e);
-            }
-        }
-
-        // We only check at most every checkInterval milliseconds
-        long now = System.currentTimeMillis();
-        if (now - lastChecked < checkInterval) {
-            return;
-        }
-        lastChecked = now;
-
-        if (lastModified == userDB.lastModified()) {
-            return;
-        }
-        loadUsersImmediately();
-    }
-
-    // file was touched so reload it
-    /**
-     *
-     */
-    protected void loadUsersImmediately() {
-        synchronized (this) {
-            logger.trace(Logger.SECURITY_SUCCESS, "Loading users from " + userDB.getAbsolutePath(), null);
-
-            BufferedReader reader = null;
-            try {
-                HashMap<Long, User> map = new HashMap<Long, User>();
-                reader = new BufferedReader(new FileReader(userDB));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.length() > 0 && line.charAt(0) != '#') {
-                        DefaultUser user = createUser(line);
-                        if (map.containsKey(new Long(user.getAccountId()))) {
-                            logger.fatal(Logger.SECURITY_FAILURE, "Problem in user file. Skipping duplicate user: " + user, null);
-                        }
-                        map.put(user.getAccountId(), user);
-                    }
-                }
-                userMap = map;
-                this.lastModified = System.currentTimeMillis();
-                logger.trace(Logger.SECURITY_SUCCESS, "User file reloaded: " + map.size(), null);
-            } catch (Exception e) {
-                logger.fatal(Logger.SECURITY_FAILURE, "Failure loading user file: " + userDB.getAbsolutePath(), e);
-            } finally {
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    logger.fatal(Logger.SECURITY_FAILURE, "Failure closing user file: " + userDB.getAbsolutePath(), e);
-                }
-            }
-        }
     }
 
     /**
@@ -513,97 +402,58 @@ public class DaoAuthenticator extends AbstractAuthenticator{
     /**
      * {@inheritDoc}
      */
-    public synchronized void removeUser(String accountName) throws AuthenticationException {
-        loadUsersIfNecessary();
+    public synchronized void removeUser(String accountName) throws AuthenticationException {        
         User user = getUser(accountName);
         if (user == null) {
             throw new AuthenticationAccountsException("Remove user failed", "Can't remove invalid accountName " + accountName);
-        }
-        userMap.remove(user.getAccountId());
+        }        
         logger.info(Logger.SECURITY_SUCCESS, "Removing user " + user.getAccountName());
-        passwordMap.remove(user);
-        saveUsers();
+        passwordMap.remove(user);        
     }
 
     /**
-     * Saves the user database to the file system. In this implementation you must call save to commit any changes to
-     * the user file. Otherwise changes will be lost when the program ends.
-     *
      * @throws AuthenticationException if the user file could not be written
      */
-    public synchronized void saveUsers() throws AuthenticationException {
-        PrintWriter writer = null;
+    public synchronized void saveUser(User user) throws AuthenticationException {
+        
         try {
-            writer = new PrintWriter(new FileWriter(userDB));
-            writer.println("# This is the user file associated with the ESAPI library from http://www.owasp.org");
-            writer.println("# accountId | accountName | hashedPassword | roles | locked | enabled | csrfToken | oldPasswordHashes | lastPasswordChangeTime | lastLoginTime | lastFailedLoginTime | expirationTime | failedLoginCount");
-            writer.println();
-            saveUsers(writer);
-            writer.flush();
-            logger.info(Logger.SECURITY_SUCCESS, "User file written to disk");
-        } catch (IOException e) {
-            logger.fatal(Logger.SECURITY_FAILURE, "Problem saving user file " + userDB.getAbsolutePath(), e);
-            throw new AuthenticationException("Internal Error", "Problem saving user file " + userDB.getAbsolutePath(), e);
-        } finally {
-            if (writer != null) {
-                writer.close();
-                lastModified = userDB.lastModified();
-                lastChecked = lastModified;
-            }
-        }
-    }
-
-    /**
-     * Save users.
-     *
-     * @param writer the print writer to use for saving
-     */
-    protected synchronized void saveUsers(PrintWriter writer) throws AuthenticationCredentialsException {
-        for (Object o : getUserNames()) {
-            String accountName = (String) o;
-            DefaultUser u = (DefaultUser) getUser(accountName);
+            
+            DefaultUser u = (DefaultUser) user;
             if (u != null && !u.isAnonymous()) {
-                writer.println(save(u));
+                
+                Connection conn = getConn();
+                QueryRunner queryRunner = new QueryRunner();
+                try{
+                	StringBuilder builder = new StringBuilder();
+                	builder.append("insert into users (id,accountname,password,expirationdate,failedlogincount,\n");
+                	builder.append("lasthostaddress,lastfailedlogintime,lastlogintime,lastpasswordchangetime,screenname,enabled,locked,roles, oldpassword)\n");
+                	builder.append("values (?,?,?,?,?,?,?,?,?,?,?,?)");
+                	String sql = builder.toString();
+                	queryRunner.update(conn, sql, user.getAccountId(), user.getAccountName(), getHashedPassword(user),
+                			user.getExpirationTime(), user.getFailedLoginCount(), user.getLastHostAddress(), user.getLastFailedLoginTime()
+                			, user.getLastLoginTime(), user.getLastPasswordChangeTime(), user.getScreenName(), user.isEnabled() ? "enabled" : "disabled", user.isLocked() ? "locked" : "unlocked"
+                			, dump(user.getRoles()), dump(getOldPasswordHashes(user)));
+                } catch (Exception e){
+                	
+                } finally {
+                	DbUtils.closeQuietly(conn);
+                }
+            
             } else {
-                throw new AuthenticationCredentialsException("Problem saving user", "Skipping save of user " + accountName);
-            }
+                throw new AuthenticationCredentialsException("Problem saving user", "Skipping save of user " + u.getAccountName());
+            }            
+        
+            logger.info(Logger.SECURITY_SUCCESS, "User written to database");
+        } catch (Exception e) {
+            logger.fatal(Logger.SECURITY_FAILURE, "Problem saving user to database", e);
+            throw new AuthenticationException("Internal Error", "Problem saving user to database", e);
         }
     }
-
-    /**
-     * Save.
-     *
-     * @param user the User to save
-     * @return a line containing properly formatted information to save regarding the user
-     */
-    private String save(DefaultUser user) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(user.getAccountId());
-        sb.append(" | ");
-        sb.append(user.getAccountName());
-        sb.append(" | ");
-        sb.append(getHashedPassword(user));
-        sb.append(" | ");
-        sb.append(dump(user.getRoles()));
-        sb.append(" | ");
-        sb.append(user.isLocked() ? "locked" : "unlocked");
-        sb.append(" | ");
-        sb.append(user.isEnabled() ? "enabled" : "disabled");
-        sb.append(" | ");
-        sb.append(dump(getOldPasswordHashes(user)));
-        sb.append(" | ");
-        sb.append(user.getLastHostAddress());
-        sb.append(" | ");
-        sb.append(user.getLastPasswordChangeTime().getTime());
-        sb.append(" | ");
-        sb.append(user.getLastLoginTime().getTime());
-        sb.append(" | ");
-        sb.append(user.getLastFailedLoginTime().getTime());
-        sb.append(" | ");
-        sb.append(user.getExpirationTime().getTime());
-        sb.append(" | ");
-        sb.append(user.getFailedLoginCount());
-        return sb.toString();
+    
+    public Connection getConn() throws Exception{
+    	Class.forName("org.postgresql.Driver");    	
+    	Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost/exchange", "exchange", "Admin123456");
+    	return conn;
     }
 
     /**
