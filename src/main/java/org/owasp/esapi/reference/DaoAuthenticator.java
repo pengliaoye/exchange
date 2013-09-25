@@ -360,48 +360,52 @@ public class DaoAuthenticator extends AbstractAuthenticator{
         DefaultUser user = queryRunner.query(conn, sql, new ResultSetHandler<DefaultUser>(){
 			@Override
 			public DefaultUser handle(ResultSet rs) throws SQLException {
-					try{
-				        long accountId = rs.getLong("id");
-				        String accountName = rs.getString("accountname");
-	
-				        verifyAccountNameStrength(accountName);
-				        DefaultUser user = new DefaultUser(accountName);
-				        user.setScreenName(rs.getString("screenname"));
-				        user.accountId = accountId;
-	
-				        String password = rs.getString("password");
-				        verifyPasswordStrength(null, password, user);
-				        setHashedPassword(user, password);
-	
-				        String[] roles = rs.getString("roles").toLowerCase().split(" *, *");
-				        for (String role : roles) {
-				            if (!"".equals(role)) {
-				                user.addRole(role);
-				            }
-				        }
-				        if (!"unlocked".equalsIgnoreCase(rs.getString("locked"))) {
-				            user.lock();
-				        }
-				        if ("enabled".equalsIgnoreCase(rs.getString("enabled"))) {
-				            user.enable();
-				        } else {
-				            user.disable();
-				        }
-	
-				        // generate a new csrf token
-				        user.resetCSRFToken();
-	
-				        setOldPasswordHashes(user, Arrays.asList(rs.getString("oldpassword").split(" *, *")));
-				        user.setLastHostAddress("null".equals(rs.getString("lasthostaddress")) ? null : rs.getString("lasthostaddress"));
-				        user.setLastPasswordChangeTime(new Date(rs.getDate("lastpasswordchangetime").getTime()));
-				        user.setLastLoginTime(new Date(rs.getDate("lastlogintime").getTime()));
-				        user.setLastFailedLoginTime(new Date(rs.getDate("lastfailedlogintime").getTime()));
-				        user.setExpirationTime(new Date(rs.getDate("expirationdate").getTime()));
-				        user.setFailedLoginCount(rs.getInt("failedlogincount"));
-				        return user;
-				    } catch (AuthenticationException e){
-				    	throw new RuntimeException(e);
-				    }
+                                    if(rs.next()){
+                                            try{
+                                            long accountId = rs.getLong("id");
+                                            String accountName = rs.getString("accountname");
+
+                                            verifyAccountNameStrength(accountName);
+                                            DefaultUser user = new DefaultUser(accountName);
+                                            user.setScreenName(rs.getString("screenname"));
+                                            user.accountId = accountId;
+
+                                            String password = rs.getString("password");
+                                            verifyPasswordStrength(null, password, user);
+                                            setHashedPassword(user, password);
+
+                                            String[] roles = rs.getString("roles").toLowerCase().split(" *, *");
+                                            for (String role : roles) {
+                                                if (!"".equals(role)) {
+                                                    user.addRole(role);
+                                                }
+                                            }
+                                            if (!"unlocked".equalsIgnoreCase(rs.getString("locked"))) {
+                                                user.lock();
+                                            }
+                                            if ("enabled".equalsIgnoreCase(rs.getString("enabled"))) {
+                                                user.enable();
+                                            } else {
+                                                user.disable();
+                                            }
+
+                                            // generate a new csrf token
+                                            user.resetCSRFToken();
+
+                                            setOldPasswordHashes(user, Arrays.asList(rs.getString("oldpassword").split(" *, *")));
+                                            user.setLastHostAddress("null".equals(rs.getString("lasthostaddress")) ? null : rs.getString("lasthostaddress"));
+                                            user.setLastPasswordChangeTime(new Date(rs.getDate("lastpasswordchangetime").getTime()));
+                                            user.setLastLoginTime(new Date(rs.getDate("lastlogintime").getTime()));
+                                            user.setLastFailedLoginTime(new Date(rs.getDate("lastfailedlogintime").getTime()));
+                                            user.setExpirationTime(new Date(rs.getDate("expirationdate").getTime()));
+                                            user.setFailedLoginCount(rs.getInt("failedlogincount"));
+                                            return user;
+                                        } catch (AuthenticationException e){
+                                            throw new RuntimeException(e);
+                                        }
+                                    } else {
+                                        return null;
+                                    }
 				}
         }, value);
         return user;
