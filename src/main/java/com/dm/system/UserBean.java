@@ -11,6 +11,7 @@ import javax.enterprise.inject.Model;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.owasp.esapi.Authenticator;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.User;
 import org.owasp.esapi.errors.AuthenticationException;
@@ -26,6 +27,7 @@ public class UserBean {
 
     private String username;
     private String password;
+    Authenticator authenticator = ESAPI.authenticator();
 
     /**
      * Creates a new instance of UserBean
@@ -34,8 +36,9 @@ public class UserBean {
     }
 
     public void createUser() {
-        try {
-            ESAPI.authenticator().createUser(username, password, password);
+        try {        	
+        	password = authenticator.generateStrongPassword();
+        	authenticator.createUser(username, password, password);
         } catch (AuthenticationException ex) {
             logger.log(Level.SEVERE, ex.getLogMessage(), ex);
         }
@@ -45,7 +48,7 @@ public class UserBean {
         
         User user = null;
         try {
-            user = ESAPI.authenticator().login();
+            user = authenticator.login();
             
             if (user != null) {
                 HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
