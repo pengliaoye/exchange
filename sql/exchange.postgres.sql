@@ -9,8 +9,10 @@ create table users(
     lastlogintime timestamp,
     lastpasswordchangetime timestamp,
     screenname varchar(255),
-    enabled boolean not null,
-    locked  boolean
+    enabled varchar(255) not null,
+    locked  varchar(255),
+    roles varchar(500),
+    oldpassword varchar(500)
 );
 
 create table authorities (

@@ -2,6 +2,8 @@ package org.owasp.esapi.reference;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,6 +17,7 @@ import java.util.Set;
 
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
 import org.owasp.esapi.Authenticator;
 import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.EncoderConstants;
@@ -319,7 +322,12 @@ public class DaoAuthenticator extends AbstractAuthenticator{
         if (accountId == 0) {
             return User.ANONYMOUS;
         }
-        
+        try{
+        	User user = getUser("id", accountId);
+        	return user;
+        } catch (Exception e){
+        	logger.fatal(Logger.SECURITY_FAILURE, "Failure loading user " + accountId, e);
+        }
         return null;
     }
 
@@ -329,12 +337,79 @@ public class DaoAuthenticator extends AbstractAuthenticator{
     public synchronized User getUser(String accountName) {
         if (accountName == null) {
             return User.ANONYMOUS;
-        }        
+        }
+        
+        try{
+        	User user = getUser("accountname", accountName);
+        	return user;
+        } catch (Exception e){
+        	logger.fatal(Logger.SECURITY_FAILURE, "Failure loading user " + accountName, e);
+        }
         return null;
+    }
+    
+    public User getUser(String field, Object value) throws Exception{
+        QueryRunner queryRunner = new QueryRunner();
+        StringBuilder builder = new StringBuilder();
+        builder.append("SELECT id, accountname, password, expirationdate, failedlogincount,\n"); 
+        builder.append("lasthostaddress, lastfailedlogintime, lastlogintime, lastpasswordchangetime, \n"); 
+        builder.append("screenname, enabled, locked, roles, oldpassword\n"); 
+        builder.append("FROM users WHERE "+field+"=?\n"); 
+        String sql = builder.toString();
+        Connection conn = getConn();
+        DefaultUser user = queryRunner.query(conn, sql, new ResultSetHandler<DefaultUser>(){
+			@Override
+			public DefaultUser handle(ResultSet rs) throws SQLException {
+					try{
+				        long accountId = rs.getLong("id");
+				        String accountName = rs.getString("accountname");
+	
+				        verifyAccountNameStrength(accountName);
+				        DefaultUser user = new DefaultUser(accountName);
+				        user.setScreenName(rs.getString("screenname"));
+				        user.accountId = accountId;
+	
+				        String password = rs.getString("password");
+				        verifyPasswordStrength(null, password, user);
+				        setHashedPassword(user, password);
+	
+				        String[] roles = rs.getString("roles").toLowerCase().split(" *, *");
+				        for (String role : roles) {
+				            if (!"".equals(role)) {
+				                user.addRole(role);
+				            }
+				        }
+				        if (!"unlocked".equalsIgnoreCase(rs.getString("locked"))) {
+				            user.lock();
+				        }
+				        if ("enabled".equalsIgnoreCase(rs.getString("enabled"))) {
+				            user.enable();
+				        } else {
+				            user.disable();
+				        }
+	
+				        // generate a new csrf token
+				        user.resetCSRFToken();
+	
+				        setOldPasswordHashes(user, Arrays.asList(rs.getString("oldpassword").split(" *, *")));
+				        user.setLastHostAddress("null".equals(rs.getString("lasthostaddress")) ? null : rs.getString("lasthostaddress"));
+				        user.setLastPasswordChangeTime(new Date(rs.getDate("lastpasswordchangetime").getTime()));
+				        user.setLastLoginTime(new Date(rs.getDate("lastlogintime").getTime()));
+				        user.setLastFailedLoginTime(new Date(rs.getDate("lastfailedlogintime").getTime()));
+				        user.setExpirationTime(new Date(rs.getDate("expirationdate").getTime()));
+				        user.setFailedLoginCount(rs.getInt("failedlogincount"));
+				        return user;
+				    } catch (AuthenticationException e){
+				    	throw new RuntimeException(e);
+				    }
+				}
+        }, value);
+        return user;
     }
     
     public synchronized Set getUserNames() {        
         HashSet<String> results = new HashSet<String>();
+        // TODO
         return results;
     }
 
@@ -408,7 +483,8 @@ public class DaoAuthenticator extends AbstractAuthenticator{
             throw new AuthenticationAccountsException("Remove user failed", "Can't remove invalid accountName " + accountName);
         }        
         logger.info(Logger.SECURITY_SUCCESS, "Removing user " + user.getAccountName());
-        passwordMap.remove(user);        
+        passwordMap.remove(user);
+        // TODO remove user
     }
 
     /**
@@ -426,15 +502,13 @@ public class DaoAuthenticator extends AbstractAuthenticator{
                 try{
                 	StringBuilder builder = new StringBuilder();
                 	builder.append("insert into users (id,accountname,password,expirationdate,failedlogincount,\n");
-                	builder.append("lasthostaddress,lastfailedlogintime,lastlogintime,lastpasswordchangetime,screenname,enabled,locked,roles, oldpassword)\n");
+                	builder.append("lasthostaddress,lastfailedlogintime,lastlogintime,lastpasswordchangetime,screenname,enabled,locked,roles,oldpassword)\n");
                 	builder.append("values (?,?,?,?,?,?,?,?,?,?,?,?)");
                 	String sql = builder.toString();
                 	queryRunner.update(conn, sql, user.getAccountId(), user.getAccountName(), getHashedPassword(user),
                 			user.getExpirationTime(), user.getFailedLoginCount(), user.getLastHostAddress(), user.getLastFailedLoginTime()
                 			, user.getLastLoginTime(), user.getLastPasswordChangeTime(), user.getScreenName(), user.isEnabled() ? "enabled" : "disabled", user.isLocked() ? "locked" : "unlocked"
                 			, dump(user.getRoles()), dump(getOldPasswordHashes(user)));
-                } catch (Exception e){
-                	
                 } finally {
                 	DbUtils.closeQuietly(conn);
                 }
