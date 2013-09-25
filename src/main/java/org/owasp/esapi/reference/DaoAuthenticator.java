@@ -510,8 +510,9 @@ public class DaoAuthenticator extends AbstractAuthenticator{
                 	builder.append("values (?,?,?,?,?,?,?,?,?,?,?,?)");
                 	String sql = builder.toString();
                 	queryRunner.update(conn, sql, user.getAccountId(), user.getAccountName(), getHashedPassword(user),
-                			user.getExpirationTime(), user.getFailedLoginCount(), user.getLastHostAddress(), user.getLastFailedLoginTime()
-                			, user.getLastLoginTime(), user.getLastPasswordChangeTime(), user.getScreenName(), user.isEnabled() ? "enabled" : "disabled", user.isLocked() ? "locked" : "unlocked"
+                			new java.sql.Date(user.getExpirationTime().getTime()), user.getFailedLoginCount(), user.getLastHostAddress(), 
+                			new java.sql.Date(user.getLastFailedLoginTime().getTime()), new java.sql.Date(user.getLastLoginTime().getTime())
+                			, new java.sql.Date(user.getLastPasswordChangeTime().getTime()), user.getScreenName(), user.isEnabled() ? "enabled" : "disabled", user.isLocked() ? "locked" : "unlocked"
                 			, dump(user.getRoles()), dump(getOldPasswordHashes(user)));
                 } finally {
                 	DbUtils.closeQuietly(conn);
