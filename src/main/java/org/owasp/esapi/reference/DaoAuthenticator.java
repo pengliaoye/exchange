@@ -397,7 +397,7 @@ public class DaoAuthenticator extends AbstractAuthenticator{
                                             user.setLastPasswordChangeTime(new Date(rs.getDate("lastpasswordchangetime").getTime()));
                                             user.setLastLoginTime(new Date(rs.getDate("lastlogintime").getTime()));
                                             user.setLastFailedLoginTime(new Date(rs.getDate("lastfailedlogintime").getTime()));
-                                            user.setExpirationTime(new Date(rs.getDate("expirationdate").getTime()));
+                                            user.setExpirationTime(new Date(rs.getLong("expirationdate")));
                                             user.setFailedLoginCount(rs.getInt("failedlogincount"));
                                             return user;
                                         } catch (AuthenticationException e){
@@ -510,7 +510,7 @@ public class DaoAuthenticator extends AbstractAuthenticator{
                 	builder.append("values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 	String sql = builder.toString();
                 	queryRunner.update(conn, sql, user.getAccountId(), user.getAccountName(), getHashedPassword(user),
-                			new java.sql.Date(user.getExpirationTime().getTime()), user.getFailedLoginCount(), user.getLastHostAddress(), 
+                			user.getExpirationTime().getTime(), user.getFailedLoginCount(), user.getLastHostAddress(), 
                 			new java.sql.Date(user.getLastFailedLoginTime().getTime()), new java.sql.Date(user.getLastLoginTime().getTime())
                 			, new java.sql.Date(user.getLastPasswordChangeTime().getTime()), user.getScreenName(), user.isEnabled() ? "enabled" : "disabled", user.isLocked() ? "locked" : "unlocked"
                 			, dump(user.getRoles()), dump(getOldPasswordHashes(user)));
