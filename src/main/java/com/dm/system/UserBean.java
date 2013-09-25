@@ -16,6 +16,8 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.User;
 import org.owasp.esapi.errors.AuthenticationException;
 
+import com.dm.util.JsfUtil;
+
 /**
  *
  * @author Administrator
@@ -41,6 +43,7 @@ public class UserBean {
         	authenticator.createUser(username, password, password);
         } catch (AuthenticationException ex) {
             logger.log(Level.SEVERE, ex.getLogMessage(), ex);
+            JsfUtil.addErrorMessage(ex.getUserMessage());
         }
     }
 
