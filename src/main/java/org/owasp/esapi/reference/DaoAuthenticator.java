@@ -507,7 +507,7 @@ public class DaoAuthenticator extends AbstractAuthenticator{
                 	StringBuilder builder = new StringBuilder();
                 	builder.append("insert into users (id,accountname,password,expirationdate,failedlogincount,\n");
                 	builder.append("lasthostaddress,lastfailedlogintime,lastlogintime,lastpasswordchangetime,screenname,enabled,locked,roles,oldpassword)\n");
-                	builder.append("values (?,?,?,?,?,?,?,?,?,?,?,?)");
+                	builder.append("values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
                 	String sql = builder.toString();
                 	queryRunner.update(conn, sql, user.getAccountId(), user.getAccountName(), getHashedPassword(user),
                 			new java.sql.Date(user.getExpirationTime().getTime()), user.getFailedLoginCount(), user.getLastHostAddress(), 
