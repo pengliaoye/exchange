@@ -86,7 +86,7 @@ public class SimpleESAPIFilter implements Filter {
 			HttpSession session = ESAPI.httpUtilities().getCurrentRequest().getSession(false);
 			if(session != null){
 				try{
-					ESAPI.authenticator().login();
+					//ESAPI.authenticator().login();
 				}
 				catch (Exception e) {
 					// noop

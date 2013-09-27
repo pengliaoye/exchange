@@ -63,7 +63,8 @@ public class UserBean {
             
             return "index";
         } catch (AuthenticationException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, ex.getLogMessage(), ex);
+            JsfUtil.addErrorMessage(ex.getUserMessage());
             return null;
         }
 
