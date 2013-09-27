@@ -88,7 +88,7 @@ public class DaoAuthenticator extends AbstractAuthenticator{
             user.enable();
             user.unlock();            
             System.out.println("New user created: " + accountName);
-            auth.saveUser(user);
+            auth.saveUser(user, true);
             System.out.println("User account " + user.getAccountName() + " updated");
         } else {
             System.err.println("User account " + user.getAccountName() + " already exists!");
@@ -221,7 +221,7 @@ public class DaoAuthenticator extends AbstractAuthenticator{
         }
         
         logger.info(Logger.SECURITY_SUCCESS, "New user created: " + accountName);
-        saveUser(user);
+        saveUser(user, true);
         return user;
     }
 
@@ -277,7 +277,7 @@ public class DaoAuthenticator extends AbstractAuthenticator{
             setHashedPassword(user, newHash);
             logger.info(Logger.SECURITY_SUCCESS, "Password changed for user: " + accountName);
             // jtm - 11/2/2010 - added to resolve http://code.google.com/p/owasp-esapi-java/issues/detail?id=13
-            saveUser(user);
+            saveUser(user, false);
         } catch (EncryptionException ee) {
             throw new AuthenticationException("Password change failed", "Encryption exception changing password for " + accountName, ee);
         }
@@ -428,57 +428,6 @@ public class DaoAuthenticator extends AbstractAuthenticator{
     }
 
     /**
-     * Create a new user with all attributes from a String.  The format is:
-     * accountId | accountName | password | roles (comma separated) | unlocked | enabled | old password hashes (comma separated) | last host address | last password change time | last long time | last failed login time | expiration time | failed login count
-     * This method verifies the account name and password strength, creates a new CSRF token, then returns the newly created user.
-     *
-     * @param line parameters to set as attributes for the new User.
-     * @return the newly created User
-     * @throws AuthenticationException
-     */
-    private DefaultUser createUser(String line) throws AuthenticationException {
-        String[] parts = line.split(" *\\| *");
-        String accountIdString = parts[0];
-        long accountId = Long.parseLong(accountIdString);
-        String accountName = parts[1];
-
-        verifyAccountNameStrength(accountName);
-        DefaultUser user = new DefaultUser(accountName);
-        user.accountId = accountId;
-
-        String password = parts[2];
-        verifyPasswordStrength(null, password, user);
-        setHashedPassword(user, password);
-
-        String[] roles = parts[3].toLowerCase().split(" *, *");
-        for (String role : roles) {
-            if (!"".equals(role)) {
-                user.addRole(role);
-            }
-        }
-        if (!"unlocked".equalsIgnoreCase(parts[4])) {
-            user.lock();
-        }
-        if ("enabled".equalsIgnoreCase(parts[5])) {
-            user.enable();
-        } else {
-            user.disable();
-        }
-
-        // generate a new csrf token
-        user.resetCSRFToken();
-
-        setOldPasswordHashes(user, Arrays.asList(parts[6].split(" *, *")));
-        user.setLastHostAddress("null".equals(parts[7]) ? null : parts[7]);
-        user.setLastPasswordChangeTime(new Date(Long.parseLong(parts[8])));
-        user.setLastLoginTime(new Date(Long.parseLong(parts[9])));
-        user.setLastFailedLoginTime(new Date(Long.parseLong(parts[10])));
-        user.setExpirationTime(new Date(Long.parseLong(parts[11])));
-        user.setFailedLoginCount(Integer.parseInt(parts[12]));
-        return user;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public synchronized void removeUser(String accountName) throws AuthenticationException {        
@@ -488,13 +437,22 @@ public class DaoAuthenticator extends AbstractAuthenticator{
         }        
         logger.info(Logger.SECURITY_SUCCESS, "Removing user " + user.getAccountName());
         passwordMap.remove(user);
-        // TODO remove user
+        Connection conn = null;
+        try{
+        	conn = getConn();
+            QueryRunner queryRunner = new QueryRunner();
+            queryRunner.update(conn, "delete from users where accountname = ?", accountName);
+        } catch(Exception e) {
+        	throw new RuntimeException(e);
+        } finally{
+        	DbUtils.closeQuietly(conn);
+        }
     }
 
     /**
      * @throws AuthenticationException if the user file could not be written
      */
-    public synchronized void saveUser(User user) throws AuthenticationException {
+    public synchronized void saveUser(User user, boolean create) throws AuthenticationException {
         
         try {
             
@@ -505,15 +463,35 @@ public class DaoAuthenticator extends AbstractAuthenticator{
                 QueryRunner queryRunner = new QueryRunner();
                 try{
                 	StringBuilder builder = new StringBuilder();
-                	builder.append("insert into users (id,accountname,password,expirationdate,failedlogincount,\n");
-                	builder.append("lasthostaddress,lastfailedlogintime,lastlogintime,lastpasswordchangetime,screenname,enabled,locked,roles,oldpassword)\n");
-                	builder.append("values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                	if(create){
+	                	builder.append("insert into users (id,accountname,password,expirationdate,failedlogincount,\n");
+	                	builder.append("lasthostaddress,lastfailedlogintime,lastlogintime,lastpasswordchangetime,screenname,enabled,locked,roles,oldpassword)\n");
+	                	builder.append("values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                	} else {
+                		builder.append("update users set accountname=?,password=?,expirationdate=?,failedlogincount=?,lasthostaddress=?,lastfailedlogintime=?,\n");
+                		builder.append("lastlogintime=?,lastpasswordchangetime=?,screenname=?,enabled=?,locked=?,roles=?,oldpassword=? where id = ?");
+                	}
                 	String sql = builder.toString();
-                	queryRunner.update(conn, sql, user.getAccountId(), user.getAccountName(), getHashedPassword(user),
-                			user.getExpirationTime().getTime(), user.getFailedLoginCount(), user.getLastHostAddress(), 
-                			new java.sql.Date(user.getLastFailedLoginTime().getTime()), new java.sql.Date(user.getLastLoginTime().getTime())
-                			, new java.sql.Date(user.getLastPasswordChangeTime().getTime()), user.getScreenName(), user.isEnabled() ? "enabled" : "disabled", user.isLocked() ? "locked" : "unlocked"
-                			, dump(user.getRoles()), dump(getOldPasswordHashes(user)));
+					Object[] params = new Object[] {
+							user.getAccountName(),
+							getHashedPassword(user),
+							user.getExpirationTime().getTime(),
+							user.getFailedLoginCount(),
+							user.getLastHostAddress(),
+							new java.sql.Date(user.getLastFailedLoginTime()
+									.getTime()),
+							new java.sql.Date(user.getLastLoginTime().getTime()),
+							new java.sql.Date(user.getLastPasswordChangeTime()
+									.getTime()), user.getScreenName(),
+							user.isEnabled() ? "enabled" : "disabled",
+							user.isLocked() ? "locked" : "unlocked",
+							dump(user.getRoles()),
+							dump(getOldPasswordHashes(user)) };
+                	if(create){
+                		queryRunner.update(conn, sql, user.getAccountId(), params);
+                	} else {
+                		queryRunner.update(conn, sql, params, user.getAccountId());
+                	}                	
                 } finally {
                 	DbUtils.closeQuietly(conn);
                 }
