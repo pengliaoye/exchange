@@ -40,6 +40,7 @@ public class UserBean {
     public void createUser() {
         try {        	
         	password = authenticator.generateStrongPassword();
+                System.out.println(password);
         	authenticator.createUser(username, password, password);
         } catch (AuthenticationException ex) {
             logger.log(Level.SEVERE, ex.getLogMessage(), ex);

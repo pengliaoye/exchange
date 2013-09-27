@@ -473,6 +473,7 @@ public class DaoAuthenticator extends AbstractAuthenticator{
                 	}
                 	String sql = builder.toString();
 					Object[] params = new Object[] {
+                                                        null,
 							user.getAccountName(),
 							getHashedPassword(user),
 							user.getExpirationTime().getTime(),
@@ -486,11 +487,14 @@ public class DaoAuthenticator extends AbstractAuthenticator{
 							user.isEnabled() ? "enabled" : "disabled",
 							user.isLocked() ? "locked" : "unlocked",
 							dump(user.getRoles()),
-							dump(getOldPasswordHashes(user)) };
+							dump(getOldPasswordHashes(user))};
                 	if(create){
-                		queryRunner.update(conn, sql, user.getAccountId(), params);
+                                params[0] = user.getAccountId();
+                		queryRunner.update(conn, sql, params);
                 	} else {
-                		queryRunner.update(conn, sql, params, user.getAccountId());
+                                System.arraycopy(params, 1, params, 0, params.length - 1);
+                                params[params.length - 1] = user.getAccountId();
+                		queryRunner.update(conn, sql, params);
                 	}                	
                 } finally {
                 	DbUtils.closeQuietly(conn);
