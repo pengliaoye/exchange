@@ -67,6 +67,14 @@ public class UserBean {
         }
 
     }
+    
+    public void changePwd(){
+    	// authenticator.getCurrentUser().changePassword(oldPassword, newPassword1, newPassword2)
+    }
+    
+    public void removeUser(){
+    	// authenticator.removeUser(accountName);
+    }
 
     public String getUsername() {
         return username;
