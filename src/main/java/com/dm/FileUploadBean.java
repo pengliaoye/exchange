@@ -12,34 +12,34 @@ import javax.enterprise.inject.Model;
 import javax.servlet.http.Part;
 
 /**
- *
+ * 
  * @author Administrator
  */
 @Model
 public class FileUploadBean {
 
-    private Part uploadedFile;
+	private Part uploadedFile;
 
-    public Part getUploadedFile() {
-        return uploadedFile;
-    }
+	public Part getUploadedFile() {
+		return uploadedFile;
+	}
 
-    public void setUploadedFile(Part uploadedFile) {
-        this.uploadedFile = uploadedFile;
-    }
+	public void setUploadedFile(Part uploadedFile) {
+		this.uploadedFile = uploadedFile;
+	}
 
-    public String getFileText() {
-        String text = "";
-        if (null != uploadedFile) {
-            try {
-                InputStream is = uploadedFile.getInputStream();
-                text = new Scanner(is).useDelimiter("\\A").next();
-            } catch (IOException ex) {
-            }
-        }
-        return text;
-    }
+	public String getFileText() {
+		String text = "";
+		if (null != uploadedFile) {
+			try (InputStream is = uploadedFile.getInputStream();
+					Scanner scanner = new Scanner(is)) {
+				text = scanner.useDelimiter("\\A").next();
+			} catch (IOException ex) {
+			}
+		}
+		return text;
+	}
 
-    public void upload() {
-    }
+	public void upload() {
+	}
 }
