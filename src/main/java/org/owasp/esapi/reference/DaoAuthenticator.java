@@ -1,5 +1,6 @@
 package org.owasp.esapi.reference;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -13,6 +14,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.dbutils.DbUtils;
@@ -29,6 +31,8 @@ import org.owasp.esapi.errors.AuthenticationAccountsException;
 import org.owasp.esapi.errors.AuthenticationCredentialsException;
 import org.owasp.esapi.errors.AuthenticationException;
 import org.owasp.esapi.errors.EncryptionException;
+import org.owasp.esapi.reference.crypto.EncryptedPropertiesUtils;
+import org.springframework.util.ResourceUtils;
 
 public class DaoAuthenticator extends AbstractAuthenticator{
 
@@ -512,8 +516,13 @@ public class DaoAuthenticator extends AbstractAuthenticator{
     }
     
     public Connection getConn() throws Exception{
-    	Class.forName("org.postgresql.Driver");    	
-    	Connection conn = DriverManager.getConnection("jdbc:postgresql://localhost/exchange", "exchange", "Admin123456");
+    	File file = ResourceUtils.getFile("classpath:init.properties");
+    	Properties props = EncryptedPropertiesUtils.loadProperties(file.getPath(), true);
+    	Class.forName(props.getProperty("dataSource.driverClass"));    	
+    	String url = props.getProperty("dataSource.jdbcUrl");
+    	String username = props.getProperty("dataSource.user");
+    	String password = props.getProperty("dataSource.password");
+    	Connection conn = DriverManager.getConnection(url, username, password);
     	return conn;
     }
 
