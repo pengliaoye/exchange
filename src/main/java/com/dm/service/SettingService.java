@@ -4,7 +4,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import com.dm.entity.GeneralProperty;
+import javax.enterprise.context.Dependent;
 
+@Dependent
 public class SettingService extends AbstractService<GeneralProperty> {
 
 	@PersistenceContext
