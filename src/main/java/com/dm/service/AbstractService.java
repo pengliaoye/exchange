@@ -3,6 +3,7 @@ package com.dm.service;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 public abstract class AbstractService<T> {
 	private Class<T> entityClass;
@@ -13,6 +14,7 @@ public abstract class AbstractService<T> {
 
 	protected abstract EntityManager getEntityManager();
 
+        @Transactional
 	public void create(T entity) {
 		getEntityManager().persist(entity);
 	}
