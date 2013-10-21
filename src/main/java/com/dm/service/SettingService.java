@@ -9,16 +9,13 @@ import javax.enterprise.context.Dependent;
 @Dependent
 public class SettingService extends AbstractService<GeneralProperty> {
 
-	@PersistenceContext
-	private EntityManager entityManager;
-
 	public SettingService() {
 		super(GeneralProperty.class);
 	}
 
-	@Override
+	/*@Override
 	protected EntityManager getEntityManager() {
 		return entityManager;
-	}
+	}*/
 
 }
