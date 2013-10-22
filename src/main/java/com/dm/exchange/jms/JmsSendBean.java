@@ -12,7 +12,7 @@ public class JmsSendBean {
 	@Inject
 	JMSContext context; 
 	
-	@Resource(mappedName = "java:global/jms/pointsQueue")
+	@Resource(mappedName = "jms/myQueue")
 	Queue pointsQueue;
 
 	public void sendMessage(){

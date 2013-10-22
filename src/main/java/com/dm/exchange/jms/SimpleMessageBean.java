@@ -5,7 +5,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
-@MessageDriven(mappedName = "java:global/jms/pointsQueue")
+@MessageDriven(mappedName = "jms/myQueue")
 public class SimpleMessageBean implements MessageListener{
 
 	@Override
