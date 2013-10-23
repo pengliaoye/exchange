@@ -36,6 +36,25 @@ create table roles_authorities (
     authority_id varchar(250)
 );
 
+create table tb_setting(
+	id varchar(50),
+	name varchar(255),
+	val varchar(255)
+);
+
+create table tb_dict(
+	id varchar(50),
+	code varchar(255),
+	name varchar(255),
+	type varchar(50),
+	description varchar(255)
+);
+
+create table tb_dict_type(
+	id varchar(50),
+	name varchar(255)
+);
+
 create or replace view userauthorities as 
 select u.username, a.authority
 from users u, users_authorities ua,authorities a
