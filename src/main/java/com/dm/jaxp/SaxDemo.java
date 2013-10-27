@@ -13,6 +13,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class SaxDemo extends DefaultHandler{
 	
 	// http://www.javacodegeeks.com/2013/05/parsing-xml-using-dom-sax-and-stax-parser-in-java.html
+	// http://blog.yamanyar.com/2009/04/differences-between-dom-sax-or-stax.html
 
 	/**
 	 * @param args
