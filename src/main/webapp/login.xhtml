@@ -38,14 +38,11 @@
 					id="remember" name="remember" type="checkbox"/> Remember me
 				</label>
 	
-				<button type="submit" class="pure-button pure-button-primary" jsf:action="#{userBean.login}">Sign
-					in</button>
-                                <button type="submit" class="pure-button pure-button-primary" jsf:action="#{settingBean.saveGeneralProp}">Sign
-					in</button>
-					<button type="submit" class="pure-button pure-button-primary" jsf:action="#{helloClientBean.getHello}">Sign
-					in</button>
-					<button type="submit" class="pure-button pure-button-primary" jsf:action="#{jmsSendBean.sendMessage}">Sign
-					in</button>
+				<button type="submit" class="pure-button pure-button-primary" jsf:action="#{userBean.login}">Sign in</button>
+                <button type="submit" class="pure-button pure-button-primary" jsf:action="#{settingBean.saveGeneralProp}">Framework</button>
+				<button type="submit" class="pure-button pure-button-primary" jsf:action="#{helloClientBean.getHello}">WebService Client</button>
+				<button type="submit" class="pure-button pure-button-primary" jsf:action="#{jmsSendBean.sendMessage}">JMS</button>
+				<button type="submit" class="pure-button pure-button-primary" jsf:action="#{mailBean.sendMail}">Mail</button>
 			</fieldset>
 		</form>
 	</div>
