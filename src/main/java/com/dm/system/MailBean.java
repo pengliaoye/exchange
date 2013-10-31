@@ -1,6 +1,7 @@
 package com.dm.system;
 
 import javax.annotation.Resource;
+import javax.enterprise.inject.Model;
 import javax.mail.MailSessionDefinition;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -11,6 +12,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 @MailSessionDefinition(name = "java:comp/myMailSession", host = "smtp.gmail.com", transportProtocol = "smtps", properties = { "mail.debug=true" })
+@Model
 public class MailBean {
 
 	@Resource(name = "java:comp/myMailSession")
