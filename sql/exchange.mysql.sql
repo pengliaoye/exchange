@@ -52,7 +52,8 @@ create table tb_dict(
 
 create table tb_dict_type(
 	id varchar(50),
-	name varchar(255)
+	name varchar(255),
+	description varchar(255)
 );
 
 create or replace view userauthorities as 

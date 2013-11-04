@@ -8,7 +8,7 @@ import javax.json.JsonReader;
 import javax.json.JsonStructure;
 import javax.json.stream.JsonGenerator;
 
-import com.dm.entity.GeneralProperty;
+import com.dm.entity.Setting;
 
 public class JsonDemo {
 
@@ -20,7 +20,7 @@ public class JsonDemo {
 	}
 	
 	public void objectToJson(){
-		GeneralProperty genaralProp = new GeneralProperty();
+		Setting genaralProp = new Setting();
 		genaralProp.setName("abc");
 		genaralProp.setValue("123");
 		StringWriter writer = new StringWriter();
