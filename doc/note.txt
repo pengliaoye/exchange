@@ -47,7 +47,7 @@ jca
 jaxp
 jaxb
 jmx
-日志统一， 输出英语
+日志统一， 输出英语(jdk logging glassfish好像不支持per app)
 缓存， 缓存手动刷新
 分页
 文件上传，下载
