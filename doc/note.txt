@@ -42,6 +42,8 @@ json
 http://blog.yorkxin.org/posts/2013/09/30/oauth2-1-introduction/
 http://www.oschina.net/translate/15-free-apis-you-didnt-hear-about-but-will-make-use-of
 http://www.cnblogs.com/duanhuajian/archive/2013/06/13/3134122.html
+https://code.google.com/p/my-battery/source/browse/trunk/amazon/src/com/amazonservices/mws/orders/chen/utils/HttpUtils.java?spec=svn169&r=169
+https://github.com/askcici/js-location
 NetBeans E-commerce Tutorial
 appfuse
 OAUTH
