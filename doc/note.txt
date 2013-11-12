@@ -63,7 +63,7 @@ tree
 js国际化
 配置
 数据字典
-git+maven+glassfish+jira+checkstyle+Jenkins
+git+maven+glassfish+jira+checkstyle+Jenkins+Sonar
 
 encrytproperties
   	  
