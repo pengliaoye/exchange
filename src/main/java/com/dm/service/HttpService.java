@@ -1,4 +1,4 @@
-package com.dm.system;
+package com.dm.service;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -10,9 +10,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CommonBean {
+public class HttpService {
 
-	private static final Logger logger = Logger.getLogger(CommonBean.class
+	private static final Logger logger = Logger.getLogger(HttpService.class
 			.getName());
 
 	private static final int HTTP_TIMEOUT = 6000;
