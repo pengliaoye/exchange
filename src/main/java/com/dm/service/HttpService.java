@@ -9,7 +9,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.enterprise.context.Dependent;
 
+@Dependent
 public class HttpService {
 
 	private static final Logger logger = Logger.getLogger(HttpService.class

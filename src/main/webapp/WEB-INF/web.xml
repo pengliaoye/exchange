@@ -37,6 +37,7 @@
     <welcome-file-list>
         <welcome-file>faces/index.xhtml</welcome-file>
     </welcome-file-list>
+    <!--
     <error-page>
         <error-code>500</error-code>
         <location>/error500.jsp</location>
@@ -45,6 +46,7 @@
         <error-code>404</error-code>
         <location>/error500.jsp</location>
     </error-page>
+        -->
     <!--
     <security-constraint>
         <display-name>Constraint1</display-name>

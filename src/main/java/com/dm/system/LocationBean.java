@@ -82,14 +82,14 @@ public class LocationBean {
 	
 	public void handleProvinceChange() {
 		if(province !=null && !province.equals(""))
-			cities = null;
+			cities = locationService.getCityData(province);
 		else
 			cities = new HashMap<String, String>();
 	}
 
 	public void handleCityChange() {
 		if(city !=null && !city.equals(""))
-			countries = null;
+			countries = locationService.getCountryData(city);
 		else
 			countries = new HashMap<String, String>();
 	}

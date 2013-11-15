@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en"
+	xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:jsf="http://xmlns.jcp.org/jsf"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
+<body>
+    <h:form>
+        <h:selectOneMenu id="province" value="locationBean.province">
+            <f:selectItem itemLabel="Select Province" itemValue=""></f:selectItem>
+            <f:selectItems value="#{locationBean.provinces.entrySet()}" var="entry" itemValue="#{entry.key}" itemLabel="#{entry.value}"/>
+            <f:ajax execute="city country" listener="#{locationBean.handleProvinceChange}"/>
+        </h:selectOneMenu>
+
+        <h:selectOneMenu id="city" value="locationBean.city">
+            <f:selectItem itemLabel="Select City" itemValue=""></f:selectItem>
+            <f:selectItems value="#{locationBean.cities}"/>
+            <f:ajax execute="country" listener="#{locationBean.handleCityChange}"/>
+        </h:selectOneMenu>
+
+        <h:selectOneMenu id="country" value="locationBean.country">
+            <f:selectItem itemLabel="Select Country" itemValue=""></f:selectItem>
+            <f:selectItems value="#{locationBean.countries}"/>        
+        </h:selectOneMenu>
+    </h:form>
+</body>
+</html>
+

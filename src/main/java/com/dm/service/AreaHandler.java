@@ -16,7 +16,7 @@ public class AreaHandler extends DefaultHandler {
 	@Override
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
-		if ("area".equals(localName)) {
+		if ("area".equals(qName)) {
 			id = attributes.getValue("id");
 		}
 	}
