@@ -4,15 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.inject.Model;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import com.dm.service.LocationService;
+import java.io.Serializable;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
-@Model
-public class LocationBean {
+@Named
+@ViewScoped
+public class LocationBean implements Serializable{
 
 	private String province;
 	
@@ -20,9 +23,9 @@ public class LocationBean {
 
 	private String country;
 	
-	private Map<String,String> provinces = new HashMap<String, String>();
-	private Map<String,String> cities = new HashMap<String, String>();
-	private Map<String,String> countries = new HashMap<String, String>();
+	private Map<String,String> provinces = new HashMap<>();
+	private Map<String,String> cities = new HashMap<>();
+	private Map<String,String> countries = new HashMap<>();
 	
 	@Inject
 	private LocationService locationService;
@@ -81,17 +84,18 @@ public class LocationBean {
 	}
 	
 	public void handleProvinceChange() {
+                countries = new HashMap<>();
 		if(province !=null && !province.equals(""))
 			cities = locationService.getCityData(province);
 		else
-			cities = new HashMap<String, String>();
+			cities = new HashMap<>();
 	}
 
 	public void handleCityChange() {
 		if(city !=null && !city.equals(""))
 			countries = locationService.getCountryData(city);
 		else
-			countries = new HashMap<String, String>();
+			countries = new HashMap<>();
 	}
 
     public void displayLocation() {
