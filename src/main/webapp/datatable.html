@@ -58,6 +58,15 @@
                     qty: Math.ceil(len * Math.random())
                 });
             }
+            
+            var myDataSource = new Y.DataSource.IO({source:"./myScript.php"});
+            
+            myDataSource.plug(Y.Plugin.DataSourceJSONSchema, {
+                schema: {
+                    resultListLocator: "ResultSet.Result",
+                    resultFields: ["Title"]
+                }
+            });
 
             var table = new Y.DataTable({
                 columns: [
@@ -110,9 +119,22 @@
                 rowsPerPage: 10,
                 paginatorLocation: ['header', 'footer']
             });
+            
+            table.plug(Y.Plugin.DataTableDataSource, {
+                datasource: myDataSource
+            });
 
-            table.render('#dtable');
-        	});
+            table.render('#dtable').showMessage('loadingMessage');
+         	
+            // Load the data into the table
+            table.datasource.load({
+                request: encodeURIComponent(
+                    'select *' +
+                    ' from   local.search' +
+                    ' where  zip="94089"' +
+                    ' and    query="pizza"');
+            });
+        });
         </script>
     </head>
    <body class="yui3-skin-sam">

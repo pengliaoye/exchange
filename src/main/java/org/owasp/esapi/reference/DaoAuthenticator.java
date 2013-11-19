@@ -34,6 +34,8 @@ import org.owasp.esapi.errors.EncryptionException;
 import org.owasp.esapi.reference.crypto.EncryptedPropertiesUtils;
 import org.springframework.util.ResourceUtils;
 
+import com.dm.util.ConnUtil;
+
 public class DaoAuthenticator extends AbstractAuthenticator{
 
     private static volatile Authenticator singletonInstance;
@@ -360,7 +362,7 @@ public class DaoAuthenticator extends AbstractAuthenticator{
         builder.append("screenname, enabled, locked, roles, oldpassword\n"); 
         builder.append("FROM users WHERE "+field+"=?\n"); 
         String sql = builder.toString();
-        Connection conn = getConn();
+        Connection conn = ConnUtil.getConn();
         DefaultUser user = queryRunner.query(conn, sql, new ResultSetHandler<DefaultUser>(){
 			@Override
 			public DefaultUser handle(ResultSet rs) throws SQLException {
@@ -443,7 +445,7 @@ public class DaoAuthenticator extends AbstractAuthenticator{
         passwordMap.remove(user);
         Connection conn = null;
         try{
-        	conn = getConn();
+        	conn = ConnUtil.getConn();
             QueryRunner queryRunner = new QueryRunner();
             queryRunner.update(conn, "delete from users where accountname = ?", accountName);
         } catch(Exception e) {
@@ -463,7 +465,7 @@ public class DaoAuthenticator extends AbstractAuthenticator{
             DefaultUser u = (DefaultUser) user;
             if (u != null && !u.isAnonymous()) {
                 
-                Connection conn = getConn();
+                Connection conn = ConnUtil.getConn();
                 QueryRunner queryRunner = new QueryRunner();
                 try{
                 	StringBuilder builder = new StringBuilder();
@@ -513,17 +515,6 @@ public class DaoAuthenticator extends AbstractAuthenticator{
             logger.fatal(Logger.SECURITY_FAILURE, "Problem saving user to database", e);
             throw new AuthenticationException("Internal Error", "Problem saving user to database", e);
         }
-    }
-    
-    public Connection getConn() throws Exception{
-    	File file = ResourceUtils.getFile("classpath:init.properties");
-    	Properties props = EncryptedPropertiesUtils.loadProperties(file.getPath(), true);
-    	Class.forName(props.getProperty("dataSource.driverClass"));    	
-    	String url = props.getProperty("dataSource.jdbcUrl");
-    	String username = props.getProperty("dataSource.user");
-    	String password = props.getProperty("dataSource.password");
-    	Connection conn = DriverManager.getConnection(url, username, password);
-    	return conn;
     }
 
     /**
