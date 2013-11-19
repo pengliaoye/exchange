@@ -69,4 +69,8 @@ YUI({filter:'raw'}).use("datatable", "datatable-paginator", "datatype-number", "
 
 	// Load the data into the table
 	table.datasource.load();
+        
+        table.after("change", function(e){
+            console.log(e);
+        });
 });
