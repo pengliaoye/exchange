@@ -51,7 +51,8 @@ public class InitDbData {
         int len = foods.length;
         Object[][] params = new Object[len][];
         for (int i = 0; i < len; i++) {
-        	params[i] = new Object[]{                
+        	params[i] = new Object[]{
+        		i + 1,
                 foods[i],
                 Math.round((Math.random()) * 500) / 500.0,
                 Math.ceil(len * Math.random())
@@ -63,7 +64,7 @@ public class InitDbData {
         try{
 	    	conn = ConnUtil.getConn();	    	
 			QueryRunner runner = new QueryRunner();
-			String sql = "insert into foods(name,price,qty) values(?,?,?)";
+			String sql = "insert into foods(id,name,price,qty) values(?,?,?,?)";
 			runner.batch(conn, sql, params);
         } finally {
 			DbUtils.closeQuietly(conn);
