@@ -14,8 +14,7 @@ public class ConnUtil {
     
 	public static Connection getConn() throws IOException, ClassNotFoundException, SQLException{
     	File file = ResourceUtils.getFile("classpath:init.properties");
-    	Properties props = EncryptedPropertiesUtils.loadProperties(file.getPath(), true);
-    	Class.forName(props.getProperty("dataSource.driverClass"));    	
+    	Properties props = EncryptedPropertiesUtils.loadProperties(file.getPath(), true);    	
     	String url = props.getProperty("dataSource.jdbcUrl");
     	String username = props.getProperty("dataSource.user");
     	String password = props.getProperty("dataSource.password");
