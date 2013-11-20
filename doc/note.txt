@@ -46,6 +46,10 @@ https://code.google.com/p/my-battery/source/browse/trunk/amazon/src/com/amazonse
 http://www.hascode.com/2013/05/continuous-deployment-using-glassfish-jenkins-maven-and-git/
 https://github.com/askcici/js-location
 NetBeans E-commerce Tutorial
+http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
+http://ivanych.net/doc/SQL_ForSmarties_TreesAndHierarchies.pdf
+http://explainextended.com/2009/09/24/adjacency-list-vs-nested-sets-postgresql/
+尚学堂王勇_Hibernate_44_树形结构作业详解
 appfuse
 OAUTH
 jca
