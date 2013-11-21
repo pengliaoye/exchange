@@ -155,4 +155,8 @@ public class NodeManager {
 		}
 		return null;
 	}
+        
+        public String parseCheckTree(Node node){
+            return null;
+        }
 }
