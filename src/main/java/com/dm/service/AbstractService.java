@@ -8,7 +8,7 @@ import javax.transaction.Transactional;
 
 public abstract class AbstractService<T> {
 	
-	@PersistenceContext
+	@PersistenceContext(unitName="default")
 	private EntityManager entityManager;
 	
 	private Class<T> entityClass;
