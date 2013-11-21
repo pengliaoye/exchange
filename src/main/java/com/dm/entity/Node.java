@@ -35,15 +35,15 @@ public class Node {
 	private Node parent;
 
 	// вс╫з╣Ц 1 --- *
-	@OneToMany(targetEntity = Node.class)
+	@OneToMany
 	@JoinColumn(name = "pid")
-	private Set children;
+	private Set<Node> children;
 
-	public Set getChildren() {
+	public Set<Node> getChildren() {
 		return children;
 	}
 
-	public void setChildren(Set children) {
+	public void setChildren(Set<Node> children) {
 		this.children = children;
 	}
 

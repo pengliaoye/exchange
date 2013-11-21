@@ -11,6 +11,9 @@
   		<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost/exchange"/>
   		<property name="javax.persistence.jdbc.user" value="exchange"/>
   		<property name="javax.persistence.jdbc.password" value="Admin123456"/>
+  		
+  		<property name="eclipselink.logging.level.sql" value="FINE"/>
+		<property name="eclipselink.logging.parameters" value="true"/>
   	</properties>
   </persistence-unit>
 </persistence>

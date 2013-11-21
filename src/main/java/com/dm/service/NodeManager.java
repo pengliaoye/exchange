@@ -1,7 +1,9 @@
 package com.dm.service;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -85,7 +87,7 @@ public class NodeManager {
 		}
 	}
 
-	private void printNode(Node node) {
+	public void printNode(Node node) {
 
 		if (node == null) {
 			return;
@@ -101,10 +103,56 @@ public class NodeManager {
 		System.out.println(node.getName()
 				+ (node.isLeaf() ? "" : "[" + node.getChildren().size() + "]"));
 
-		Set children = node.getChildren();
-		for (Iterator iter = children.iterator(); iter.hasNext();) {
-			Node child = (Node) iter.next();
+		Set<Node> children = node.getChildren();
+		for (Iterator<Node> iter = children.iterator(); iter.hasNext();) {
+			Node child = iter.next();
 			printNode(child);
 		}
+	}
+	
+	public Node buildTree(List<Node> nodes){
+		Iterator<Node> iterator = nodes.iterator();
+		Node root = null;
+		Node parentNode = null;
+		Node nearParentNode = null;
+		while (iterator.hasNext()) {
+			Node node = iterator.next();
+			
+			// 如果父节点为根节点
+			if (node.getParent() == null) {
+				root = node;
+				parentNode = root;
+				nearParentNode = parentNode;
+			} else if (node.getParent().getId() == nearParentNode.getId()) {// 最近一次循环的父节点
+				parentNode = nearParentNode;
+			} else {
+				parentNode = findParentNode(root, node.getParent().getId());// 查找父节点
+				nearParentNode = parentNode;				
+			}
+			
+			if(parentNode.getChildren() == null){
+				parentNode.setChildren(new HashSet<Node>());
+			} 
+			parentNode.getChildren().add(node);
+		}
+		return root;
+	}
+	
+	private Node findParentNode(Node root, int pid) {
+		
+		if(root.getId() == pid){
+			return root;
+		}
+		
+		Set<Node> children = root.getChildren();
+		if (children != null) {
+			for (Node node : children) {
+				Node childFind = findParentNode(node, pid);
+				if (childFind != null) {
+					return childFind;
+				}
+			}
+		}
+		return null;
 	}
 }
