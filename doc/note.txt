@@ -49,6 +49,7 @@ NetBeans E-commerce Tutorial
 http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
 http://ivanych.net/doc/SQL_ForSmarties_TreesAndHierarchies.pdf
 http://explainextended.com/2009/09/24/adjacency-list-vs-nested-sets-postgresql/
+http://my.oschina.net/u/1264515/blog/177862
 尚学堂王勇_Hibernate_44_树形结构作业详解
 appfuse
 OAUTH
@@ -67,7 +68,7 @@ tree
 js国际化
 配置
 数据字典
-git+maven+glassfish+jira+checkstyle+Jenkins+Sonar
+git+maven+glassfish+jira+checkstyle+Jenkins+Sonar+cargo
 
 encrytproperties
   	  

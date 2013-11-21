@@ -4,4 +4,13 @@
     <jta-data-source>jdbc/exchange</jta-data-source>
 	
   </persistence-unit>
+  <persistence-unit name="test" transaction-type="RESOURCE_LOCAL">
+  	<exclude-unlisted-classes>false</exclude-unlisted-classes> 
+  	<properties>
+  		<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+  		<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost/exchange"/>
+  		<property name="javax.persistence.jdbc.user" value="exchange"/>
+  		<property name="javax.persistence.jdbc.password" value="Admin123456"/>
+  	</properties>
+  </persistence-unit>
 </persistence>

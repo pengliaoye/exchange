@@ -1,10 +1,23 @@
-package com.bjsxt.hibernate;
+package com.dm.entity;
 
 import java.util.Set;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "tree")
 public class Node {
 
 	// 标识符
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	// 节点名称
@@ -17,9 +30,13 @@ public class Node {
 	private boolean leaf;
 
 	// 父节点 * --- 1
+	@ManyToOne
+	@JoinColumn(name = "pid")
 	private Node parent;
 
 	// 子节点 1 --- *
+	@OneToMany(targetEntity = Node.class)
+	@JoinColumn(name = "pid")
 	private Set children;
 
 	public Set getChildren() {
