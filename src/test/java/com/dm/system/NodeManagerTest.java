@@ -13,8 +13,10 @@ import com.dm.util.JpaUtils;
 
 public class NodeManagerTest {
 
+	@Test
 	public void testCreateTree() {
-		NodeManager.getInstance().createTree("C:\\workspace\\");
+		NodeManager.getInstance().createTree(
+				"C:\\Users\\Administrator\\git\\exchange\\src\\main\\java");
 	}
 
 	@Test
@@ -36,6 +38,20 @@ public class NodeManagerTest {
 			NodeManager nodeMg = NodeManager.getInstance();
 			Node root = nodeMg.buildTree(nodes);
 			nodeMg.printNode(root);
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		} finally {
+			JpaUtils.closeEm(em);
+		}
+	}
+
+	@Test
+	public void testParseCheckTree() {
+		EntityManager em = JpaUtils.getEntityManager();
+		try {
+			Node node = em.find(Node.class, 1);
+			String result = NodeManager.getInstance().parseCheckTree(node);
+			System.out.println(result);
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 		} finally {

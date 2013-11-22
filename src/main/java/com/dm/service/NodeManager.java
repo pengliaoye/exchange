@@ -17,7 +17,7 @@ public class NodeManager {
 
 	private NodeManager() {
 	}
- 
+
 	public static synchronized NodeManager getInstance() {
 		if (nodeManager == null) {
 			nodeManager = new NodeManager();
@@ -109,15 +109,15 @@ public class NodeManager {
 			printNode(child);
 		}
 	}
-	
-	public Node buildTree(List<Node> nodes){
+
+	public Node buildTree(List<Node> nodes) {
 		Iterator<Node> iterator = nodes.iterator();
 		Node root = null;
 		Node parentNode = null;
 		Node nearParentNode = null;
 		while (iterator.hasNext()) {
 			Node node = iterator.next();
-			
+
 			// 如果父节点为根节点
 			if (node.getParent() == null) {
 				root = node;
@@ -127,23 +127,23 @@ public class NodeManager {
 				parentNode = nearParentNode;
 			} else {
 				parentNode = findParentNode(root, node.getParent().getId());// 查找父节点
-				nearParentNode = parentNode;				
+				nearParentNode = parentNode;
 			}
-			
-			if(parentNode.getChildren() == null){
+
+			if (parentNode.getChildren() == null) {
 				parentNode.setChildren(new HashSet<Node>());
-			} 
+			}
 			parentNode.getChildren().add(node);
 		}
 		return root;
 	}
-	
+
 	private Node findParentNode(Node root, int pid) {
-		
-		if(root.getId() == pid){
+
+		if (root.getId() == pid) {
 			return root;
 		}
-		
+
 		Set<Node> children = root.getChildren();
 		if (children != null) {
 			for (Node node : children) {
@@ -155,8 +155,46 @@ public class NodeManager {
 		}
 		return null;
 	}
-        
-        public String parseCheckTree(Node node){
-            return null;
-        }
+
+	public String parseCheckTree(Node node) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("<ul id=\"tree-checkmenu\" class=\"checktree\">");
+		Node root = new Node();
+		Set<Node> children = new HashSet<>();
+		children.add(node);
+		root.setChildren(children);
+		iterateNode(builder, root);
+		builder.append("</ul>");
+		String html = builder.toString();
+		return html;
+	}
+
+	private void iterateNode(StringBuilder builder, Node node) {
+		Set<Node> children = node.getChildren();
+		if (children != null) {
+			Iterator<Node> iterator = children.iterator();
+			while (iterator.hasNext()) {
+				Node child = iterator.next();
+				boolean hasChildren = (child.getChildren() != null && child
+						.getChildren().size() > 0);
+				builder.append("<li");
+				if (hasChildren) {
+					builder.append(" id=\"show-" + child.getId() + "\"");
+				}
+				if (!iterator.hasNext()) {
+					builder.append(" class=\"last\"");
+				}
+				builder.append(">");
+				builder.append("<input id=\"check-" + child.getId()
+						+ "\" type=\"checkbox\" />" + child.getName());
+				if (hasChildren) {
+					builder.append("<ul id=\"tree-" + child.getId() + "\">");
+					iterateNode(builder, child);
+					builder.append("</ul>");
+				}
+				builder.append("</li>");
+			}
+		}
+
+	}
 }

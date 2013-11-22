@@ -6,20 +6,38 @@
 
 package com.dm.system;
 
-import com.dm.service.NodeManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.enterprise.inject.Model;
+import javax.persistence.EntityManager;
+
+import com.dm.entity.Node;
+import com.dm.service.NodeManager;
+import com.dm.util.JpaUtils;
 
 /**
- *
+ * 
  * @author Administrator
  */
 @Model
 public class CheckTreeBean {
-    
-    public String getTreeData(){
-        String result = NodeManager.getInstance().parseCheckTree(null);
-        //return result;
-        return "123123123";
-    }
-    
+
+	private static final Logger logger = Logger.getLogger(CheckTreeBean.class
+			.getName());
+
+	public String getTreeData() {
+		EntityManager em = JpaUtils.getEntityManager();
+		String result = null;
+		try {
+			Node node = em.find(Node.class, 1);
+			result = NodeManager.getInstance().parseCheckTree(node);
+		} catch (RuntimeException e) {
+			logger.log(Level.SEVERE, e.getMessage(), e);
+		} finally {
+			JpaUtils.closeEm(em);
+		}
+		return result;
+	}
+
 }
