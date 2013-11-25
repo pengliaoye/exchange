@@ -8,7 +8,6 @@ import java.sql.SQLException;
 
 import javax.persistence.EntityManager;
 
-import org.apache.commons.dbutils.DbUtils;
 import org.junit.Test;
 
 import com.dm.entity.Node;
@@ -20,8 +19,7 @@ public class NodeManagerTest {
 
 	@Test
 	public void testCreateTree() {
-		NodeManager.getInstance().createTree(
-				"C:\\tmp");
+		NodeManager.getInstance().createTree("C:\\tmp");
 	}
 
 	@Test
@@ -30,32 +28,20 @@ public class NodeManagerTest {
 	}
 
 	@Test
-	public void testBuildTree() {		
+	public void testBuildTree() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("with recursive temp as(select a.* from tree a where pid is null union all\n");
 		builder.append("select t.* from tree t, temp tp where t.pid = tp.id\n");
 		builder.append(") select * from temp");
 		String sqlString = builder.toString();
-		Connection conn = null;
-		PreparedStatement  ps = null;
-		try {
-			conn = ConnUtil.getConn();
-			ps = conn.prepareStatement(sqlString);
+		try (Connection conn = ConnUtil.getConn();
+				PreparedStatement ps = conn.prepareStatement(sqlString)) {
 			ResultSet rs = ps.executeQuery();
 			NodeManager nodeMg = NodeManager.getInstance();
 			Node root = nodeMg.buildTree(rs);
 			nodeMg.printNode(root);
 		} catch (SQLException | ClassNotFoundException | IOException e) {
 			e.printStackTrace();
-		} finally {			
-			try {
-				if(ps != null){
-					ps.close();
-				}
-			} catch (SQLException e) {
-				// ignore
-			}
-			DbUtils.closeQuietly(conn);
 		}
 	}
 

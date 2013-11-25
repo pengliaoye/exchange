@@ -16,8 +16,6 @@ import java.util.logging.Logger;
 
 import javax.enterprise.inject.Model;
 
-import org.apache.commons.dbutils.DbUtils;
-
 import com.dm.entity.Node;
 import com.dm.service.NodeManager;
 import com.dm.util.ConnUtil;
@@ -39,26 +37,14 @@ public class CheckTreeBean {
 		builder.append("select t.* from tree t, temp tp where t.pid = tp.id\n");
 		builder.append(") select * from temp");
 		String sqlString = builder.toString();
-		Connection conn = null;
-		PreparedStatement  ps = null;
-		try {
-			conn = ConnUtil.getConn();
-			ps = conn.prepareStatement(sqlString);
+		try (Connection conn = ConnUtil.getConn();
+				PreparedStatement ps = conn.prepareStatement(sqlString)) {
 			ResultSet rs = ps.executeQuery();
 			NodeManager nodeMg = NodeManager.getInstance();
 			Node root = nodeMg.buildTree(rs);
 			result = nodeMg.parseCheckTree(root);
 		} catch (SQLException | ClassNotFoundException | IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
-		} finally {			
-			try {
-				if(ps != null){
-					ps.close();
-				}
-			} catch (SQLException e) {
-				// ignore
-			}
-			DbUtils.closeQuietly(conn);
 		}
 		return result;
 	}
