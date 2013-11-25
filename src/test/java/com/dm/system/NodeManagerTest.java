@@ -1,14 +1,19 @@
 package com.dm.system;
 
-import java.util.List;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.junit.Test;
 
 import com.dm.entity.Node;
 import com.dm.service.NodeManager;
+import com.dm.util.ConnUtil;
 import com.dm.util.JpaUtils;
 
 public class NodeManagerTest {
@@ -16,7 +21,7 @@ public class NodeManagerTest {
 	@Test
 	public void testCreateTree() {
 		NodeManager.getInstance().createTree(
-				"C:\\Users\\Administrator\\git\\exchange\\src\\main\\java");
+				"C:\\tmp");
 	}
 
 	@Test
@@ -25,23 +30,32 @@ public class NodeManagerTest {
 	}
 
 	@Test
-	public void testBuildTree() {
-		EntityManager em = JpaUtils.getEntityManager();
+	public void testBuildTree() {		
 		StringBuilder builder = new StringBuilder();
-		builder.append("with recursive temp as(select a.* from tree a union all\n");
+		builder.append("with recursive temp as(select a.* from tree a where pid is null union all\n");
 		builder.append("select t.* from tree t, temp tp where t.pid = tp.id\n");
 		builder.append(") select * from temp");
 		String sqlString = builder.toString();
+		Connection conn = null;
+		PreparedStatement  ps = null;
 		try {
-			Query query = em.createNativeQuery(sqlString, Node.class);
-			List nodes = query.getResultList();
+			conn = ConnUtil.getConn();
+			ps = conn.prepareStatement(sqlString);
+			ResultSet rs = ps.executeQuery();
 			NodeManager nodeMg = NodeManager.getInstance();
-			Node root = nodeMg.buildTree(nodes);
+			Node root = nodeMg.buildTree(rs);
 			nodeMg.printNode(root);
-		} catch (RuntimeException e) {
+		} catch (SQLException | ClassNotFoundException | IOException e) {
 			e.printStackTrace();
-		} finally {
-			JpaUtils.closeEm(em);
+		} finally {			
+			try {
+				if(ps != null){
+					ps.close();
+				}
+			} catch (SQLException e) {
+				// ignore
+			}
+			DbUtils.closeQuietly(conn);
 		}
 	}
 

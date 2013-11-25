@@ -1,9 +1,10 @@
 package com.dm.service;
 
 import java.io.File;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -104,36 +105,43 @@ public class NodeManager {
 				+ (node.isLeaf() ? "" : "[" + node.getChildren().size() + "]"));
 
 		Set<Node> children = node.getChildren();
-		for (Iterator<Node> iter = children.iterator(); iter.hasNext();) {
-			Node child = iter.next();
-			printNode(child);
+		if(children != null){
+			for (Iterator<Node> iter = children.iterator(); iter.hasNext();) {
+				Node child = iter.next();
+				printNode(child);
+			}
 		}
 	}
 
-	public Node buildTree(List<Node> nodes) {
-		Iterator<Node> iterator = nodes.iterator();
+	public Node buildTree(ResultSet rs) throws SQLException {		
 		Node root = null;
 		Node parentNode = null;
 		Node nearParentNode = null;
-		while (iterator.hasNext()) {
-			Node node = iterator.next();
+		while (rs.next()) {
+			Node node = new Node();
+			node.setId(rs.getInt("id"));
+			node.setName(rs.getString("name"));
+			node.setLevel(rs.getInt("level"));
+			node.setLeaf(rs.getBoolean("leaf"));
+			int pid = rs.getInt("pid");
 
 			// 如果父节点为根节点
-			if (node.getParent() == null) {
-				root = node;
-				parentNode = root;
-				nearParentNode = parentNode;
-			} else if (node.getParent().getId() == nearParentNode.getId()) {// 最近一次循环的父节点
+			if (pid == 0) {
+				root = node;				
+			} else if (nearParentNode != null && pid == nearParentNode.getId()) {// 最近一次循环的父节点
 				parentNode = nearParentNode;
 			} else {
-				parentNode = findParentNode(root, node.getParent().getId());// 查找父节点
-				nearParentNode = parentNode;
+				parentNode = findParentNode(root, pid);// 查找父节点				
 			}
 
-			if (parentNode.getChildren() == null) {
-				parentNode.setChildren(new HashSet<Node>());
+			if(parentNode != null){
+				if (parentNode.getChildren() == null) {
+					parentNode.setChildren(new HashSet<Node>());
+				}
+				parentNode.getChildren().add(node);
 			}
-			parentNode.getChildren().add(node);
+			node.setParent(parentNode);							
+			nearParentNode = parentNode;
 		}
 		return root;
 	}
