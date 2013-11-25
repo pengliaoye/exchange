@@ -6,15 +6,21 @@
 
 package com.dm.system;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.enterprise.inject.Model;
-import javax.persistence.EntityManager;
+
+import org.apache.commons.dbutils.DbUtils;
 
 import com.dm.entity.Node;
 import com.dm.service.NodeManager;
-import com.dm.util.JpaUtils;
+import com.dm.util.ConnUtil;
 
 /**
  * 
@@ -27,15 +33,32 @@ public class CheckTreeBean {
 			.getName());
 
 	public String getTreeData() {
-		EntityManager em = JpaUtils.getEntityManager();
 		String result = null;
+		StringBuilder builder = new StringBuilder();
+		builder.append("with recursive temp as(select a.* from tree a where pid is null union all\n");
+		builder.append("select t.* from tree t, temp tp where t.pid = tp.id\n");
+		builder.append(") select * from temp");
+		String sqlString = builder.toString();
+		Connection conn = null;
+		PreparedStatement  ps = null;
 		try {
-			Node node = em.find(Node.class, 1);
-			result = NodeManager.getInstance().parseCheckTree(node);
-		} catch (RuntimeException e) {
+			conn = ConnUtil.getConn();
+			ps = conn.prepareStatement(sqlString);
+			ResultSet rs = ps.executeQuery();
+			NodeManager nodeMg = NodeManager.getInstance();
+			Node root = nodeMg.buildTree(rs);
+			result = nodeMg.parseCheckTree(root);
+		} catch (SQLException | ClassNotFoundException | IOException e) {
 			logger.log(Level.SEVERE, e.getMessage(), e);
-		} finally {
-			JpaUtils.closeEm(em);
+		} finally {			
+			try {
+				if(ps != null){
+					ps.close();
+				}
+			} catch (SQLException e) {
+				// ignore
+			}
+			DbUtils.closeQuietly(conn);
 		}
 		return result;
 	}
