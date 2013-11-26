@@ -68,6 +68,8 @@ tree
 js国际化
 配置
 数据字典
+http://blog.sina.com.cn/s/blog_5c5d5cdf0101dxim.html
+http://www.ibm.com/developerworks/cn/java/j-lo-sonar/
 git+maven+glassfish+jira+checkstyle+Jenkins+Sonar+cargo
 
 encrytproperties
