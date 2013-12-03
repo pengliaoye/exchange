@@ -51,7 +51,7 @@ public class OauthServlet extends HttpServlet {
 					.setClientSecret("95b62596e5f9378aa71d97a848da5d19")
 					.setGrantType(GrantType.AUTHORIZATION_CODE)
 					.setRedirectURI("http://localhost:8080")
-					.setCode(responseCode).buildHeaderMessage();
+					.setCode(responseCode).buildQueryMessage();
 
 			OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
 			OAuthJSONAccessTokenResponse response = oAuthClient
