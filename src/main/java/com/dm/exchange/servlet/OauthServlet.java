@@ -97,19 +97,6 @@ public class OauthServlet extends HttpServlet {
 		JsonReader reader = Json.createReader(new StringReader(r));
 		JsonObject jso = reader.readObject();
 		String uid = jso.get("uid").toString();
-
-		OAuthClientRequest request = new OAuthBearerClientRequest(
-				"https://api.weibo.com/2/account/get_uid.json").setAccessToken(
-				accessToken).buildHeaderMessage();
-
-		OAuthClient client = new OAuthClient(new URLConnectionClient());
-		OAuthResourceResponse resourceResponse = client.resource(request, null,
-				OAuthResourceResponse.class);
-
-		if (resourceResponse.getResponseCode() == 200) {
-			String body = resourceResponse.getBody();
-			System.out.println("body===" + body);
-		}
 		return uid;
 	}
 
