@@ -2,11 +2,15 @@ package com.dm.exchange.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.json.stream.JsonParser;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericType;
 
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
@@ -31,82 +34,68 @@ import org.apache.oltu.oauth2.common.message.types.GrantType;
 @WebServlet(urlPatterns = "/oauth/oauth2/redirect")
 public class OauthServlet extends HttpServlet {
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		this.doPost(req, resp);
-	}
+    private static final Logger logger = Logger.getLogger(OauthServlet.class.getName());
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		try {
-			OAuthClientResponse oaresp = OAuthAuthzResponse
-					.oauthCodeAuthzResponse(req);
-			String responseCode = oaresp.getParam("code");
+    private Client client;
 
-			OAuthClientRequest request = OAuthClientRequest
-					.tokenLocation("https://api.weibo.com/oauth2/access_token")
-					.setClientId("237505324")
-					.setClientSecret("95b62596e5f9378aa71d97a848da5d19")
-					.setGrantType(GrantType.AUTHORIZATION_CODE)
-					.setRedirectURI("http://localhost:8080")
-					.setCode(responseCode).buildQueryMessage();
+    @Override
+    public void init() throws ServletException {
+        client = ClientBuilder.newClient();
+    }
 
-			OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
-			OAuthJSONAccessTokenResponse response = oAuthClient
-					.accessToken(request);
-			String accessToken = response.getAccessToken();
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        this.doPost(req, resp);
+    }
 
-			String uid = getUid(accessToken);
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        try {
+            OAuthClientResponse oaresp = OAuthAuthzResponse
+                    .oauthCodeAuthzResponse(req);
+            String responseCode = oaresp.getParam("code");
 
-			Client client = ClientBuilder.newClient();
-			WebTarget target = client
-					.target("https://api.weibo.com/2/users/show.json");
-			Map<String, Object> r = target.queryParam("uid", uid)
-					.queryParam("access_token", accessToken).request()
-					.get(new GenericType<Map<String, Object>>() {
-					});
+            OAuthClientRequest request = OAuthClientRequest
+                    .tokenLocation("https://api.weibo.com/oauth2/access_token")
+                    .setClientId("237505324")
+                    .setClientSecret("95b62596e5f9378aa71d97a848da5d19")
+                    .setGrantType(GrantType.AUTHORIZATION_CODE)
+                    .setRedirectURI("http://122.73.14.11:8080/exchange/oauth/oauth2/redirect")
+                    .setCode(responseCode).buildQueryMessage();
 
-			System.out.println(r.get("screen_name"));
-		} catch (OAuthProblemException | OAuthSystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+            OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
+            OAuthJSONAccessTokenResponse response = oAuthClient
+                    .accessToken(request);
+            String accessToken = response.getAccessToken();
 
-	public String getUid(String accessToken) {
-		String uid = null;
-		try {
-			URL url = new URL("https://api.weibo.com/2/account/get_uid.json");
-			URLConnection c = url.openConnection();
-			c.addRequestProperty("Authorization", "OAuth2 " + accessToken);
-			InputStream inputStream = c.getInputStream();
-			JsonParser parser = Json.createParser(inputStream);
-			while (parser.hasNext()) {
-				switch (parser.next()) {
-				case KEY_NAME:
-					String key = parser.getString();
-					parser.next();
-					switch (key) {
-					case "uid":
-						uid = parser.getString();
-						break;
+            String uid = getUid(accessToken);
 
-					default:
-						break;
-					}
-					break;
+            WebTarget target = client
+                    .target("https://api.weibo.com/2/users/show.json");
+            String r = target.queryParam("uid", uid)
+                    .queryParam("access_token", accessToken).request()
+                    .get(String.class);
+            JsonObject jso;
+            try (JsonReader reader = Json.createReader(new StringReader(r))) {
+                jso = reader.readObject();
+            }
+            System.out.println(jso.get("screen_name"));
+        } catch (OAuthProblemException | OAuthSystemException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
 
-				default:
-					break;
-				}
-			}
-			inputStream.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return uid;
-	}
+    public String getUid(String accessToken) {
+        WebTarget target = client.target("https://api.weibo.com/2/account/get_uid.json");
+        String r = target.request()
+                .header("Authorization", "OAuth2 " + accessToken)
+                .get(String.class);
+        JsonReader reader = Json.createReader(new StringReader(r));
+        JsonObject jso = reader.readObject();
+        String uid = jso.get("uid").toString();
+        return uid;
+    }
 
 }
