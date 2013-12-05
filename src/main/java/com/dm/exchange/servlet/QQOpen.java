@@ -43,6 +43,11 @@ public class QQOpen extends HttpServlet {
         String enparam = URLEncoder.encode(param, "UTF-8");
 
         String str = "GET&" + enuri + enparam;
+        
+        Mac mac = Mac.getInstance("HmacSHA1");
+        mac.init(new SecretKeySpec(key, "HmacSHA1"));
+        byte[] rawHmac = mac.doFinal(original);
+        return new String(Base64Coder.encode(rawHmac));
 
         WebTarget target = client.target("http://119.147.19.43/v3/user/get_info")
                 .queryParam("openid", openid)
