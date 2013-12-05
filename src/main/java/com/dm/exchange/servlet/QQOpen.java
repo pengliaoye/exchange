@@ -35,16 +35,15 @@ public class QQOpen extends HttpServlet {
         String openid = req.getParameter("openid");
         String openkey = req.getParameter("openkey");
         String pf = req.getParameter("pf");
-        
+
         String uri = "/v3/user/get_info";
         String enuri = URLEncoder.encode(uri, "UTF-8");
-        
-        String param = "appid=1101120886&openid="+openid+"&openkey="+openkey+"&pf="+pf;
+
+        String param = "appid=1101120886&openid=" + openid + "&openkey=" + openkey + "&pf=" + pf;
         String enparam = URLEncoder.encode(param, "UTF-8");
-        
-        String str = "GET&"+enuri+enparam;
-        
-        
+
+        String str = "GET&" + enuri + enparam;
+
         WebTarget target = client.target("http://119.147.19.43/v3/user/get_info")
                 .queryParam("openid", openid)
                 .queryParam("openkey", openkey)
