@@ -19,20 +19,18 @@ import javax.ws.rs.client.WebTarget;
 
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
-import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthAuthzResponse;
 import org.apache.oltu.oauth2.client.response.OAuthClientResponse;
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
-import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 
 @WebServlet(urlPatterns = "/oauth/oauth2/redirect")
-public class OauthServlet extends HttpServlet {
+public class WeiboServlet extends HttpServlet {
 
-	private static final Logger logger = Logger.getLogger(OauthServlet.class
+	private static final Logger logger = Logger.getLogger(WeiboServlet.class
 			.getName());
 
 	private Client client;
