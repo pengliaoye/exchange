@@ -12,9 +12,9 @@ public class HelloWsClientBean {
 	@WebServiceRef(wsdlLocation = "http://localhost:8080/exchange/HelloService?WSDL")
 	private HelloService service;
 
-	public String sayHello() {
-		Hello port = service.getHelloPort();
-		return port.sayHello("world");
+	public void sayHello() {
+            Hello port = service.getHelloPort();
+            String str = port.sayHello("world");
+            System.out.println(str);
 	}
-
 }
