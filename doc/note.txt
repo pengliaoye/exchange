@@ -71,6 +71,13 @@ js国际化
 http://blog.sina.com.cn/s/blog_5c5d5cdf0101dxim.html
 http://www.ibm.com/developerworks/cn/java/j-lo-sonar/
 git+maven+glassfish+jira+checkstyle+Jenkins+Sonar+cargo
+Nagios + HAProxy + 分布式缓存(memcached/Redis) + 静态页面缓存(varnish) + nosql(mongodb)
+ + zookeeper
+数据库拆分
+
+垂直拆分：是指按功能模块拆分，比如可以将群组相关表和照片相关表存放在不同的数据库中，这种方式多个数据库之间的表结构不同。
+水平拆分：而水平拆分是将同一个表的数据进行分块保存到不同的数据库中，这些数据库中的表结构完全相同。
+按时间分(月)： bak数据库
 
 encrytproperties
   	  

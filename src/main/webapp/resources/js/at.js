@@ -57,8 +57,8 @@ YUI.add('atwho', function(Y) {
 	    bindUI : function() {	 
 	    	
 	    	var sub = {
-	    		keyup : this._on_keyup,
-	    		keydown : this._on_keydown,
+	    		keyup : this._onKeyup,
+	    		keydown : this._onKeydown,
 	    		scroll : function(e){
 	    			console.log("scroll");
 	    		},
@@ -72,7 +72,7 @@ YUI.add('atwho', function(Y) {
 	
 	    syncUI : function() {},
 	    
-	    _on_keyup : function(e){
+	    _onKeyup : function(e){
 	    	console.log("keyup");
 	        var KEY_CODE = {
 	        	      DOWN: 40,
@@ -90,17 +90,17 @@ YUI.add('atwho', function(Y) {
 	        }
 	    	
 	    },
-	    _on_keydown : function(e){
+	    _onKeydown : function(e){
 	    	console.log("keydown");
 	    },
 	    _dispatch : function(){
-	    	this._look_up();
+	    	this._lookUp();
 	    },
-	    _look_up : function(){
+	    _lookUp : function(){
 	    	var data = this.get("data");
-	    	this._render_view(data);
+	    	this._renderView(data);
 	    },
-	    _render_view : function(data){
+	    _renderView : function(data){
 	    	for(var i = 0; i < data.length; i++){
 	    		var li = Node.create(Y.Lang.sub(AtWho.DEFAULT_TPL, {name: data[i]}));
 	    	}
