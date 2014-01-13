@@ -73,6 +73,7 @@ http://www.ibm.com/developerworks/cn/java/j-lo-sonar/
 git+maven+glassfish+jira+checkstyle+Jenkins+Sonar+cargo
 Nagios + HAProxy + 分布式缓存(memcached/Redis) + 静态页面缓存(varnish) + nosql(mongodb)
  + zookeeper
+mongodb + jpa http://wiki.eclipse.org/EclipseLink/Examples/JPA/NoSQL
 数据库拆分
 
 垂直拆分：是指按功能模块拆分，比如可以将群组相关表和照片相关表存放在不同的数据库中，这种方式多个数据库之间的表结构不同。

@@ -7,13 +7,27 @@
   <persistence-unit name="test" transaction-type="RESOURCE_LOCAL">
   	<exclude-unlisted-classes>false</exclude-unlisted-classes> 
   	<properties>
-  		<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-  		<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/exchange"/>
-  		<property name="javax.persistence.jdbc.user" value="root"/>
+  		<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+  		<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost/exchange"/>
+  		<property name="javax.persistence.jdbc.user" value="exchange"/>
   		<property name="javax.persistence.jdbc.password" value="Admin123456"/>
   		
   		<property name="eclipselink.logging.level.sql" value="FINE"/>
 		<property name="eclipselink.logging.parameters" value="true"/>
   	</properties>
-  </persistence-unit>
+  </persistence-unit>  
+  <persistence-unit name="mongo" transaction-type="RESOURCE_LOCAL">
+        <class>com.dm.model.Order</class>
+        <class>com.dm.model.OrderLine</class>
+        <class>com.dm.model.Address</class>
+        <class>com.dm.model.Customer</class>
+        <properties>
+            <property name="eclipselink.target-database" value="org.eclipse.persistence.nosql.adapters.mongo.MongoPlatform"/>
+            <property name="eclipselink.nosql.connection-spec" value="org.eclipse.persistence.nosql.adapters.mongo.MongoConnectionSpec"/>
+            <!--property name="eclipselink.nosql.property.mongo.port" value="27017"/>
+            <property name="eclipselink.nosql.property.mongo.host" value="localhost"/>
+            <property name="eclipselink.nosql.property.mongo.db" value="mydb"/-->
+            <property name="eclipselink.logging.level" value="FINEST"/>
+        </properties>
+   </persistence-unit>    
 </persistence>

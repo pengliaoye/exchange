@@ -11,7 +11,7 @@ import com.mongodb.MongoClient;
 
 public class MongoDaoTest {
 
-	//@Test
+	@Test
 	public void testDb() {
 		try {
 			MongoClient mongoClient = new MongoClient();
