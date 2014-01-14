@@ -10,7 +10,7 @@
  * Contributors:
  *      Oracle - initial impl
  ******************************************************************************/
-package com.dm.model;
+package com.dm.model.jpamongo;
 
 import java.io.Serializable;
 
