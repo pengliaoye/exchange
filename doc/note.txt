@@ -70,6 +70,8 @@ js国际化
 数据字典
 http://blog.sina.com.cn/s/blog_5c5d5cdf0101dxim.html
 http://www.ibm.com/developerworks/cn/java/j-lo-sonar/
+P6Spy 打印sql语句
+http://mirror.esocc.com/apache/lucene/solr/ref-guide/apache-solr-ref-guide-4.7.pdf
 git+maven+glassfish+jira+checkstyle+Jenkins+Sonar+cargo
 Nagios + HAProxy + 分布式缓存(memcached/Redis) + 静态页面缓存(varnish) + nosql(mongodb)
  + zookeeper
