@@ -74,6 +74,7 @@ P6Spy ¥Ú”°sql”Ôæ‰
 http://mirror.esocc.com/apache/lucene/solr/ref-guide/apache-solr-ref-guide-4.7.pdf
 git+maven+glassfish+jira+checkstyle+Jenkins+Sonar+cargo
 HP Unified Functional Testing
+http://wiki.netbeans.org/FaqSettingGlassFishPassword
 Nagios + HAProxy + ∑÷≤º Ωª∫¥Ê(memcached/Redis) + æ≤Ã¨“≥√Êª∫¥Ê(varnish) + nosql(mongodb)
  + zookeeper
 mongodb + jpa http://wiki.eclipse.org/EclipseLink/Examples/JPA/NoSQL
