@@ -71,7 +71,11 @@ js国际化
 http://blog.sina.com.cn/s/blog_5c5d5cdf0101dxim.html
 http://docs.seleniumhq.org/projects/webdriver/
 http://www.ibm.com/developerworks/cn/java/j-lo-sonar/
+P6Spy 打印sql语句
+http://mirror.esocc.com/apache/lucene/solr/ref-guide/apache-solr-ref-guide-4.7.pdf
 git+maven+glassfish+jira+checkstyle+Jenkins+Sonar+cargo
+HP Unified Functional Testing
+http://wiki.netbeans.org/FaqSettingGlassFishPassword
 Nagios + HAProxy + 分布式缓存(memcached/Redis) + 静态页面缓存(varnish) + nosql(mongodb)
  + zookeeper
 mongodb + jpa http://wiki.eclipse.org/EclipseLink/Examples/JPA/NoSQL
