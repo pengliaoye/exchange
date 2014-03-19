@@ -1,4 +1,4 @@
-package com.dm.system;
+package com.dm.demo;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -8,8 +8,6 @@ import java.sql.SQLException;
 
 import javax.persistence.EntityManager;
 
-import org.junit.Test;
-
 import com.dm.entity.Node;
 import com.dm.service.NodeManager;
 import com.dm.util.ConnUtil;
@@ -17,17 +15,14 @@ import com.dm.util.JpaUtils;
 
 public class NodeManagerTest {
 
-	@Test
 	public void testCreateTree() {
 		NodeManager.getInstance().createTree("C:\\tmp");
 	}
 
-	@Test
 	public void testPrintTree() {
 		NodeManager.getInstance().printTree(3);
 	}
 
-	@Test
 	public void testBuildTree() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("with recursive temp as(select a.* from tree a where pid is null union all\n");
@@ -45,7 +40,6 @@ public class NodeManagerTest {
 		}
 	}
 
-	@Test
 	public void testParseCheckTree() {
 		EntityManager em = JpaUtils.getEntityManager();
 		try {

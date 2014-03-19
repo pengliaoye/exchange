@@ -1,8 +1,6 @@
-package com.dm.exchange.dao;
+package com.dm.demo;
 
 import java.net.UnknownHostException;
-
-import org.junit.Test;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -11,8 +9,7 @@ import com.mongodb.MongoClient;
 
 public class MongoDaoTest {
 
-	@Test
-	public void testDb() {
+	public static void main(String[] args){
 		try {
 			MongoClient mongoClient = new MongoClient();
 			DB db = mongoClient.getDB("test");
