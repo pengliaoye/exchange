@@ -72,6 +72,7 @@ http://blog.sina.com.cn/s/blog_5c5d5cdf0101dxim.html
 http://docs.seleniumhq.org/projects/webdriver/
 http://www.ibm.com/developerworks/cn/java/j-lo-sonar/
 P6Spy ¥Ú”°sql”Ôæ‰
+https://github.com/p6spy/p6spy
 http://mirror.esocc.com/apache/lucene/solr/ref-guide/apache-solr-ref-guide-4.7.pdf
 git+maven+glassfish+jira+checkstyle+Jenkins+Sonar+cargo
 HP Unified Functional Testing
