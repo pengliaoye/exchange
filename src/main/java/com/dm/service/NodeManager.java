@@ -127,7 +127,8 @@ public class NodeManager {
 
 			// 如果父节点为根节点
 			if (pid == 0) {
-				root = node;				
+				root = node;
+				parentNode = null;
 			} else if (nearParentNode != null && pid == nearParentNode.getId()) {// 最近一次循环的父节点
 				parentNode = nearParentNode;
 			} else {
