@@ -13,7 +13,7 @@ import javax.jcr.Workspace;
 @Model
 public class JcrBean {
 	
-	@Resource(name = "jcr/repository")
+	@Resource(name = "jcr/Repository")
 	private Repository repository;
 	
 	public void testJcr(){
