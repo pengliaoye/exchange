@@ -68,6 +68,7 @@ tree
 js国际化
 配置
 数据字典
+http://download.sybase.com/eval/PowerDesigner/PowerDesigner165_Evaluation.exe
 http://blog.sina.com.cn/s/blog_5c5d5cdf0101dxim.html
 http://docs.seleniumhq.org/projects/webdriver/
 http://www.ibm.com/developerworks/cn/java/j-lo-sonar/
