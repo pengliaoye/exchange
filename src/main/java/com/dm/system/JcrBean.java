@@ -24,7 +24,6 @@ import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
-import javax.jcr.Workspace;
 
 import org.jsoup.Connection;
 import org.jsoup.helper.HttpConnection;
@@ -43,10 +42,7 @@ public class JcrBean {
 				"admin".toCharArray());
 		final Session jcrSession;
 		try {
-			jcrSession = repository.login(credentials, null);
-			Workspace ws = jcrSession.getWorkspace();
-			ws.getNamespaceRegistry().registerNamespace("wiki",
-					"http://www.barik.net/wiki/1.0");
+			jcrSession = repository.login(credentials, null);			
 		} catch (RepositoryException e) {
 			e.printStackTrace();
 			return;
