@@ -3,7 +3,6 @@ package com.dm.system;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -26,10 +25,12 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 import javax.jcr.Workspace;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.html.HTML;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
+
+import org.jsoup.Connection;
+import org.jsoup.helper.HttpConnection;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 @Model
 public class JcrBean {
@@ -216,32 +217,18 @@ public class JcrBean {
 			String query = term + " filetype:" + filetype;
 			URL google = new URL("http://www.google.com/search?q="
 					+ URLEncoder.encode(query, "UTF-8") + "&start=" + start);
-			URLConnection con = google.openConnection();
-			con.setRequestProperty("User-Agent", "");
-			InputStream in = con.getInputStream();
-			try {
-				HTMLEditorKit kit = new HTMLEditorKit();
-				HTMLDocument doc = new HTMLDocument();
-				doc.putProperty("IgnoreCharsetDirective", Boolean.TRUE);
-				kit.read(new InputStreamReader(in, "UTF-8"), doc, 0);
-				HTMLDocument.Iterator it = doc.getIterator(HTML.Tag.A);
-				while (it.isValid()) {
-					AttributeSet attr = it.getAttributes();
-					if (attr != null) {
-						String href = (String) attr
-								.getAttribute(HTML.Attribute.HREF);
-						if (href != null && href.endsWith("." + filetype)) {
-							URL url = new URL(new URL("http", "www.google.com",
-									"dummy"), href);
-							if (url.getHost().indexOf("google") == -1) {
-								urls.add(url);
-							}
-						}
-					}
-					it.next();
+			Connection con = HttpConnection.connect(google);
+			con.timeout(60000);
+			con.userAgent("");
+			Document doc = con.get();
+			Elements els = doc.select("cite");
+			for (Element el : els) {
+				String text = el.text();
+				if (!text.startsWith("http")) {
+					text = "http://" + text;
 				}
-			} finally {
-				in.close();
+				URL url = new URL(text);
+				urls.add(url);
 			}
 			return (URL[]) urls.toArray(new URL[urls.size()]);
 		}
