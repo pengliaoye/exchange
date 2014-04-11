@@ -50,12 +50,12 @@ public class JcrBean {
 
 		try {
 			String seedWord = "";
-			int numDocs = 0;
+			int numDocs = 100;
 			List<String> filetypes = Arrays.asList(new String[] { "pdf", "rtf",
 					"doc", "ppt", "xls" });
 
 			Node root = jcrSession.getRootNode();
-			int n = 100;
+			int n = 0;
 			for (int typeIdx = 0; typeIdx < filetypes.size(); typeIdx++) {
 				String type = (String) filetypes.get(typeIdx);
 				int offset = 0;
