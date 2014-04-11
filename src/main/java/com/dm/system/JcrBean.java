@@ -55,7 +55,7 @@ public class JcrBean {
 					"doc", "ppt", "xls" });
 
 			Node root = jcrSession.getRootNode();
-			int n = 0;
+			int n = 100;
 			for (int typeIdx = 0; typeIdx < filetypes.size(); typeIdx++) {
 				String type = (String) filetypes.get(typeIdx);
 				int offset = 0;
