@@ -6,9 +6,11 @@
 
 package com.dm.exchange;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.junit.Test;
 
 /**
  *
@@ -16,9 +18,12 @@ import java.util.List;
  */
 public class OtherTest {
     
+    @Test
     public void test1(){
         List<String> names = new ArrayList<>();
-        Collections.sort(names, (String o1, String o2) -> o2.compareTo(o2));
-    }    
+        Collections.sort(names, (String o1, String o2) -> o2.compareTo(o2));        
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(now);
+    }
     
 }
