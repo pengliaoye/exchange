@@ -16,9 +16,9 @@ public class ObjectStructure {
 	}
 	
 	public void accept(Visitor visitor){
-		for(Visitable visitable : elements){
-			visitable.accept(visitor);
-		}
+            elements.stream().forEach((visitable) -> {
+                visitable.accept(visitor);
+            });
 	}
 	
 }

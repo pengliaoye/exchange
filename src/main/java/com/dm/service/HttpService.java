@@ -31,9 +31,9 @@ public class HttpService {
 			conn.setConnectTimeout(HTTP_TIMEOUT);
 			conn.setReadTimeout(HTTP_READTIMEOUT);
 			Set<Entry<String, String>> set = headers.entrySet();
-			for (Entry<String, String> entry : set) {
-				conn.addRequestProperty(entry.getKey(), entry.getValue());
-			}
+                        set.stream().forEach((entry) -> {
+                        conn.addRequestProperty(entry.getKey(), entry.getValue());
+                    });
 			reader = new BufferedReader(new InputStreamReader(
 					conn.getInputStream(), CHAR_CODE));
 			StringBuilder builder = new StringBuilder();

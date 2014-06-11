@@ -16,10 +16,10 @@ class Tree<T> implements Visitable<T> {
     public void accept(Visitor<T> visitor) {
         visitor.visitData(this, data);
 
-        for (Tree child : children) {
+        children.stream().forEach((child) -> {
             Visitor<T> childVisitor = visitor.visitTree(child);
             child.accept(childVisitor);
-        }
+        });
     }
 
     Tree child(T data) {
