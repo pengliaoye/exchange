@@ -36,13 +36,13 @@ public class PaginationServlet extends HttpServlet{
 		List<Food> foodList = foodService.getAll();
 		JsonGenerator gen = Json.createGenerator(resp.getOutputStream());
 		gen.writeStartArray();
-		for(Food f : foodList){
-    		gen.writeStartObject()
-            .write("name", f.getName())
-            .write("price", f.getPrice())
-            .write("qty", f.getQty())
-            .writeEnd();
-		}
+                foodList.stream().forEach((f) -> {
+                gen.writeStartObject()
+                        .write("name", f.getName())
+                        .write("price", f.getPrice())
+                        .write("qty", f.getQty())
+                        .writeEnd();
+            });
         gen.writeEnd();
         gen.flush();
 	}
