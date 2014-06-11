@@ -99,63 +99,61 @@ public class JcrBean {
 							final Node resource = file.addNode("jcr:content",
 									"nt:resource");
 							final Exception[] ex = new Exception[1];
-							Thread t = new Thread(new Runnable() {
-								public void run() {
-									try {
-										String info = fileName + " (" + host
-												+ ")";
-										URLConnection con = currentURL
-												.openConnection();
-										InputStream in = con.getInputStream();
-										try {
-											synchronized (fOut) {
-												fOut.println("<script>dp.inform(0, '"
-														+ info + "')</script>");
-												fOut.flush();
-											}
-											int length = con.getContentLength();
-											if (length != -1) {
-												in = new ProgressInputStream(
-														in, length, info, "dp",
-														fOut);
-											}
-											Binary binary = jcrSession
-													.getValueFactory()
-													.createBinary(in);
-											resource.setProperty("jcr:data",
-													binary);
-											String mimeType = URLConnection
-													.guessContentTypeFromName(fileName);
-											if (mimeType == null) {
-												if (fileName.endsWith(".doc")) {
-													mimeType = "application/msword";
-												} else if (fileName
-														.endsWith(".xls")) {
-													mimeType = "application/vnd.ms-excel";
-												} else if (fileName
-														.endsWith(".ppt")) {
-													mimeType = "application/mspowerpoint";
-												} else {
-													mimeType = "application/octet-stream";
-												}
-											}
-											resource.setProperty(
-													"jcr:mimeType", mimeType);
-											Calendar lastModified = Calendar
-													.getInstance();
-											lastModified.setTimeInMillis(con
-													.getLastModified());
-											resource.setProperty(
-													"jcr:lastModified",
-													lastModified);
-										} finally {
-											in.close();
-										}
-									} catch (Exception e) {
-										ex[0] = e;
-									}
-								}
-							});
+							Thread t = new Thread(() -> {
+                                                            try {
+                                                                String info = fileName + " (" + host
+                                                                        + ")";
+                                                                URLConnection con = currentURL
+                                                                        .openConnection();
+                                                                InputStream in = con.getInputStream();
+                                                                try {
+                                                                    synchronized (fOut) {
+                                                                        fOut.println("<script>dp.inform(0, '"
+                                                                                + info + "')</script>");
+                                                                        fOut.flush();
+                                                                    }
+                                                                    int length = con.getContentLength();
+                                                                    if (length != -1) {
+                                                                        in = new ProgressInputStream(
+                                                                                in, length, info, "dp",
+                                                                                fOut);
+                                                                    }
+                                                                    Binary binary = jcrSession
+                                                                            .getValueFactory()
+                                                                            .createBinary(in);
+                                                                    resource.setProperty("jcr:data",
+                                                                            binary);
+                                                                    String mimeType = URLConnection
+                                                                            .guessContentTypeFromName(fileName);
+                                                                    if (mimeType == null) {
+                                                                        if (fileName.endsWith(".doc")) {
+                                                                            mimeType = "application/msword";
+                                                                        } else if (fileName
+                                                                                .endsWith(".xls")) {
+                                                                            mimeType = "application/vnd.ms-excel";
+                                                                        } else if (fileName
+                                                                                .endsWith(".ppt")) {
+                                                                            mimeType = "application/mspowerpoint";
+                                                                        } else {
+                                                                            mimeType = "application/octet-stream";
+                                                                        }
+                                                                    }
+                                                                    resource.setProperty(
+                                                                            "jcr:mimeType", mimeType);
+                                                                    Calendar lastModified = Calendar
+                                                                            .getInstance();
+                                                                    lastModified.setTimeInMillis(con
+                                                                            .getLastModified());
+                                                                    resource.setProperty(
+                                                                            "jcr:lastModified",
+                                                                            lastModified);
+                                                                } finally {
+                                                                    in.close();
+                                                                }
+                                                            } catch (Exception e) {
+                                                                ex[0] = e;
+                                                            }
+                                                        });
 							t.start();
 							for (int s = 0; t.isAlive(); s++) {
 								Thread.sleep(100);

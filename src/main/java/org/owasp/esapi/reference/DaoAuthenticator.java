@@ -363,56 +363,47 @@ public class DaoAuthenticator extends AbstractAuthenticator{
         builder.append("FROM users WHERE "+field+"=?\n"); 
         String sql = builder.toString();
         Connection conn = ConnUtil.getConn();
-        DefaultUser user = queryRunner.query(conn, sql, new ResultSetHandler<DefaultUser>(){
-			@Override
-			public DefaultUser handle(ResultSet rs) throws SQLException {
-                                    if(rs.next()){
-                                            try{
-                                            long accountId = rs.getLong("id");
-                                            String accountName = rs.getString("accountname");
-
-                                            verifyAccountNameStrength(accountName);
-                                            DefaultUser user = new DefaultUser(accountName);
-                                            user.setScreenName(rs.getString("screenname"));
-                                            user.accountId = accountId;
-
-                                            String password = rs.getString("password");
-                                            verifyPasswordStrength(null, password, user);
-                                            setHashedPassword(user, password);
-
-                                            String[] roles = rs.getString("roles").toLowerCase().split(" *, *");
-                                            for (String role : roles) {
-                                                if (!"".equals(role)) {
-                                                    user.addRole(role);
-                                                }
-                                            }
-                                            if (!"unlocked".equalsIgnoreCase(rs.getString("locked"))) {
-                                                user.lock();
-                                            }
-                                            if ("enabled".equalsIgnoreCase(rs.getString("enabled"))) {
-                                                user.enable();
-                                            } else {
-                                                user.disable();
-                                            }
-
-                                            // generate a new csrf token
-                                            user.resetCSRFToken();
-
-                                            setOldPasswordHashes(user, Arrays.asList(rs.getString("oldpassword").split(" *, *")));
-                                            user.setLastHostAddress("null".equals(rs.getString("lasthostaddress")) ? null : rs.getString("lasthostaddress"));
-                                            user.setLastPasswordChangeTime(new Date(rs.getDate("lastpasswordchangetime").getTime()));
-                                            user.setLastLoginTime(new Date(rs.getDate("lastlogintime").getTime()));
-                                            user.setLastFailedLoginTime(new Date(rs.getDate("lastfailedlogintime").getTime()));
-                                            user.setExpirationTime(new Date(rs.getLong("expirationdate")));
-                                            user.setFailedLoginCount(rs.getInt("failedlogincount"));
-                                            return user;
-                                        } catch (AuthenticationException e){
-                                            throw new RuntimeException(e);
-                                        }
-                                    } else {
-                                        return null;
-                                    }
-				}
+        DefaultUser user = queryRunner.query(conn, sql, (ResultSet rs) -> {
+            if (rs.next()) {
+                try {
+                    long accountId = rs.getLong("id");
+                    String accountName = rs.getString("accountname");
+                    verifyAccountNameStrength(accountName);
+                    DefaultUser user1 = new DefaultUser(accountName);
+                    user1.setScreenName(rs.getString("screenname"));
+                    user1.accountId = accountId;
+                    String password = rs.getString("password");
+                    verifyPasswordStrength(null, password, user1);
+                    setHashedPassword(user1, password);
+                    String[] roles = rs.getString("roles").toLowerCase().split(" *, *");
+                    for (String role : roles) {
+                        if (!"".equals(role)) {
+                            user1.addRole(role);
+                        }
+                    }
+                    if (!"unlocked".equalsIgnoreCase(rs.getString("locked"))) {
+                        user1.lock();
+                    }
+                    if ("enabled".equalsIgnoreCase(rs.getString("enabled"))) {
+                        user1.enable();
+                    } else {
+                        user1.disable();
+                    }
+                    user1.resetCSRFToken();
+                    setOldPasswordHashes(user1, Arrays.asList(rs.getString("oldpassword").split(" *, *")));
+                    user1.setLastHostAddress("null".equals(rs.getString("lasthostaddress")) ? null : rs.getString("lasthostaddress"));
+                    user1.setLastPasswordChangeTime(new Date(rs.getDate("lastpasswordchangetime").getTime()));
+                    user1.setLastLoginTime(new Date(rs.getDate("lastlogintime").getTime()));
+                    user1.setLastFailedLoginTime(new Date(rs.getDate("lastfailedlogintime").getTime()));
+                    user1.setExpirationTime(new Date(rs.getLong("expirationdate")));
+                    user1.setFailedLoginCount(rs.getInt("failedlogincount"));
+                    return user1;
+                }catch (AuthenticationException e){
+                    throw new RuntimeException(e);
+                }
+            } else {
+                return null;
+            }
         }, value);
         return user;
     }
@@ -525,9 +516,9 @@ public class DaoAuthenticator extends AbstractAuthenticator{
      */
     private String dump(Collection<String> c) {
         StringBuilder sb = new StringBuilder();
-        for (String s : c) {
+        c.stream().forEach((s) -> {
             sb.append(s).append(",");
-        }
+        });
         if ( c.size() > 0) {
         	return sb.toString().substring(0, sb.length() - 1);
         }

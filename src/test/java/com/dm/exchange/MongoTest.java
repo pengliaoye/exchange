@@ -11,7 +11,7 @@ public class MongoTest extends AbstractIntegrationTest{
 	@Autowired
 	private CustomerRepository repository;
 	
-	@Test
+	//@Test
 	public void testRepository() throws Exception {
 
 		repository.deleteAll();
@@ -23,9 +23,9 @@ public class MongoTest extends AbstractIntegrationTest{
 		// fetch all customers
 		System.out.println("Customers found with findAll():");
 		System.out.println("-------------------------------");
-		for (Customer customer : repository.findAll()) {
-			System.out.println(customer);
-		}
+                repository.findAll().stream().forEach((customer) -> {
+                System.out.println(customer);
+            });
 		System.out.println();
 
 		// fetch an individual customer
@@ -35,9 +35,9 @@ public class MongoTest extends AbstractIntegrationTest{
 
 		System.out.println("Customers found with findByLastName('Smith'):");
 		System.out.println("--------------------------------");
-		for (Customer customer : repository.findByLastName("Smith")) {
-			System.out.println(customer);
-		}
+                repository.findByLastName("Smith").stream().forEach((customer) -> {
+                System.out.println(customer);
+            });
 
 	}
 

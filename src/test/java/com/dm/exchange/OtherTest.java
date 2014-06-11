@@ -6,6 +6,7 @@
 
 package com.dm.exchange;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +23,8 @@ public class OtherTest {
     public void test1(){
         List<String> names = new ArrayList<>();
         Collections.sort(names, (String o1, String o2) -> o2.compareTo(o2));        
-        LocalDateTime now = LocalDateTime.now();
+        Instant now;
+        now = Instant.now();
         System.out.println(now);
     }
     

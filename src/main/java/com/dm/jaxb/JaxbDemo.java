@@ -23,9 +23,9 @@ public class JaxbDemo {
 		GreetingListType greetingListType = demo.unmarshal(
 				GreetingListType.class, is);
 		List<GreetingType> greetingList = greetingListType.getGreeting();
-		for (GreetingType gt : greetingList) {
-			System.out.println(gt.getLanguage() + " " + gt.getText());			
-		}
+                greetingList.stream().forEach((gt) -> {
+                System.out.println(gt.getLanguage() + " " + gt.getText());
+            });
 	}
 
 	public <T> T unmarshal(Class<T> docClass, InputStream inputStream)

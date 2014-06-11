@@ -13,9 +13,9 @@ public class InterpretTest {
 		List<AbstractExpression> list = new ArrayList<AbstractExpression>();
 		list.add(new TerminalExpression());
 		list.add(new NonTerminalExpression());
-		for (AbstractExpression expression : list) {
-			expression.interpret(ctx);
-		}
+                list.stream().forEach((expression) -> {
+                expression.interpret(ctx);
+            });
 	}
 
 }

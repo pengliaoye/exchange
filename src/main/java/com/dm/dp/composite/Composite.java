@@ -27,9 +27,9 @@ public class Composite extends Component {
 			System.out.print("-");
 		}
 		System.out.println(name);
-		for(Component component : children){
-			component.display(depth + 2);
-		}
+                children.stream().forEach((component) -> {
+                component.display(depth + 2);
+            });
 	}
 
 }
