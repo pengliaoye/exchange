@@ -110,9 +110,9 @@
             <version>1.5</version>
         </dependency>
         <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.2-1002.jdbc4</version>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>9.3-1102-jdbc41</version>
         </dependency>
         <dependency>
 			<groupId>mysql</groupId>
