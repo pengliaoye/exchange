@@ -1,14 +1,14 @@
 package com.dm.dp.decorator;
 
-public class ConcreteDecoratorA extends Decorator{
-	
-	private String addedState;
+public class ConcreteDecoratorA extends Decorator {
 
-	@Override
-	public void operation() {
-		super.operation();
-		addedState = "New State";
-		System.out.println("object A operation");
-	}
+  private String addedState;
+
+  @Override
+  public void operation() {
+    super.operation();
+    addedState = "New State";
+    System.out.println("object A operation");
+  }
 
 }

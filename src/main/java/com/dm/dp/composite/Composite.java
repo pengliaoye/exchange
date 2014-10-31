@@ -4,32 +4,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Composite extends Component {
-	
-	private List<Component> children = new ArrayList<Component>();
 
-	public Composite(String name) {
-		super(name);
-	}
+  private List<Component> children = new ArrayList<Component>();
 
-	@Override
-	public void add(Component component) {
-		children.add(component);
-	}
+  public Composite(String name) {
+    super(name);
+  }
 
-	@Override
-	public void remove(Component component) {
-		children.remove(component);
-	}
+  @Override
+  public void add(Component component) {
+    children.add(component);
+  }
 
-	@Override
-	public void display(int depth) {		
-		for(int i = 0; i < depth; i++){
-			System.out.print("-");
-		}
-		System.out.println(name);
-                children.stream().forEach((component) -> {
-                component.display(depth + 2);
-            });
-	}
+  @Override
+  public void remove(Component component) {
+    children.remove(component);
+  }
+
+  @Override
+  public void display(int depth) {
+    for (int i = 0; i < depth; i++) {
+      System.out.print("-");
+    }
+    System.out.println(name);
+    children.stream().forEach((component) -> {
+      component.display(depth + 2);
+    });
+  }
 
 }
