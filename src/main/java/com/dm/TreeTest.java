@@ -4,24 +4,24 @@ import java.util.Arrays;
 
 public class TreeTest {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-	    Tree<String> forest = new Tree<String>("forest");
-	    Tree<String> current = forest;
+  /**
+   * @param args
+   */
+  public static void main(String[] args) {
+    Tree<String> forest = new Tree<String>("forest");
+    Tree<String> current = forest;
 
-	    for (String tree : Arrays.asList("x1/x2/x3", "x1/x2/x4", "x1/x5")) {
-	        Tree<String> root = current;
+    for (String tree : Arrays.asList("x1/x2/x3", "x1/x2/x4", "x1/x5")) {
+      Tree<String> root = current;
 
-	        for (String data : tree.split("/")) {
-	            current = current.child(data);
-	        }
+      for (String data : tree.split("/")) {
+        current = current.child(data);
+      }
 
-	        current = root;
-	    }
+      current = root;
+    }
 
-	    forest.accept(new PrintIndentedVisitor(0));
-	}
+    forest.accept(new PrintIndentedVisitor(0));
+  }
 
 }
