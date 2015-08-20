@@ -17,7 +17,7 @@ import com.dm.entity.Sport;
 @Path("sports")
 public class SportFacadeREST extends AbstractFacade<Sport> {
 
-	@PersistenceContext
+	@PersistenceContext(unitName="default")
 	protected EntityManager em;
 
 	public SportFacadeREST() {
