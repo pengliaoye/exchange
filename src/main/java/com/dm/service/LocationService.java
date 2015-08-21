@@ -1,24 +1,23 @@
 package com.dm.service;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 @Dependent
-public class LocationService {
+public class LocationService implements Serializable{
 
 	private static final Logger logger = Logger.getLogger(LocationService.class
 			.getName());
