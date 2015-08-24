@@ -8,7 +8,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.enterprise.inject.Model;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.owasp.esapi.Authenticator;
@@ -16,6 +18,9 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.User;
 import org.owasp.esapi.errors.AuthenticationException;
 
+import com.dm.exchange.Constants;
+import com.dm.exchange.rest.RestClient;
+import com.dm.exchange.rest.bean.RecaptchaVerifyResp;
 import com.dm.util.JsfUtil;
 
 /**
@@ -26,9 +31,15 @@ import com.dm.util.JsfUtil;
 public class UserBean {
 	
 	private Logger logger = Logger.getLogger(UserBean.class.getName());
+	
+	@Inject
+	private RestClient client;
 
     private String username;
     private String password;
+    
+    @ManagedProperty(value="#{param.g-recaptcha-response}")
+    private String recaptchaResp;
     Authenticator authenticator = ESAPI.authenticator();
 
     /**
@@ -49,6 +60,8 @@ public class UserBean {
     }
 
     public String login() {
+    	
+    	RecaptchaVerifyResp verifyResp = client.recaptchaVerify(Constants.G_RECAPTCHA_SECRET, recaptchaResp);
         
         User user = null;
         try {
