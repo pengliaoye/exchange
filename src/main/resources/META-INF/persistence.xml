@@ -3,6 +3,7 @@
   <persistence-unit name="default" transaction-type="JTA">
     <jta-data-source>jdbc/exchange</jta-data-source>
     <properties>
+    	<property name="javax.persistence.query.timeout" value="3000"/>
 	  	<property name="eclipselink.logging.level.sql" value="FINE"/>
 		<property name="eclipselink.logging.parameters" value="true"/>
   	</properties>
