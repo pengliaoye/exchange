@@ -2,7 +2,8 @@
 <html lang="en"
 	xmlns="http://www.w3.org/1999/xhtml"
         xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:jsf="http://xmlns.jcp.org/jsf">
+        xmlns:jsf="http://xmlns.jcp.org/jsf"
+        xmlns:f="http://xmlns.jcp.org/jsf/core">
 <head>
 <meta charset="UTF-8"/>
 <title>Login Page</title>
@@ -21,6 +22,11 @@
 						placeholder="Username" /> <label for="password">Password</label>
 				<input type="password" name="password" placeholder="Password" />	
 				<div class="g-recaptcha" data-sitekey="6LfB9gMTAAAAAJ-84CYd_KGDuUjO2VdARLsmLcpW"></div>
+                                
+                                <f:metadata>
+                                    <f:viewParam name="g-recaptcha-response" value="#{userBean.recaptchaResp}" />                                    
+                                </f:metadata>
+                                
 				<label for="remember" class="pure-checkbox"> <input
 					id="remember" name="remember" type="checkbox"/> Remember me
 				</label>

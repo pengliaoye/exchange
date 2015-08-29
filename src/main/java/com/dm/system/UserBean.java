@@ -29,17 +29,16 @@ import com.dm.util.JsfUtil;
  */
 @Model
 public class UserBean {
-	
-	private Logger logger = Logger.getLogger(UserBean.class.getName());
-	
-	@Inject
-	private RestClient client;
+
+    private static final Logger logger = Logger.getLogger(UserBean.class.getName());
+
+    @Inject
+    private RestClient client;
 
     private String username;
     private String password;
-    
-    @ManagedProperty(value="#{param.g-recaptcha-response}")
     private String recaptchaResp;
+
     Authenticator authenticator = ESAPI.authenticator();
 
     /**
@@ -49,10 +48,10 @@ public class UserBean {
     }
 
     public void createUser() {
-        try {        	
-        	password = authenticator.generateStrongPassword();
-                System.out.println(password);
-        	authenticator.createUser(username, password, password);
+        try {
+            password = authenticator.generateStrongPassword();
+            System.out.println(password);
+            authenticator.createUser(username, password, password);
         } catch (AuthenticationException ex) {
             logger.log(Level.SEVERE, ex.getLogMessage(), ex);
             JsfUtil.addErrorMessage(ex.getUserMessage());
@@ -60,20 +59,19 @@ public class UserBean {
     }
 
     public String login() {
-    	
+
     	RecaptchaVerifyResp verifyResp = client.recaptchaVerify(Constants.G_RECAPTCHA_SECRET, recaptchaResp);
-        
         User user = null;
         try {
             user = authenticator.login();
-            
+
             if (user != null) {
-                HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+                HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
                 if (request.getParameter("remember") != null) {
                     ESAPI.httpUtilities().setRememberToken(request.getParameter("password"), 8000, "", "");
                 }
             }
-            
+
             return "index";
         } catch (AuthenticationException ex) {
             logger.log(Level.SEVERE, ex.getLogMessage(), ex);
@@ -82,13 +80,13 @@ public class UserBean {
         }
 
     }
-    
-    public void changePwd(){
-    	// authenticator.getCurrentUser().changePassword(oldPassword, newPassword1, newPassword2)
+
+    public void changePwd() {
+        // authenticator.getCurrentUser().changePassword(oldPassword, newPassword1, newPassword2)
     }
-    
-    public void removeUser(){
-    	// authenticator.removeUser(accountName);
+
+    public void removeUser() {
+        // authenticator.removeUser(accountName);
     }
 
     public String getUsername() {
@@ -106,5 +104,13 @@ public class UserBean {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
+    public String getRecaptchaResp() {
+        return recaptchaResp;
+    }
+
+    public void setRecaptchaResp(String recaptchaResp) {
+        this.recaptchaResp = recaptchaResp;
+    }
+
 }
