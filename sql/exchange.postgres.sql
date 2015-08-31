@@ -1,8 +1,8 @@
-create table users(
-    id bigint primary key,
+create table tb_users(
+    id integer primary key,
     accountname varchar(50) not null unique,
     password varchar(255) not null,
-    expirationdate bigint,
+    expirationdate integer,
     failedlogincount integer,
     lasthostaddress varchar(255),
     lastfailedlogintime timestamp,
@@ -15,35 +15,69 @@ create table users(
     oldpassword varchar(500)
 );
 
-create table authorities (
-	id varchar(255) primary key,
+create table tb_authorities (
+	id varchar(32) primary key,
 	authority varchar(255)
 );
 
-create table roles(
-  	id varchar(255) primary key,
- 	role_name varchar(255)
+create table tb_roles(
+  	id varchar(32) primary key,
+ 	name varchar(255)
 );
 
-create table users_authorities(
-    id varchar(255) primary key,
+create table tb_users_authorities(
+    id varchar(32) primary key,
     user_id bigint,
-    authority_id varchar(255)
+    authority_id varchar(32)
 );
 
-create table users_roles(
-    id varchar(255) primary key,
-    user_id bigint,
-    role_id varchar(255)
+create table tb_users_roles(
+    id varchar(32) primary key,
+    user_id integer,
+    role_id varchar(32)
 );
 
-create table roles_authorities (
-    id varchar(255) primary key,
-    roles_id varchar(255),
-    authority_id varchar(255)
+create table tb_roles_authorities (
+    id varchar(32) primary key,
+    roles_id varchar(32),
+    authority_id varchar(32)
 );
 
-create or replace view userauthorities as 
+create table tb_setting(
+	id varchar(32),
+	name varchar(255),
+	val varchar(255)
+);
+
+create table tb_dict(
+	id varchar(32),
+	code varchar(255),
+	name varchar(255),
+	type_id varchar(32),
+	description varchar(255)
+);
+
+create table tb_dict_type(
+	id varchar(32),
+	code varchar(50),
+	name varchar(255),
+	description varchar(255)
+);
+
+create table tb_tree(
+	id varchar(32),
+	pid varchar(32),
+	name varchar(50),
+	level integer,
+	leaf boolean
+);
+
+create table tb_sports(
+	id varchar(32) primary key,
+	name varchar(255)
+);
+
+create or replace view vw_user_authorities as 
 select u.accountname, a.authority
 from users u, users_authorities ua,authorities a
 where u.id = ua.user_id and ua.authority_id = a.id
