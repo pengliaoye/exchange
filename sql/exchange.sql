@@ -1,3 +1,16 @@
+drop table if exists tb_users;
+drop table if exists tb_authorities;
+drop table if exists tb_roles;
+drop table if exists tb_users_authorities;
+drop table if exists tb_users_roles;
+drop table if exists tb_roles_authorities;
+drop table if exists tb_setting;
+drop table if exists tb_dict;
+drop table if exists tb_dict_type;
+drop table if exists tb_tree;
+drop table if exists tb_sports;
+drop view if exists vw_user_authorities;
+
 create table tb_users(
     id integer primary key,
     accountname varchar(50) not null unique,
@@ -79,10 +92,10 @@ create table tb_sports(
 
 create or replace view vw_user_authorities as 
 select u.accountname, a.authority
-from users u, users_authorities ua,authorities a
+from tb_users u, tb_users_authorities ua, tb_authorities a
 where u.id = ua.user_id and ua.authority_id = a.id
 union
 select u.accountname, a.authority
-from users u, users_roles ur, roles_authorities ra, authorities a
+from tb_users u, tb_users_roles ur, tb_roles_authorities ra, tb_authorities a
 where u.id = ur.user_id and ur.id = ra.roles_id and ra.authority_id 
 = a.id;
