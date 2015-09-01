@@ -1,5 +1,5 @@
 create table tb_users(
-    id integer primary key,
+    id bigint primary key,
     account_name varchar(50) not null unique,
     password varchar(255) not null,
     expiration_time timestamp not null,
@@ -12,7 +12,7 @@ create table tb_users(
     enabled varchar(255) not null,
     locked  varchar(255),
     roles varchar(500),
-    oldpassword varchar(500)
+    old_password varchar(500)
 );
 
 create table tb_authorities (
@@ -27,13 +27,13 @@ create table tb_roles(
 
 create table tb_users_authorities(
     id varchar(32) primary key,
-    user_id integer not null,
+    user_id bigint not null,
     authority_id varchar(32) not null
 );
 
 create table tb_users_roles(
     id varchar(32) primary key,
-    user_id integer not null,
+    user_id bigint not null,
     role_id varchar(32) not null
 );
 
