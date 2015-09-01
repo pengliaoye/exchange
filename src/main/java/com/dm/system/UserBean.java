@@ -40,6 +40,7 @@ public class UserBean {
     private String username;
     @NotNull(message="{user.password}")
     private String password;
+    @NotNull(message="{login.recaptcha.response}")
     private String recaptchaResp;
 
     Authenticator authenticator = ESAPI.authenticator();

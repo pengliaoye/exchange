@@ -363,7 +363,7 @@ public class DaoAuthenticator extends AbstractAuthenticator {
     }
 
     try {
-      User user = getUser("accountname", accountName);
+      User user = getUser("account_name", accountName);
       return user;
     } catch (Exception e) {
       logger.fatal(Logger.SECURITY_FAILURE, "Failure loading user " + accountName, e);
@@ -374,11 +374,11 @@ public class DaoAuthenticator extends AbstractAuthenticator {
   public User getUser(String field, Object value) throws Exception {
     QueryRunner queryRunner = new QueryRunner();
     StringBuilder builder = new StringBuilder();
-    builder.append("SELECT id, accountname, password, expirationdate, failedlogincount,\n");
+    builder.append("SELECT id, account_name, password, expiration_time, failed_login_count,\n");
     builder
-        .append("lasthostaddress, lastfailedlogintime, lastlogintime, lastpasswordchangetime, \n");
-    builder.append("screenname, enabled, locked, roles, oldpassword\n");
-    builder.append("FROM users WHERE " + field + "=?\n");
+        .append("last_host_address, last_failed_login_time, last_login_time, last_password_change_time, \n");
+    builder.append("screen_name, enabled, locked, roles, old_password\n");
+    builder.append("FROM tb_users WHERE " + field + "=?\n");
     String sql = builder.toString();
     Connection conn = ConnUtil.getConn();
     DefaultUser user =
@@ -390,10 +390,10 @@ public class DaoAuthenticator extends AbstractAuthenticator {
                   if (rs.next()) {
                     try {
                       long accountId = rs.getLong("id");
-                      String accountName = rs.getString("accountname");
+                      String accountName = rs.getString("account_name");
                       verifyAccountNameStrength(accountName);
                       DefaultUser user1 = new DefaultUser(accountName);
-                      user1.setScreenName(rs.getString("screenname"));
+                      user1.setScreenName(rs.getString("screen_name"));
                       user1.accountId = accountId;
                       String password = rs.getString("password");
                       verifyPasswordStrength(null, password, user1);
@@ -414,16 +414,16 @@ public class DaoAuthenticator extends AbstractAuthenticator {
                       }
                       user1.resetCSRFToken();
                       setOldPasswordHashes(user1,
-                          Arrays.asList(rs.getString("oldpassword").split(" *, *")));
-                      user1.setLastHostAddress("null".equals(rs.getString("lasthostaddress")) ? null
-                          : rs.getString("lasthostaddress"));
-                      user1.setLastPasswordChangeTime(new Date(rs.getDate("lastpasswordchangetime")
+                          Arrays.asList(rs.getString("old_password").split(" *, *")));
+                      user1.setLastHostAddress("null".equals(rs.getString("last_host_address")) ? null
+                          : rs.getString("last_host_address"));
+                      user1.setLastPasswordChangeTime(new Date(rs.getDate("last_password_change_time")
                           .getTime()));
-                      user1.setLastLoginTime(new Date(rs.getDate("lastlogintime").getTime()));
-                      user1.setLastFailedLoginTime(new Date(rs.getDate("lastfailedlogintime")
+                      user1.setLastLoginTime(new Date(rs.getDate("last_login_time").getTime()));
+                      user1.setLastFailedLoginTime(new Date(rs.getDate("last_failed_login_time")
                           .getTime()));
-                      user1.setExpirationTime(new Date(rs.getLong("expirationdate")));
-                      user1.setFailedLoginCount(rs.getInt("failedlogincount"));
+                      user1.setExpirationTime(new Date(rs.getDate("expiration_time").getTime()));
+                      user1.setFailedLoginCount(rs.getInt("failed_login_count"));
                       return user1;
                     } catch (AuthenticationException e) {
                       throw new RuntimeException(e);

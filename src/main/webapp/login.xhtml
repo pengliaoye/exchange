@@ -7,9 +7,7 @@
 <head>
 <meta charset="UTF-8"/>
 <title>Login Page</title>
-<!--
-<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css"/>
--->
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css"/>
 <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
@@ -19,11 +17,13 @@
 			<fieldset>
 				<legend>Login</legend>
 	            <label for="name">Username</label> <input id="name" type="text" name="username"
-						placeholder="Username" /> <label for="password">Password</label>
-				<input type="password" name="password" placeholder="Password" />	
+						placeholder="Username"/> <label for="password">Password</label>
+				<input id="password" type="password" name="password" placeholder="Password" />	
 				<div class="g-recaptcha" data-sitekey="6LfB9gMTAAAAAJ-84CYd_KGDuUjO2VdARLsmLcpW"></div>
                                 
                                 <f:metadata>
+                                    <f:viewParam name="username" value="#{userBean.username}" />
+                                    <f:viewParam name="password" value="#{userBean.password}" />
                                     <f:viewParam name="g-recaptcha-response" value="#{userBean.recaptchaResp}" />                                    
                                 </f:metadata>
                                 
