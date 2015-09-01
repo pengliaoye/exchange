@@ -22,6 +22,7 @@ import com.dm.exchange.Constants;
 import com.dm.exchange.rest.RestClient;
 import com.dm.exchange.rest.bean.RecaptchaVerifyResp;
 import com.dm.util.JsfUtil;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -35,7 +36,9 @@ public class UserBean {
     @Inject
     private RestClient client;
 
+    @NotNull(message="{user.username}")
     private String username;
+    @NotNull(message="{user.password}")
     private String password;
     private String recaptchaResp;
 

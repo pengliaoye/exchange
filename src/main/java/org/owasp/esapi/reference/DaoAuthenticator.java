@@ -35,6 +35,8 @@ import org.owasp.esapi.reference.crypto.EncryptedPropertiesUtils;
 import org.springframework.util.ResourceUtils;
 
 import com.dm.util.ConnUtil;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class DaoAuthenticator extends AbstractAuthenticator {
 
@@ -488,24 +490,24 @@ public class DaoAuthenticator extends AbstractAuthenticator {
           StringBuilder builder = new StringBuilder();
           if (create) {
             builder
-                .append("insert into users (id,accountname,password,expirationdate,failedlogincount,\n");
+                .append("insert into tb_users (id,account_name,password,expiration_time,failed_login_count,\n");
             builder
-                .append("lasthostaddress,lastfailedlogintime,lastlogintime,lastpasswordchangetime,screenname,enabled,locked,roles,oldpassword)\n");
+                .append("last_host_address,last_failed_login_time,last_login_time,last_password_change_time,screen_name,enabled,locked,roles,old_password)\n");
             builder.append("values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
           } else {
             builder
-                .append("update users set accountname=?,password=?,expirationdate=?,failedlogincount=?,lasthostaddress=?,lastfailedlogintime=?,\n");
+                .append("update users set account_name=?,password=?,expiration_time=?,failed_login_count=?,last_host_address=?,last_failed_login_time=?,\n");
             builder
-                .append("lastlogintime=?,lastpasswordchangetime=?,screenname=?,enabled=?,locked=?,roles=?,oldpassword=? where id = ?");
+                .append("last_login_time=?,last_password_change_time=?,screen_name=?,enabled=?,locked=?,roles=?,old_password=? where id = ?");
           }
           String sql = builder.toString();
           Object[] params =
               new Object[] {null, user.getAccountName(), getHashedPassword(user),
-                  user.getExpirationTime().getTime(), user.getFailedLoginCount(),
+                  Timestamp.valueOf(LocalDateTime.now().withYear(9999)), user.getFailedLoginCount(),
                   user.getLastHostAddress(),
-                  new java.sql.Date(user.getLastFailedLoginTime().getTime()),
-                  new java.sql.Date(user.getLastLoginTime().getTime()),
-                  new java.sql.Date(user.getLastPasswordChangeTime().getTime()),
+                  new java.sql.Timestamp(user.getLastFailedLoginTime().getTime()),
+                  new java.sql.Timestamp(user.getLastLoginTime().getTime()),
+                  new java.sql.Timestamp(user.getLastPasswordChangeTime().getTime()),
                   user.getScreenName(), user.isEnabled() ? "enabled" : "disabled",
                   user.isLocked() ? "locked" : "unlocked", dump(user.getRoles()),
                   dump(getOldPasswordHashes(user))};
