@@ -8,7 +8,7 @@ public class DtableOutput {
 	private int draw;
 	private int recordsTotal;
 	private int recordsFiltered;
-	private List<List<Object>> data = new ArrayList<>();
+	private List<Object[]> data = new ArrayList<>();
 
 	public int getDraw() {
 		return draw;
@@ -34,11 +34,11 @@ public class DtableOutput {
 		this.recordsFiltered = recordsFiltered;
 	}
 
-	public List<List<Object>> getData() {
+	public List<Object[]> getData() {
 		return data;
 	}
 
-	public void setData(List<List<Object>> data) {
+	public void setData(List<Object[]> data) {
 		this.data = data;
 	}
 
