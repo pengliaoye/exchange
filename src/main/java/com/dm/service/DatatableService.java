@@ -45,7 +45,7 @@ public class DatatableService {
 		String sql = "select " + StringUtils.join(columnNames, ",") + " from " + tableName;
 		Query query = entityManager.createNativeQuery(sql);
 		List<Object[]> list = query.getResultList();
-		String countSql = "select count(*) from (" + sql + ")";
+		String countSql = "select count(*) from (" + sql + ") as t";
 		Query countQuery = entityManager.createNativeQuery(countSql);
 		Long count = (Long) countQuery.getSingleResult();
 		DtableOutput dtable = new DtableOutput();
