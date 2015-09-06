@@ -1,5 +1,7 @@
 package com.dm.exchange.rest;
 
+import java.util.Map;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,8 +28,9 @@ public class DatatableFacadeREST {
 
 	@GET
 	@Produces("application/json")
-	public DtableOutput getAll(@QueryParam("start") int start, @QueryParam("length") int length) {
-		DtableOutput output = dtableService.table(request, null);
+	public DtableOutput getAll(@QueryParam("start") int start, @QueryParam("length") int length,
+			@QueryParam("order") Map<String, Integer>[] order) {
+		DtableOutput output = dtableService.table(request, null, start, length);
 		return output;
 	}
 
