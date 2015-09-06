@@ -1,5 +1,6 @@
 package com.dm.exchange.rest.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DtableOutput {
@@ -7,7 +8,7 @@ public class DtableOutput {
 	private int draw;
 	private int recordsTotal;
 	private int recordsFiltered;
-	private List<List<Object>> data;
+	private List<List<Object>> data = new ArrayList<>();
 
 	public int getDraw() {
 		return draw;
