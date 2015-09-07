@@ -24,6 +24,7 @@ import com.dm.exchange.rest.AbstractFacade;
 import com.dm.exchange.rest.bean.ColumnOrder;
 import com.dm.exchange.rest.bean.DtableColumn;
 import com.dm.exchange.rest.bean.DtableOutput;
+import org.apache.commons.lang3.StringUtils;
 
 @Dependent
 public class DatatableService extends AbstractFacade<Sport> {
@@ -57,7 +58,7 @@ public class DatatableService extends AbstractFacade<Sport> {
 		CriteriaQuery<Object[]> criteriaQuery = builder.createQuery(Object[].class);
 		Root<Sport> sportRoot = criteriaQuery.from(Sport.class);
 		List<Selection<?>> columnNames = dbColumns.stream().map((dtableColumn) -> {
-			return sportRoot.get(dtableColumn.getColName());
+			return sportRoot.get(dtableColumn.getName());
 		}).collect(Collectors.toList());
 		criteriaQuery.multiselect(columnNames);
 		// criteriaQuery.where(builder.equal(sportRoot.get("name"), "Ram"));
@@ -72,12 +73,13 @@ public class DatatableService extends AbstractFacade<Sport> {
 			}).collect(Collectors.toList());
 			criteriaQuery.orderBy(orders);
 		}
-		Predicate[] globalSearch = null;
-		if (search != null) {
-			globalSearch = columns.keySet().stream().map((columnIdx) -> {
+                Expression<Boolean> restriction = null;
+		if (StringUtils.isNotBlank(search)) {
+			Predicate[] globalSearch = columns.keySet().stream().map((columnIdx) -> {
 				return builder.like(sportRoot.get(columnMap.get(columnIdx)), "%" + search + "%");
 			}).toArray((size -> new Predicate[size]));
-			criteriaQuery.where(globalSearch);
+                        restriction = builder.or(globalSearch);
+			criteriaQuery.where(restriction);
 		}
 		TypedQuery<Object[]> query = entityManager.createQuery(criteriaQuery);
 		query.setFirstResult(start);
@@ -86,8 +88,8 @@ public class DatatableService extends AbstractFacade<Sport> {
 		List<Object[]> dataArray = query.getResultList();
 		long recordsTotal = this.count();
 		long recordsFiltered;
-		if (search != null) {
-			recordsFiltered = this.countWhere(globalSearch);
+		if (StringUtils.isNotBlank(search)) {
+			recordsFiltered = this.countWhere(sportRoot, restriction);
 		} else {
 			recordsFiltered = recordsTotal;
 		}

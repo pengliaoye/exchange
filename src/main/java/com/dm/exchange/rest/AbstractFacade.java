@@ -1,12 +1,15 @@
 package com.dm.exchange.rest;
 
+import com.dm.entity.Sport;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 public abstract class AbstractFacade<T> {
 
@@ -58,12 +61,11 @@ public abstract class AbstractFacade<T> {
 		return q.getSingleResult();
 	}
 
-	public long countWhere(Predicate... restrictions) {
+	public long countWhere(Root<T> rt, Expression<Boolean> restriction) {
 		CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Long> cq = builder.createQuery(Long.class);
-		javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
-		cq.select(builder.count(rt));
-		cq.where(restrictions);
+		//javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
+		cq.select(builder.count(rt)).where(restriction);
 		TypedQuery<Long> q = getEntityManager().createQuery(cq);
 		return q.getSingleResult();
 	}

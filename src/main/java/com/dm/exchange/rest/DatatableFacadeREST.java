@@ -1,6 +1,5 @@
 package com.dm.exchange.rest;
 
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +20,7 @@ import com.dm.exchange.rest.bean.ColumnOrder;
 import com.dm.exchange.rest.bean.DtableColumn;
 import com.dm.exchange.rest.bean.DtableOutput;
 import com.dm.service.DatatableService;
+import java.util.TreeMap;
 
 @Named
 @Stateless
@@ -41,7 +41,7 @@ public class DatatableFacadeREST {
 	@Produces("application/json")
 	public DtableOutput getAll(@QueryParam("draw") int draw, @QueryParam("start") int start,
 			@QueryParam("length") int length, @QueryParam("search[value]") String search) {
-		Map<Integer, ColumnOrder> order = Collections.emptySortedMap();
+		Map<Integer, ColumnOrder> order = new TreeMap<>();
 		Map<Integer, DtableColumn> columns = new HashMap<>();
 		Enumeration<String> enumeration = request.getParameterNames();
 		while (enumeration.hasMoreElements()) {
