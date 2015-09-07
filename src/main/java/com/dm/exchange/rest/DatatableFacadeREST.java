@@ -38,7 +38,7 @@ public class DatatableFacadeREST {
 
 	@GET
 	@Produces("application/json")
-	public DtableOutput getAll(@QueryParam("start") int start, @QueryParam("length") int length) {
+	public DtableOutput getAll(@QueryParam("draw") int draw, @QueryParam("start") int start, @QueryParam("length") int length) {
 		Map<Integer, ColumnOrder> order = new HashMap<>();
 		Map<Integer, DtableColumn> columns = new HashMap<>();
 		Enumeration<String> enumeration = request.getParameterNames();
@@ -88,7 +88,7 @@ public class DatatableFacadeREST {
 				}
 			}
 		}
-		DtableOutput output = dtableService.table(request, null, start, length, order, columns);
+		DtableOutput output = dtableService.table(request, null, draw, start, length, order, columns);
 		return output;
 	}
 
