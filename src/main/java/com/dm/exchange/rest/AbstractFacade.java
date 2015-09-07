@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 
 public abstract class AbstractFacade<T> {
 
@@ -47,11 +49,22 @@ public abstract class AbstractFacade<T> {
 		return q.getResultList();
 	}
 
-	public int count() {
-		CriteriaQuery<Long> cq = getEntityManager().getCriteriaBuilder().createQuery(Long.class);
+	public long count() {
+		CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = builder.createQuery(Long.class);
 		javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
-		cq.select(getEntityManager().getCriteriaBuilder().count(rt));
+		cq.select(builder.count(rt));
 		TypedQuery<Long> q = getEntityManager().createQuery(cq);
-		return q.getSingleResult().intValue();
+		return q.getSingleResult();
+	}
+
+	public long countWhere(Predicate... restrictions) {
+		CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Long> cq = builder.createQuery(Long.class);
+		javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
+		cq.select(builder.count(rt));
+		cq.where(restrictions);
+		TypedQuery<Long> q = getEntityManager().createQuery(cq);
+		return q.getSingleResult();
 	}
 }

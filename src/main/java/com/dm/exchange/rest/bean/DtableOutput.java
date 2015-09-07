@@ -6,8 +6,8 @@ import java.util.List;
 public class DtableOutput {
 
 	private int draw;
-	private int recordsTotal;
-	private int recordsFiltered;
+	private long recordsTotal;
+	private long recordsFiltered;
 	private List<Object[]> data = new ArrayList<>();
 
 	public int getDraw() {
@@ -18,19 +18,19 @@ public class DtableOutput {
 		this.draw = draw;
 	}
 
-	public int getRecordsTotal() {
+	public long getRecordsTotal() {
 		return recordsTotal;
 	}
 
-	public void setRecordsTotal(int recordsTotal) {
+	public void setRecordsTotal(long recordsTotal) {
 		this.recordsTotal = recordsTotal;
 	}
 
-	public int getRecordsFiltered() {
+	public long getRecordsFiltered() {
 		return recordsFiltered;
 	}
 
-	public void setRecordsFiltered(int recordsFiltered) {
+	public void setRecordsFiltered(long recordsFiltered) {
 		this.recordsFiltered = recordsFiltered;
 	}
 

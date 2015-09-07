@@ -1,5 +1,6 @@
 package com.dm.exchange.rest;
 
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,8 +39,9 @@ public class DatatableFacadeREST {
 
 	@GET
 	@Produces("application/json")
-	public DtableOutput getAll(@QueryParam("draw") int draw, @QueryParam("start") int start, @QueryParam("length") int length) {
-		Map<Integer, ColumnOrder> order = new HashMap<>();
+	public DtableOutput getAll(@QueryParam("draw") int draw, @QueryParam("start") int start,
+			@QueryParam("length") int length, @QueryParam("search[value]") String search) {
+		Map<Integer, ColumnOrder> order = Collections.emptySortedMap();
 		Map<Integer, DtableColumn> columns = new HashMap<>();
 		Enumeration<String> enumeration = request.getParameterNames();
 		while (enumeration.hasMoreElements()) {
@@ -88,7 +90,7 @@ public class DatatableFacadeREST {
 				}
 			}
 		}
-		DtableOutput output = dtableService.table(request, null, draw, start, length, order, columns);
+		DtableOutput output = dtableService.table(request, null, draw, start, length, search, order, columns);
 		return output;
 	}
 
