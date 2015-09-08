@@ -33,8 +33,8 @@ public class CheckTreeBean {
 	public String getTreeData() {
 		String result = null;
 		StringBuilder builder = new StringBuilder();
-		builder.append("with recursive temp as(select a.* from tree a where pid is null union all\n");
-		builder.append("select t.* from tree t, temp tp where t.pid = tp.id\n");
+		builder.append("with recursive temp as(select a.* from tb_tree a where pid is null union all\n");
+		builder.append("select t.* from tb_tree t, temp tp where t.pid = tp.id\n");
 		builder.append(") select * from temp");
 		String sqlString = builder.toString();
 		try (Connection conn = ConnUtil.getConn();

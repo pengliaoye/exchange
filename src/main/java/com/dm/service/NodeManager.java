@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
 import com.dm.entity.Node;
 import com.dm.util.JpaUtils;
@@ -31,8 +32,9 @@ public class NodeManager {
 	public void createTree(String dir) {
 		EntityManager em = JpaUtils.getEntityManager();
 
+		EntityTransaction trans = em.getTransaction();
 		try {
-			em.getTransaction().begin();
+			trans.begin();
 
 			File root = new File(dir);
 			saveTree(root, em, null, 0);
@@ -40,7 +42,9 @@ public class NodeManager {
 			em.getTransaction().commit();
 		} catch (RuntimeException e) {
 			e.printStackTrace();
-			em.getTransaction().rollback();
+			if(trans.isActive()){
+				trans.rollback();
+			}
 		} finally {
 			JpaUtils.closeEm(em);
 		}
@@ -70,7 +74,7 @@ public class NodeManager {
 		}
 	}
 
-	public void printTree(int id) {
+	public void printTree(String id) {
 		EntityManager em = JpaUtils.getEntityManager();
 
 		try {
@@ -102,7 +106,7 @@ public class NodeManager {
 		}
 
 		System.out.println(node.getName()
-				+ (node.isLeaf() ? "" : "[" + node.getChildren().size() + "]"));
+				+ (node.isLeaf() ? "" : "[" + (node.getChildren() != null ? node.getChildren().size() : 0) + "]"));
 
 		Set<Node> children = node.getChildren();
 		if(children != null){
@@ -119,17 +123,17 @@ public class NodeManager {
 		Node nearParentNode = null;
 		while (rs.next()) {
 			Node node = new Node();
-			node.setId(rs.getInt("id"));
+			node.setId(rs.getString("id"));
 			node.setName(rs.getString("name"));
 			node.setLevel(rs.getInt("level"));
 			node.setLeaf(rs.getBoolean("leaf"));
-			int pid = rs.getInt("pid");
+			String pid = rs.getString("pid");
 
 			// 如果父节点为根节点
-			if (pid == 0) {
+			if (pid == null) {
 				root = node;
 				parentNode = null;
-			} else if (nearParentNode != null && pid == nearParentNode.getId()) {// 最近一次循环的父节点
+			} else if (nearParentNode != null && pid.equals(nearParentNode.getId())) {// 最近一次循环的父节点
 				parentNode = nearParentNode;
 			} else {
 				parentNode = findParentNode(root, pid);// 查找父节点				
@@ -147,9 +151,9 @@ public class NodeManager {
 		return root;
 	}
 
-	private Node findParentNode(Node root, int pid) {
+	private Node findParentNode(Node root, String pid) {
 
-		if (root.getId() == pid) {
+		if (root.getId().equals(pid)) {
 			return root;
 		}
 

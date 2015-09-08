@@ -19,64 +19,64 @@ create table tb_users(
 );
 
 create table tb_authorities (
-	id varchar(32) primary key,
+	id varchar(36) primary key,
 	name varchar(255) not null
 );
 
 create table tb_roles(
-  	id varchar(32) primary key,
+  	id varchar(36) primary key,
  	name varchar(255) not null
 );
 
 create table tb_users_authorities(
-    id varchar(32) primary key,
+    id varchar(36) primary key,
     user_id bigint not null,
-    authority_id varchar(32) not null
+    authority_id varchar(36) not null
 );
 
 create table tb_users_roles(
-    id varchar(32) primary key,
+    id varchar(36) primary key,
     user_id bigint not null,
-    role_id varchar(32) not null
+    role_id varchar(36) not null
 );
 
 create table tb_roles_authorities (
-    id varchar(32) primary key,
-    roles_id varchar(32) not null,
-    authority_id varchar(32) not null
+    id varchar(36) primary key,
+    roles_id varchar(36) not null,
+    authority_id varchar(36) not null
 );
 
 create table tb_setting(
-	id varchar(32) primary key,
+	id varchar(36) primary key,
 	name varchar(255) not null unique,
 	val varchar(255) not null
 );
 
 create table tb_dict(
-	id varchar(32) primary key,
+	id varchar(36) primary key,
 	code varchar(255) not null,
 	name varchar(255) not null,
-	type_id varchar(32) not null,
+	type_id varchar(36) not null,
 	description varchar(255)
 );
 
 create table tb_dict_type(
-	id varchar(32) primary key,
+	id varchar(36) primary key,
 	code varchar(50) not null unique,
 	name varchar(255) not null,
 	description varchar(255)
 );
 
 create table tb_tree(
-	id varchar(32) primary key,
-	pid varchar(32),
+	id varchar(36) primary key,
+	pid varchar(36),
 	name varchar(50) not null,
 	level integer,
 	leaf boolean
 );
 
 create table tb_sports(
-	id varchar(32) primary key,
+	id varchar(36) primary key,
 	name varchar(255) not null unique
 );
 

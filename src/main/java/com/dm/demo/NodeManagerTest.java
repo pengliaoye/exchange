@@ -14,19 +14,23 @@ import java.sql.SQLException;
 import javax.persistence.EntityManager;
 
 public class NodeManagerTest {
-
-  public void testCreateTree() {
-    NodeManager.getInstance().createTree("C:\\tmp");
+	
+  public static void main(String[] args){
+	  testBuildTree();
   }
 
-  public void testPrintTree() {
-    NodeManager.getInstance().printTree(3);
+  public static void testCreateTree() {
+    NodeManager.getInstance().createTree("C:/dev/my-project");
   }
 
-  public void testBuildTree() {
+  public static void testPrintTree() {
+    NodeManager.getInstance().printTree("7eccf02d-fc55-4968-adcd-450179f76c5a");
+  }
+
+  public static void testBuildTree() {
     StringBuilder builder = new StringBuilder();
-    builder.append("with recursive temp as(select a.* from tree a where pid is null union all\n");
-    builder.append("select t.* from tree t, temp tp where t.pid = tp.id\n");
+    builder.append("with recursive temp as(select a.* from tb_tree a where pid is null union all\n");
+    builder.append("select t.* from tb_tree t, temp tp where t.pid = tp.id\n");
     builder.append(") select * from temp");
     String sqlString = builder.toString();
     try (Connection conn = ConnUtil.getConn();
@@ -40,7 +44,7 @@ public class NodeManagerTest {
     }
   }
 
-  public void testParseCheckTree() {
+  public static void testParseCheckTree() {
     EntityManager em = JpaUtils.getEntityManager();
     try {
       Node node = em.find(Node.class, 1);

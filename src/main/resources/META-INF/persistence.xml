@@ -15,9 +15,11 @@
   		<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost/exchange"/>
   		<property name="javax.persistence.jdbc.user" value="exchange"/>
   		<property name="javax.persistence.jdbc.password" value="Admin123456"/>
-  		
+  		  		
   		<property name="eclipselink.logging.level.sql" value="FINE"/>
 		<property name="eclipselink.logging.parameters" value="true"/>
+		
+		<property name="eclipselink.session.customizer" value="com.dm.util.UUIDGenerator"/>
   	</properties>
   </persistence-unit>  
   <persistence-unit name="mongo" transaction-type="RESOURCE_LOCAL">
