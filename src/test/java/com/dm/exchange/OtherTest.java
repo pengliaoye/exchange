@@ -19,7 +19,7 @@ import org.junit.Test;
  */
 public class OtherTest {
     
-    @Test
+    //@Test
     public void test1(){
         List<String> names = new ArrayList<>();
         Collections.sort(names, (String o1, String o2) -> o2.compareTo(o2));        

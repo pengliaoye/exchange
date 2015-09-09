@@ -9,7 +9,7 @@ import com.dm.service.HttpService;
 
 public class HttpServiceTest {
 	
-	@Test
+	//@Test
 	public void testHttpConn(){
 		String url = "http://www.ems.com.cn/partner/api/public/p/area/cn/province/list";
 		HttpService bean = new HttpService();
