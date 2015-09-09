@@ -1,3 +1,3 @@
-<img title="Build Status Images" src="https://travis-ci.org/pengliaoye/exchange.svg">
+[![Build Status](https://travis-ci.org/pengliaoye/exchange.svg?branch=master)](https://travis-ci.org/pengliaoye/exchange)
 exchange
 ========
