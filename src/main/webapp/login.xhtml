@@ -470,7 +470,7 @@ License: You must have a valid license purchased only from themeforest(the above
 			<i class="m-icon-swapleft"></i> Back </button>
 			<button type="submit" id="register-submit-btn" class="btn blue pull-right" jsf:action="#{userBean.createUser}">
 			Sign Up <i class="m-icon-swapright m-icon-white"></i>
-                        <f:ajax event="click" onerror="on_ajax_error"/>
+                        <f:ajax event="click" onevent="handleAjaxEvent"/>
 			</button>
 		</div>
 	</form>
@@ -506,8 +506,10 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
-function on_ajax_error(data){
-    console.log(data);
+function handleAjaxEvent(data){
+    if(data.status == 'success'){
+        console.log(data);
+    }
 }
 jQuery(document).ready(function() {
   Metronic.init(); // init metronic core components
