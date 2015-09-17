@@ -8,7 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.enterprise.inject.Model;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -18,9 +17,7 @@ import org.owasp.esapi.ESAPI;
 import org.owasp.esapi.User;
 import org.owasp.esapi.errors.AuthenticationException;
 
-import com.dm.exchange.Constants;
 import com.dm.exchange.rest.RestClient;
-import com.dm.exchange.rest.bean.RecaptchaVerifyResp;
 import com.dm.util.JsfUtil;
 import javax.validation.constraints.NotNull;
 
@@ -29,7 +26,7 @@ import javax.validation.constraints.NotNull;
  * @author Administrator
  */
 @Model
-public class UserBean {
+public class UserBean{
 
     private static final Logger logger = Logger.getLogger(UserBean.class.getName());
 
@@ -64,7 +61,7 @@ public class UserBean {
 
     public String login() {
 
-    	RecaptchaVerifyResp verifyResp = client.recaptchaVerify(Constants.G_RECAPTCHA_SECRET, recaptchaResp);
+//    	RecaptchaVerifyResp verifyResp = client.recaptchaVerify(Constants.G_RECAPTCHA_SECRET, recaptchaResp);
         User user = null;
         try {
             user = authenticator.login();
@@ -80,7 +77,7 @@ public class UserBean {
         } catch (AuthenticationException ex) {
             logger.log(Level.SEVERE, ex.getLogMessage(), ex);
             JsfUtil.addErrorMessage(ex.getUserMessage());
-            return null;
+            return "login";
         }
 
     }
