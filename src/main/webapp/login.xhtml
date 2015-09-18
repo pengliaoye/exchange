@@ -15,6 +15,7 @@ License: You must have a valid license purchased only from themeforest(the above
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:h="http://xmlns.jcp.org/jsf/html"
         xmlns:jsf="http://xmlns.jcp.org/jsf"
+        xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
         xmlns:f="http://xmlns.jcp.org/jsf/core">
 <!-- BEGIN HEAD -->
 <head jsf:id="head">
@@ -63,10 +64,6 @@ License: You must have a valid license purchased only from themeforest(the above
 <div class="content">
 	<!-- BEGIN LOGIN FORM -->
 	<form jsf:id="loginForm" jsf:prependId="false" class="login-form">
-                <f:metadata>
-                    <f:viewParam name="username" value="#{userBean.username}" />
-                    <f:viewParam name="password" value="#{userBean.password}" />                                
-                </f:metadata>
 		<h3 class="form-title">Login to your account</h3>
 		<div class="alert alert-danger ${! empty facesContext.maximumSeverity ? '' : 'display-hide'}">
 			<button class="close" data-close="alert"></button>
@@ -79,22 +76,20 @@ License: You must have a valid license purchased only from themeforest(the above
 			<label class="control-label visible-ie8 visible-ie9">Username</label>
 			<div class="input-icon">
 				<i class="fa fa-user"></i>
-				<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username"/>
+				<input jsf:id="username" class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Username"  value="#{userBean.username}"/>                                
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label visible-ie8 visible-ie9">Password</label>
 			<div class="input-icon">
 				<i class="fa fa-lock"></i>
-				<input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password"/>
+				<input jsf:id="password" class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" value="#{userBean.password}"/>
 			</div>
 		</div>
 		<div class="form-actions">
 			<label class="checkbox">
 			<input type="checkbox" name="remember" value="1"/> Remember me </label>
-                    <ui:remove>
 			<button type="submit" class="btn blue pull-right" jsf:action="#{userBean.login}">Login<i class="m-icon-swapright m-icon-white"></i></button>
-                    </ui:remove>
 		</div>
 		<div class="login-options">
 			<h4>Or login with</h4>
@@ -155,7 +150,7 @@ License: You must have a valid license purchased only from themeforest(the above
 	</form>
 	<!-- END FORGOT PASSWORD FORM -->
 	<!-- BEGIN REGISTRATION FORM -->        
-	<form jsf:id="registerForm" class="register-form">
+	<form jsf:id="registerForm"  class="register-form">
 		<h3>Sign Up</h3>
 		<p>
 			 Enter your personal details below:
@@ -191,242 +186,243 @@ License: You must have a valid license purchased only from themeforest(the above
 		</div>
 		<div class="form-group">
 			<label class="control-label visible-ie8 visible-ie9">Country</label>
-			<select name="country" id="select2_sample4" class="select2 form-control">
-				<option value=""></option>
-				<option value="AF">Afghanistan</option>
-				<option value="AL">Albania</option>
-				<option value="DZ">Algeria</option>
-				<option value="AS">American Samoa</option>
-				<option value="AD">Andorra</option>
-				<option value="AO">Angola</option>
-				<option value="AI">Anguilla</option>
-				<option value="AR">Argentina</option>
-				<option value="AM">Armenia</option>
-				<option value="AW">Aruba</option>
-				<option value="AU">Australia</option>
-				<option value="AT">Austria</option>
-				<option value="AZ">Azerbaijan</option>
-				<option value="BS">Bahamas</option>
-				<option value="BH">Bahrain</option>
-				<option value="BD">Bangladesh</option>
-				<option value="BB">Barbados</option>
-				<option value="BY">Belarus</option>
-				<option value="BE">Belgium</option>
-				<option value="BZ">Belize</option>
-				<option value="BJ">Benin</option>
-				<option value="BM">Bermuda</option>
-				<option value="BT">Bhutan</option>
-				<option value="BO">Bolivia</option>
-				<option value="BA">Bosnia and Herzegowina</option>
-				<option value="BW">Botswana</option>
-				<option value="BV">Bouvet Island</option>
-				<option value="BR">Brazil</option>
-				<option value="IO">British Indian Ocean Territory</option>
-				<option value="BN">Brunei Darussalam</option>
-				<option value="BG">Bulgaria</option>
-				<option value="BF">Burkina Faso</option>
-				<option value="BI">Burundi</option>
-				<option value="KH">Cambodia</option>
-				<option value="CM">Cameroon</option>
-				<option value="CA">Canada</option>
-				<option value="CV">Cape Verde</option>
-				<option value="KY">Cayman Islands</option>
-				<option value="CF">Central African Republic</option>
-				<option value="TD">Chad</option>
-				<option value="CL">Chile</option>
-				<option value="CN">China</option>
-				<option value="CX">Christmas Island</option>
-				<option value="CC">Cocos (Keeling) Islands</option>
-				<option value="CO">Colombia</option>
-				<option value="KM">Comoros</option>
-				<option value="CG">Congo</option>
-				<option value="CD">Congo, the Democratic Republic of the</option>
-				<option value="CK">Cook Islands</option>
-				<option value="CR">Costa Rica</option>
-				<option value="CI">Cote d'Ivoire</option>
-				<option value="HR">Croatia (Hrvatska)</option>
-				<option value="CU">Cuba</option>
-				<option value="CY">Cyprus</option>
-				<option value="CZ">Czech Republic</option>
-				<option value="DK">Denmark</option>
-				<option value="DJ">Djibouti</option>
-				<option value="DM">Dominica</option>
-				<option value="DO">Dominican Republic</option>
-				<option value="EC">Ecuador</option>
-				<option value="EG">Egypt</option>
-				<option value="SV">El Salvador</option>
-				<option value="GQ">Equatorial Guinea</option>
-				<option value="ER">Eritrea</option>
-				<option value="EE">Estonia</option>
-				<option value="ET">Ethiopia</option>
-				<option value="FK">Falkland Islands (Malvinas)</option>
-				<option value="FO">Faroe Islands</option>
-				<option value="FJ">Fiji</option>
-				<option value="FI">Finland</option>
-				<option value="FR">France</option>
-				<option value="GF">French Guiana</option>
-				<option value="PF">French Polynesia</option>
-				<option value="TF">French Southern Territories</option>
-				<option value="GA">Gabon</option>
-				<option value="GM">Gambia</option>
-				<option value="GE">Georgia</option>
-				<option value="DE">Germany</option>
-				<option value="GH">Ghana</option>
-				<option value="GI">Gibraltar</option>
-				<option value="GR">Greece</option>
-				<option value="GL">Greenland</option>
-				<option value="GD">Grenada</option>
-				<option value="GP">Guadeloupe</option>
-				<option value="GU">Guam</option>
-				<option value="GT">Guatemala</option>
-				<option value="GN">Guinea</option>
-				<option value="GW">Guinea-Bissau</option>
-				<option value="GY">Guyana</option>
-				<option value="HT">Haiti</option>
-				<option value="HM">Heard and Mc Donald Islands</option>
-				<option value="VA">Holy See (Vatican City State)</option>
-				<option value="HN">Honduras</option>
-				<option value="HK">Hong Kong</option>
-				<option value="HU">Hungary</option>
-				<option value="IS">Iceland</option>
-				<option value="IN">India</option>
-				<option value="ID">Indonesia</option>
-				<option value="IR">Iran (Islamic Republic of)</option>
-				<option value="IQ">Iraq</option>
-				<option value="IE">Ireland</option>
-				<option value="IL">Israel</option>
-				<option value="IT">Italy</option>
-				<option value="JM">Jamaica</option>
-				<option value="JP">Japan</option>
-				<option value="JO">Jordan</option>
-				<option value="KZ">Kazakhstan</option>
-				<option value="KE">Kenya</option>
-				<option value="KI">Kiribati</option>
-				<option value="KP">Korea, Democratic People's Republic of</option>
-				<option value="KR">Korea, Republic of</option>
-				<option value="KW">Kuwait</option>
-				<option value="KG">Kyrgyzstan</option>
-				<option value="LA">Lao People's Democratic Republic</option>
-				<option value="LV">Latvia</option>
-				<option value="LB">Lebanon</option>
-				<option value="LS">Lesotho</option>
-				<option value="LR">Liberia</option>
-				<option value="LY">Libyan Arab Jamahiriya</option>
-				<option value="LI">Liechtenstein</option>
-				<option value="LT">Lithuania</option>
-				<option value="LU">Luxembourg</option>
-				<option value="MO">Macau</option>
-				<option value="MK">Macedonia, The Former Yugoslav Republic of</option>
-				<option value="MG">Madagascar</option>
-				<option value="MW">Malawi</option>
-				<option value="MY">Malaysia</option>
-				<option value="MV">Maldives</option>
-				<option value="ML">Mali</option>
-				<option value="MT">Malta</option>
-				<option value="MH">Marshall Islands</option>
-				<option value="MQ">Martinique</option>
-				<option value="MR">Mauritania</option>
-				<option value="MU">Mauritius</option>
-				<option value="YT">Mayotte</option>
-				<option value="MX">Mexico</option>
-				<option value="FM">Micronesia, Federated States of</option>
-				<option value="MD">Moldova, Republic of</option>
-				<option value="MC">Monaco</option>
-				<option value="MN">Mongolia</option>
-				<option value="MS">Montserrat</option>
-				<option value="MA">Morocco</option>
-				<option value="MZ">Mozambique</option>
-				<option value="MM">Myanmar</option>
-				<option value="NA">Namibia</option>
-				<option value="NR">Nauru</option>
-				<option value="NP">Nepal</option>
-				<option value="NL">Netherlands</option>
-				<option value="AN">Netherlands Antilles</option>
-				<option value="NC">New Caledonia</option>
-				<option value="NZ">New Zealand</option>
-				<option value="NI">Nicaragua</option>
-				<option value="NE">Niger</option>
-				<option value="NG">Nigeria</option>
-				<option value="NU">Niue</option>
-				<option value="NF">Norfolk Island</option>
-				<option value="MP">Northern Mariana Islands</option>
-				<option value="NO">Norway</option>
-				<option value="OM">Oman</option>
-				<option value="PK">Pakistan</option>
-				<option value="PW">Palau</option>
-				<option value="PA">Panama</option>
-				<option value="PG">Papua New Guinea</option>
-				<option value="PY">Paraguay</option>
-				<option value="PE">Peru</option>
-				<option value="PH">Philippines</option>
-				<option value="PN">Pitcairn</option>
-				<option value="PL">Poland</option>
-				<option value="PT">Portugal</option>
-				<option value="PR">Puerto Rico</option>
-				<option value="QA">Qatar</option>
-				<option value="RE">Reunion</option>
-				<option value="RO">Romania</option>
-				<option value="RU">Russian Federation</option>
-				<option value="RW">Rwanda</option>
-				<option value="KN">Saint Kitts and Nevis</option>
-				<option value="LC">Saint LUCIA</option>
-				<option value="VC">Saint Vincent and the Grenadines</option>
-				<option value="WS">Samoa</option>
-				<option value="SM">San Marino</option>
-				<option value="ST">Sao Tome and Principe</option>
-				<option value="SA">Saudi Arabia</option>
-				<option value="SN">Senegal</option>
-				<option value="SC">Seychelles</option>
-				<option value="SL">Sierra Leone</option>
-				<option value="SG">Singapore</option>
-				<option value="SK">Slovakia (Slovak Republic)</option>
-				<option value="SI">Slovenia</option>
-				<option value="SB">Solomon Islands</option>
-				<option value="SO">Somalia</option>
-				<option value="ZA">South Africa</option>
-				<option value="GS">South Georgia and the South Sandwich Islands</option>
-				<option value="ES">Spain</option>
-				<option value="LK">Sri Lanka</option>
-				<option value="SH">St. Helena</option>
-				<option value="PM">St. Pierre and Miquelon</option>
-				<option value="SD">Sudan</option>
-				<option value="SR">Suriname</option>
-				<option value="SJ">Svalbard and Jan Mayen Islands</option>
-				<option value="SZ">Swaziland</option>
-				<option value="SE">Sweden</option>
-				<option value="CH">Switzerland</option>
-				<option value="SY">Syrian Arab Republic</option>
-				<option value="TW">Taiwan, Province of China</option>
-				<option value="TJ">Tajikistan</option>
-				<option value="TZ">Tanzania, United Republic of</option>
-				<option value="TH">Thailand</option>
-				<option value="TG">Togo</option>
-				<option value="TK">Tokelau</option>
-				<option value="TO">Tonga</option>
-				<option value="TT">Trinidad and Tobago</option>
-				<option value="TN">Tunisia</option>
-				<option value="TR">Turkey</option>
-				<option value="TM">Turkmenistan</option>
-				<option value="TC">Turks and Caicos Islands</option>
-				<option value="TV">Tuvalu</option>
-				<option value="UG">Uganda</option>
-				<option value="UA">Ukraine</option>
-				<option value="AE">United Arab Emirates</option>
-				<option value="GB">United Kingdom</option>
-				<option value="US">United States</option>
-				<option value="UM">United States Minor Outlying Islands</option>
-				<option value="UY">Uruguay</option>
-				<option value="UZ">Uzbekistan</option>
-				<option value="VU">Vanuatu</option>
-				<option value="VE">Venezuela</option>
-				<option value="VN">Viet Nam</option>
-				<option value="VG">Virgin Islands (British)</option>
-				<option value="VI">Virgin Islands (U.S.)</option>
-				<option value="WF">Wallis and Futuna Islands</option>
-				<option value="EH">Western Sahara</option>
-				<option value="YE">Yemen</option>
-				<option value="ZM">Zambia</option>
-				<option value="ZW">Zimbabwe</option>
+			<select jsf:id="country" name="country" id="select2_sample4" class="select2 form-control" value="#{userBean.country}">
+				
+				<f:selectItem itemValue="" itemLabel=""/>
+				<f:selectItem itemValue="AF" itemLabel="Afghanistan"/>
+				<f:selectItem itemValue="AL" itemLabel="Albania"/>
+				<f:selectItem itemValue="DZ" itemLabel="Algeria"/>
+				<f:selectItem itemValue="AS" itemLabel="American Samoa"/>
+				<f:selectItem itemValue="AD" itemLabel="Andorra"/>
+				<f:selectItem itemValue="AO" itemLabel="Angola"/>
+				<f:selectItem itemValue="AI" itemLabel="Anguilla"/>
+				<f:selectItem itemValue="AR" itemLabel="Argentina"/>
+				<f:selectItem itemValue="AM" itemLabel="Armenia"/>
+				<f:selectItem itemValue="AW" itemLabel="Aruba"/>
+				<f:selectItem itemValue="AU" itemLabel="Australia"/>
+				<f:selectItem itemValue="AT" itemLabel="Austria"/>
+				<f:selectItem itemValue="AZ" itemLabel="Azerbaijan"/>
+				<f:selectItem itemValue="BS" itemLabel="Bahamas"/>
+				<f:selectItem itemValue="BH" itemLabel="Bahrain"/>
+				<f:selectItem itemValue="BD" itemLabel="Bangladesh"/>
+				<f:selectItem itemValue="BB" itemLabel="Barbados"/>
+				<f:selectItem itemValue="BY" itemLabel="Belarus"/>
+				<f:selectItem itemValue="BE" itemLabel="Belgium"/>
+				<f:selectItem itemValue="BZ" itemLabel="Belize"/>
+				<f:selectItem itemValue="BJ" itemLabel="Benin"/>
+				<f:selectItem itemValue="BM" itemLabel="Bermuda"/>
+				<f:selectItem itemValue="BT" itemLabel="Bhutan"/>
+				<f:selectItem itemValue="BO" itemLabel="Bolivia"/>
+				<f:selectItem itemValue="BA" itemLabel="Bosnia and Herzegowina"/>
+				<f:selectItem itemValue="BW" itemLabel="Botswana"/>
+				<f:selectItem itemValue="BV" itemLabel="Bouvet Island"/>
+				<f:selectItem itemValue="BR" itemLabel="Brazil"/>
+				<f:selectItem itemValue="IO" itemLabel="British Indian Ocean Territory"/>
+				<f:selectItem itemValue="BN" itemLabel="Brunei Darussalam"/>
+				<f:selectItem itemValue="BG" itemLabel="Bulgaria"/>
+				<f:selectItem itemValue="BF" itemLabel="Burkina Faso"/>
+				<f:selectItem itemValue="BI" itemLabel="Burundi"/>
+				<f:selectItem itemValue="KH" itemLabel="Cambodia"/>
+				<f:selectItem itemValue="CM" itemLabel="Cameroon"/>
+				<f:selectItem itemValue="CA" itemLabel="Canada"/>
+				<f:selectItem itemValue="CV" itemLabel="Cape Verde"/>
+				<f:selectItem itemValue="KY" itemLabel="Cayman Islands"/>
+				<f:selectItem itemValue="CF" itemLabel="Central African Republic"/>
+				<f:selectItem itemValue="TD" itemLabel="Chad"/>
+				<f:selectItem itemValue="CL" itemLabel="Chile"/>
+				<f:selectItem itemValue="CN" itemLabel="China"/>
+				<f:selectItem itemValue="CX" itemLabel="Christmas Island"/>
+				<f:selectItem itemValue="CC" itemLabel="Cocos (Keeling) Islands"/>
+				<f:selectItem itemValue="CO" itemLabel="Colombia"/>
+				<f:selectItem itemValue="KM" itemLabel="Comoros"/>
+				<f:selectItem itemValue="CG" itemLabel="Congo"/>
+				<f:selectItem itemValue="CD" itemLabel="Congo, the Democratic Republic of the"/>
+				<f:selectItem itemValue="CK" itemLabel="Cook Islands"/>
+				<f:selectItem itemValue="CR" itemLabel="Costa Rica"/>
+				<f:selectItem itemValue="CI" itemLabel="Cote d'Ivoire"/>
+				<f:selectItem itemValue="HR" itemLabel="Croatia (Hrvatska)"/>
+				<f:selectItem itemValue="CU" itemLabel="Cuba"/>
+				<f:selectItem itemValue="CY" itemLabel="Cyprus"/>
+				<f:selectItem itemValue="CZ" itemLabel="Czech Republic"/>
+				<f:selectItem itemValue="DK" itemLabel="Denmark"/>
+				<f:selectItem itemValue="DJ" itemLabel="Djibouti"/>
+				<f:selectItem itemValue="DM" itemLabel="Dominica"/>
+				<f:selectItem itemValue="DO" itemLabel="Dominican Republic"/>
+				<f:selectItem itemValue="EC" itemLabel="Ecuador"/>
+				<f:selectItem itemValue="EG" itemLabel="Egypt"/>
+				<f:selectItem itemValue="SV" itemLabel="El Salvador"/>
+				<f:selectItem itemValue="GQ" itemLabel="Equatorial Guinea"/>
+				<f:selectItem itemValue="ER" itemLabel="Eritrea"/>
+				<f:selectItem itemValue="EE" itemLabel="Estonia"/>
+				<f:selectItem itemValue="ET" itemLabel="Ethiopia"/>
+				<f:selectItem itemValue="FK" itemLabel="Falkland Islands (Malvinas)"/>
+				<f:selectItem itemValue="FO" itemLabel="Faroe Islands"/>
+				<f:selectItem itemValue="FJ" itemLabel="Fiji"/>
+				<f:selectItem itemValue="FI" itemLabel="Finland"/>
+				<f:selectItem itemValue="FR" itemLabel="France"/>
+				<f:selectItem itemValue="GF" itemLabel="French Guiana"/>
+				<f:selectItem itemValue="PF" itemLabel="French Polynesia"/>
+				<f:selectItem itemValue="TF" itemLabel="French Southern Territories"/>
+				<f:selectItem itemValue="GA" itemLabel="Gabon"/>
+				<f:selectItem itemValue="GM" itemLabel="Gambia"/>
+				<f:selectItem itemValue="GE" itemLabel="Georgia"/>
+				<f:selectItem itemValue="DE" itemLabel="Germany"/>
+				<f:selectItem itemValue="GH" itemLabel="Ghana"/>
+				<f:selectItem itemValue="GI" itemLabel="Gibraltar"/>
+				<f:selectItem itemValue="GR" itemLabel="Greece"/>
+				<f:selectItem itemValue="GL" itemLabel="Greenland"/>
+				<f:selectItem itemValue="GD" itemLabel="Grenada"/>
+				<f:selectItem itemValue="GP" itemLabel="Guadeloupe"/>
+				<f:selectItem itemValue="GU" itemLabel="Guam"/>
+				<f:selectItem itemValue="GT" itemLabel="Guatemala"/>
+				<f:selectItem itemValue="GN" itemLabel="Guinea"/>
+				<f:selectItem itemValue="GW" itemLabel="Guinea-Bissau"/>
+				<f:selectItem itemValue="GY" itemLabel="Guyana"/>
+				<f:selectItem itemValue="HT" itemLabel="Haiti"/>
+				<f:selectItem itemValue="HM" itemLabel="Heard and Mc Donald Islands"/>
+				<f:selectItem itemValue="VA" itemLabel="Holy See (Vatican City State)"/>
+				<f:selectItem itemValue="HN" itemLabel="Honduras"/>
+				<f:selectItem itemValue="HK" itemLabel="Hong Kong"/>
+				<f:selectItem itemValue="HU" itemLabel="Hungary"/>
+				<f:selectItem itemValue="IS" itemLabel="Iceland"/>
+				<f:selectItem itemValue="IN" itemLabel="India"/>
+				<f:selectItem itemValue="ID" itemLabel="Indonesia"/>
+				<f:selectItem itemValue="IR" itemLabel="Iran (Islamic Republic of)"/>
+				<f:selectItem itemValue="IQ" itemLabel="Iraq"/>
+				<f:selectItem itemValue="IE" itemLabel="Ireland"/>
+				<f:selectItem itemValue="IL" itemLabel="Israel"/>
+				<f:selectItem itemValue="IT" itemLabel="Italy"/>
+				<f:selectItem itemValue="JM" itemLabel="Jamaica"/>
+				<f:selectItem itemValue="JP" itemLabel="Japan"/>
+				<f:selectItem itemValue="JO" itemLabel="Jordan"/>
+				<f:selectItem itemValue="KZ" itemLabel="Kazakhstan"/>
+				<f:selectItem itemValue="KE" itemLabel="Kenya"/>
+				<f:selectItem itemValue="KI" itemLabel="Kiribati"/>
+				<f:selectItem itemValue="KP" itemLabel="Korea, Democratic People's Republic of"/>
+				<f:selectItem itemValue="KR" itemLabel="Korea, Republic of"/>
+				<f:selectItem itemValue="KW" itemLabel="Kuwait"/>
+				<f:selectItem itemValue="KG" itemLabel="Kyrgyzstan"/>
+				<f:selectItem itemValue="LA" itemLabel="Lao People's Democratic Republic"/>
+				<f:selectItem itemValue="LV" itemLabel="Latvia"/>
+				<f:selectItem itemValue="LB" itemLabel="Lebanon"/>
+				<f:selectItem itemValue="LS" itemLabel="Lesotho"/>
+				<f:selectItem itemValue="LR" itemLabel="Liberia"/>
+				<f:selectItem itemValue="LY" itemLabel="Libyan Arab Jamahiriya"/>
+				<f:selectItem itemValue="LI" itemLabel="Liechtenstein"/>
+				<f:selectItem itemValue="LT" itemLabel="Lithuania"/>
+				<f:selectItem itemValue="LU" itemLabel="Luxembourg"/>
+				<f:selectItem itemValue="MO" itemLabel="Macau"/>
+				<f:selectItem itemValue="MK" itemLabel="Macedonia, The Former Yugoslav Republic of"/>
+				<f:selectItem itemValue="MG" itemLabel="Madagascar"/>
+				<f:selectItem itemValue="MW" itemLabel="Malawi"/>
+				<f:selectItem itemValue="MY" itemLabel="Malaysia"/>
+				<f:selectItem itemValue="MV" itemLabel="Maldives"/>
+				<f:selectItem itemValue="ML" itemLabel="Mali"/>
+				<f:selectItem itemValue="MT" itemLabel="Malta"/>
+				<f:selectItem itemValue="MH" itemLabel="Marshall Islands"/>
+				<f:selectItem itemValue="MQ" itemLabel="Martinique"/>
+				<f:selectItem itemValue="MR" itemLabel="Mauritania"/>
+				<f:selectItem itemValue="MU" itemLabel="Mauritius"/>
+				<f:selectItem itemValue="YT" itemLabel="Mayotte"/>
+				<f:selectItem itemValue="MX" itemLabel="Mexico"/>
+				<f:selectItem itemValue="FM" itemLabel="Micronesia, Federated States of"/>
+				<f:selectItem itemValue="MD" itemLabel="Moldova, Republic of"/>
+				<f:selectItem itemValue="MC" itemLabel="Monaco"/>
+				<f:selectItem itemValue="MN" itemLabel="Mongolia"/>
+				<f:selectItem itemValue="MS" itemLabel="Montserrat"/>
+				<f:selectItem itemValue="MA" itemLabel="Morocco"/>
+				<f:selectItem itemValue="MZ" itemLabel="Mozambique"/>
+				<f:selectItem itemValue="MM" itemLabel="Myanmar"/>
+				<f:selectItem itemValue="NA" itemLabel="Namibia"/>
+				<f:selectItem itemValue="NR" itemLabel="Nauru"/>
+				<f:selectItem itemValue="NP" itemLabel="Nepal"/>
+				<f:selectItem itemValue="NL" itemLabel="Netherlands"/>
+				<f:selectItem itemValue="AN" itemLabel="Netherlands Antilles"/>
+				<f:selectItem itemValue="NC" itemLabel="New Caledonia"/>
+				<f:selectItem itemValue="NZ" itemLabel="New Zealand"/>
+				<f:selectItem itemValue="NI" itemLabel="Nicaragua"/>
+				<f:selectItem itemValue="NE" itemLabel="Niger"/>
+				<f:selectItem itemValue="NG" itemLabel="Nigeria"/>
+				<f:selectItem itemValue="NU" itemLabel="Niue"/>
+				<f:selectItem itemValue="NF" itemLabel="Norfolk Island"/>
+				<f:selectItem itemValue="MP" itemLabel="Northern Mariana Islands"/>
+				<f:selectItem itemValue="NO" itemLabel="Norway"/>
+				<f:selectItem itemValue="OM" itemLabel="Oman"/>
+				<f:selectItem itemValue="PK" itemLabel="Pakistan"/>
+				<f:selectItem itemValue="PW" itemLabel="Palau"/>
+				<f:selectItem itemValue="PA" itemLabel="Panama"/>
+				<f:selectItem itemValue="PG" itemLabel="Papua New Guinea"/>
+				<f:selectItem itemValue="PY" itemLabel="Paraguay"/>
+				<f:selectItem itemValue="PE" itemLabel="Peru"/>
+				<f:selectItem itemValue="PH" itemLabel="Philippines"/>
+				<f:selectItem itemValue="PN" itemLabel="Pitcairn"/>
+				<f:selectItem itemValue="PL" itemLabel="Poland"/>
+				<f:selectItem itemValue="PT" itemLabel="Portugal"/>
+				<f:selectItem itemValue="PR" itemLabel="Puerto Rico"/>
+				<f:selectItem itemValue="QA" itemLabel="Qatar"/>
+				<f:selectItem itemValue="RE" itemLabel="Reunion"/>
+				<f:selectItem itemValue="RO" itemLabel="Romania"/>
+				<f:selectItem itemValue="RU" itemLabel="Russian Federation"/>
+				<f:selectItem itemValue="RW" itemLabel="Rwanda"/>
+				<f:selectItem itemValue="KN" itemLabel="Saint Kitts and Nevis"/>
+				<f:selectItem itemValue="LC" itemLabel="Saint LUCIA"/>
+				<f:selectItem itemValue="VC" itemLabel="Saint Vincent and the Grenadines"/>
+				<f:selectItem itemValue="WS" itemLabel="Samoa"/>
+				<f:selectItem itemValue="SM" itemLabel="San Marino"/>
+				<f:selectItem itemValue="ST" itemLabel="Sao Tome and Principe"/>
+				<f:selectItem itemValue="SA" itemLabel="Saudi Arabia"/>
+				<f:selectItem itemValue="SN" itemLabel="Senegal"/>
+				<f:selectItem itemValue="SC" itemLabel="Seychelles"/>
+				<f:selectItem itemValue="SL" itemLabel="Sierra Leone"/>
+				<f:selectItem itemValue="SG" itemLabel="Singapore"/>
+				<f:selectItem itemValue="SK" itemLabel="Slovakia (Slovak Republic)"/>
+				<f:selectItem itemValue="SI" itemLabel="Slovenia"/>
+				<f:selectItem itemValue="SB" itemLabel="Solomon Islands"/>
+				<f:selectItem itemValue="SO" itemLabel="Somalia"/>
+				<f:selectItem itemValue="ZA" itemLabel="South Africa"/>
+				<f:selectItem itemValue="GS" itemLabel="South Georgia and the South Sandwich Islands"/>
+				<f:selectItem itemValue="ES" itemLabel="Spain"/>
+				<f:selectItem itemValue="LK" itemLabel="Sri Lanka"/>
+				<f:selectItem itemValue="SH" itemLabel="St. Helena"/>
+				<f:selectItem itemValue="PM" itemLabel="St. Pierre and Miquelon"/>
+				<f:selectItem itemValue="SD" itemLabel="Sudan"/>
+				<f:selectItem itemValue="SR" itemLabel="Suriname"/>
+				<f:selectItem itemValue="SJ" itemLabel="Svalbard and Jan Mayen Islands"/>
+				<f:selectItem itemValue="SZ" itemLabel="Swaziland"/>
+				<f:selectItem itemValue="SE" itemLabel="Sweden"/>
+				<f:selectItem itemValue="CH" itemLabel="Switzerland"/>
+				<f:selectItem itemValue="SY" itemLabel="Syrian Arab Republic"/>
+				<f:selectItem itemValue="TW" itemLabel="Taiwan, Province of China"/>
+				<f:selectItem itemValue="TJ" itemLabel="Tajikistan"/>
+				<f:selectItem itemValue="TZ" itemLabel="Tanzania, United Republic of"/>
+				<f:selectItem itemValue="TH" itemLabel="Thailand"/>
+				<f:selectItem itemValue="TG" itemLabel="Togo"/>
+				<f:selectItem itemValue="TK" itemLabel="Tokelau"/>
+				<f:selectItem itemValue="TO" itemLabel="Tonga"/>
+				<f:selectItem itemValue="TT" itemLabel="Trinidad and Tobago"/>
+				<f:selectItem itemValue="TN" itemLabel="Tunisia"/>
+				<f:selectItem itemValue="TR" itemLabel="Turkey"/>
+				<f:selectItem itemValue="TM" itemLabel="Turkmenistan"/>
+				<f:selectItem itemValue="TC" itemLabel="Turks and Caicos Islands"/>
+				<f:selectItem itemValue="TV" itemLabel="Tuvalu"/>
+				<f:selectItem itemValue="UG" itemLabel="Uganda"/>
+				<f:selectItem itemValue="UA" itemLabel="Ukraine"/>
+				<f:selectItem itemValue="AE" itemLabel="United Arab Emirates"/>
+				<f:selectItem itemValue="GB" itemLabel="United Kingdom"/>
+				<f:selectItem itemValue="US" itemLabel="United States"/>
+				<f:selectItem itemValue="UM" itemLabel="United States Minor Outlying Islands"/>
+				<f:selectItem itemValue="UY" itemLabel="Uruguay"/>
+				<f:selectItem itemValue="UZ" itemLabel="Uzbekistan"/>
+				<f:selectItem itemValue="VU" itemLabel="Vanuatu"/>
+				<f:selectItem itemValue="VE" itemLabel="Venezuela"/>
+				<f:selectItem itemValue="VN" itemLabel="Viet Nam"/>
+				<f:selectItem itemValue="VG" itemLabel="Virgin Islands (British)"/>
+				<f:selectItem itemValue="VI" itemLabel="Virgin Islands (U.S.)"/>
+				<f:selectItem itemValue="WF" itemLabel="Wallis and Futuna Islands"/>
+				<f:selectItem itemValue="EH" itemLabel="Western Sahara"/>
+				<f:selectItem itemValue="YE" itemLabel="Yemen"/>
+				<f:selectItem itemValue="ZM" itemLabel="Zambia"/>
+				<f:selectItem itemValue="ZW" itemLabel="Zimbabwe"/>
 			</select>
 		</div>
 		<p>
@@ -443,7 +439,7 @@ License: You must have a valid license purchased only from themeforest(the above
 			<label class="control-label visible-ie8 visible-ie9">Password</label>
 			<div class="input-icon">
 				<i class="fa fa-lock"></i>
-				<input class="form-control placeholder-no-fix" type="password" autocomplete="off" id="register_password" placeholder="Password" name="password"/>
+				<input jsf:id="password" class="form-control placeholder-no-fix" type="password" autocomplete="off" id="register_password" placeholder="Password" name="password" value="#{userBean.password}"/>                                
 			</div>
 		</div>
 		<div class="form-group">
@@ -451,7 +447,7 @@ License: You must have a valid license purchased only from themeforest(the above
 			<div class="controls">
 				<div class="input-icon">
 					<i class="fa fa-check"></i>
-					<input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="Re-type Your Password" name="rpassword"/>
+					<input jsf:id="rpassword" class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="Re-type Your Password" name="rpassword" value="#{userBean.rpassword}"/>
 				</div>
 			</div>
 		</div>
@@ -468,11 +464,12 @@ License: You must have a valid license purchased only from themeforest(the above
 		<div class="form-actions">
 			<button id="register-back-btn" type="button" class="btn">
 			<i class="m-icon-swapleft"></i> Back </button>
-			<button type="submit" id="register-submit-btn" class="btn blue pull-right" jsf:action="#{userBean.createUser}">
+			<button jsf:id="register"  type="submit" id="register-submit-btn" class="btn blue pull-right" >
 			Sign Up <i class="m-icon-swapright m-icon-white"></i>
-                        <f:ajax event="click" onevent="handleAjaxEvent"/>
+                        <f:ajax execute="register" onevent="handleAjaxEvent" listener="#{userBean.createUser()}" render="errors"/>
 			</button>
 		</div>
+                <h:messages id="errors"/>
 	</form>
 	<!-- END REGISTRATION FORM -->
 </div>
