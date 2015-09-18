@@ -81,7 +81,7 @@ public class UserBean {
 
     public String login() {
 
-    	RecaptchaVerifyResp verifyResp = client.recaptchaVerify(Constants.G_RECAPTCHA_SECRET, recaptchaResp);
+    	//RecaptchaVerifyResp verifyResp = client.recaptchaVerify(Constants.G_RECAPTCHA_SECRET, recaptchaResp);
         User user = null;
         try {
             user = authenticator.login();
