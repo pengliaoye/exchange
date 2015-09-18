@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -19,22 +17,19 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.dm.entity.Sport;
-import com.dm.exchange.rest.AbstractFacade;
 import com.dm.exchange.rest.bean.ColumnOrder;
 import com.dm.exchange.rest.bean.DtableColumn;
 import com.dm.exchange.rest.bean.DtableOutput;
-import org.apache.commons.lang3.StringUtils;
 
 @Dependent
-public class DatatableService extends AbstractFacade<Sport> {
+public class DatatableService extends AbstractService<Sport> {
 
 	public DatatableService() {
 		super(Sport.class);
 	}
-
-	@PersistenceContext(unitName = "default")
-	private EntityManager entityManager;
 
 	public DtableOutput table(HttpServletRequest request, String tableDef, int draw, int start, int length,
 			String search, Map<Integer, ColumnOrder> order, Map<Integer, DtableColumn> columns) {
@@ -100,11 +95,6 @@ public class DatatableService extends AbstractFacade<Sport> {
 		dtable.setRecordsFiltered(recordsFiltered);
 		dtable.setRecordsTotal(recordsTotal);
 		return dtable;
-	}
-
-	@Override
-	protected EntityManager getEntityManager() {
-		return entityManager;
 	}
 
 }

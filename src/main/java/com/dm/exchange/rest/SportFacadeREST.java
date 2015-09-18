@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -16,14 +14,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import com.dm.entity.Sport;
+import com.dm.service.AbstractService;
 
 @Named
 @Stateless
 @Path("sports")
-public class SportFacadeREST extends AbstractFacade<Sport> {
-
-	@PersistenceContext(unitName = "default")
-	protected EntityManager entityManager;
+public class SportFacadeREST extends AbstractService<Sport> {
 
 	public SportFacadeREST() {
 		super(Sport.class);
@@ -76,11 +72,6 @@ public class SportFacadeREST extends AbstractFacade<Sport> {
 	@Produces("text/plain")
 	public String getCount() {
 		return String.valueOf(super.count());
-	}
-
-	@Override
-	protected EntityManager getEntityManager() {
-		return entityManager;
 	}
 
 }

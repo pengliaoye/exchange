@@ -4,22 +4,25 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Root;
 
 public abstract class AbstractService<T> {
-	
-	@PersistenceContext(unitName="default")
-	private EntityManager entityManager;
-	
+
+	@PersistenceContext(unitName = "default")
+	protected EntityManager entityManager;
+
 	private Class<T> entityClass;
 
 	public AbstractService(Class<T> entityClass) {
 		this.entityClass = entityClass;
 	}
 
-        @Transactional
 	public void create(T entity) {
-        	entityManager.persist(entity);
+		entityManager.persist(entity);
 	}
 
 	public void edit(T entity) {
@@ -35,28 +38,36 @@ public abstract class AbstractService<T> {
 	}
 
 	public List<T> getAll() {
-		javax.persistence.criteria.CriteriaQuery<T> cq = entityManager
-				.getCriteriaBuilder().createQuery(entityClass);
+		CriteriaQuery<T> cq = entityManager.getCriteriaBuilder().createQuery(entityClass);
 		cq.select(cq.from(entityClass));
 		return entityManager.createQuery(cq).getResultList();
 	}
 
 	public List<T> findRange(int[] range) {
-		javax.persistence.criteria.CriteriaQuery<T> cq = entityManager
-				.getCriteriaBuilder().createQuery(entityClass);
+		CriteriaQuery<T> cq = entityManager.getCriteriaBuilder().createQuery(entityClass);
 		cq.select(cq.from(entityClass));
-		javax.persistence.TypedQuery<T> q = entityManager.createQuery(cq);
+		TypedQuery<T> q = entityManager.createQuery(cq);
 		q.setMaxResults(range[1] - range[0]);
 		q.setFirstResult(range[0]);
 		return q.getResultList();
 	}
 
-	public int count() {
-		javax.persistence.criteria.CriteriaQuery<Long> cq = entityManager
-				.getCriteriaBuilder().createQuery(Long.class);
+	public long count() {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Long> cq = builder.createQuery(Long.class);
 		javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
-		cq.select(entityManager.getCriteriaBuilder().count(rt));
-		javax.persistence.TypedQuery<Long> q = entityManager.createQuery(cq);
-		return (q.getSingleResult()).intValue();
+		cq.select(builder.count(rt));
+		TypedQuery<Long> q = entityManager.createQuery(cq);
+		return q.getSingleResult();
 	}
+
+	public long countWhere(Root<T> rt, Expression<Boolean> restriction) {
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Long> cq = builder.createQuery(Long.class);
+		// javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
+		cq.select(builder.count(rt)).where(restriction);
+		TypedQuery<Long> q = entityManager.createQuery(cq);
+		return q.getSingleResult();
+	}
+
 }

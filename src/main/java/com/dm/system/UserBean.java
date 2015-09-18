@@ -8,10 +8,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.enterprise.inject.Model;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 
 import org.owasp.esapi.Authenticator;
 import org.owasp.esapi.ESAPI;
@@ -21,8 +21,8 @@ import org.owasp.esapi.errors.AuthenticationException;
 import com.dm.exchange.Constants;
 import com.dm.exchange.rest.RestClient;
 import com.dm.exchange.rest.bean.RecaptchaVerifyResp;
+import com.dm.service.UserService;
 import com.dm.util.JsfUtil;
-import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -35,6 +35,9 @@ public class UserBean {
 
     @Inject
     private RestClient client;
+        
+	@Inject
+	private UserService userService;
 
     @NotNull(message="{user.username}")
     private String username;
@@ -42,6 +45,13 @@ public class UserBean {
     private String password;
     @NotNull(message="{login.recaptcha.response}")
     private String recaptchaResp;
+    
+    private String fullname;
+    private String email;
+    private String address;
+    private String city;
+    private String country;
+    private String rpassword;
 
     Authenticator authenticator = ESAPI.authenticator();
 
@@ -55,7 +65,14 @@ public class UserBean {
         try {
             password = authenticator.generateStrongPassword();
             System.out.println(password);
-            authenticator.createUser(username, password, password);
+            User user = authenticator.createUser(username, password, rpassword);
+            com.dm.entity.User usr = new com.dm.entity.User();
+            usr.setId(user.getAccountId());
+            usr.setFullName(fullname);
+            usr.setAddress(address);
+            usr.setCity(city);
+            usr.setCountry(country);
+            userService.edit(usr); 
         } catch (AuthenticationException ex) {
             logger.log(Level.SEVERE, ex.getLogMessage(), ex);
             JsfUtil.addErrorMessage(ex.getUserMessage());
