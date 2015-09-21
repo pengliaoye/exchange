@@ -12,7 +12,11 @@ create table tb_users(
     enabled varchar(255) not null,
     locked  varchar(255),
     roles varchar(500),
-    old_password varchar(500)
+    old_password varchar(500),
+    email varchar(255),
+    address varchar(255),
+    city varchar(255),
+    country varchar(255)
 );
 
 create table tb_authorities (

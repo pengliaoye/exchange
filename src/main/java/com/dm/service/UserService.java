@@ -1,10 +1,10 @@
 package com.dm.service;
 
-import javax.enterprise.context.Dependent;
 
 import com.dm.entity.User;
+import javax.ejb.Stateless;
 
-@Dependent
+@Stateless
 public class UserService extends AbstractService<User> {
 
 	public UserService() {

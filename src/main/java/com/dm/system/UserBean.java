@@ -69,6 +69,7 @@ public class UserBean {
             com.dm.entity.User usr = new com.dm.entity.User();
             usr.setId(user.getAccountId());
             usr.setFullName(fullname);
+            usr.setEmail(email);
             usr.setAddress(address);
             usr.setCity(city);
             usr.setCountry(country);

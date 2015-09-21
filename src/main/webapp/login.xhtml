@@ -15,8 +15,8 @@ License: You must have a valid license purchased only from themeforest(the above
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:h="http://xmlns.jcp.org/jsf/html"
         xmlns:jsf="http://xmlns.jcp.org/jsf"
-        xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
-        xmlns:f="http://xmlns.jcp.org/jsf/core">
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:p="http://primefaces.org/ui">
 <!-- BEGIN HEAD -->
 <head jsf:id="head">
 <meta charset="utf-8"/>
@@ -150,7 +150,7 @@ License: You must have a valid license purchased only from themeforest(the above
 	</form>
 	<!-- END FORGOT PASSWORD FORM -->
 	<!-- BEGIN REGISTRATION FORM -->        
-	<form jsf:id="registerForm"  class="register-form">
+	<form jsf:id="registerForm" jsf:prependId="false"  class="register-form">
 		<h3>Sign Up</h3>
 		<p>
 			 Enter your personal details below:
@@ -159,7 +159,7 @@ License: You must have a valid license purchased only from themeforest(the above
 			<label class="control-label visible-ie8 visible-ie9">Full Name</label>
 			<div class="input-icon">
 				<i class="fa fa-font"></i>
-				<input class="form-control placeholder-no-fix" type="text" placeholder="Full Name" name="fullname"/>
+                                <input jsf:id="fullname" class="form-control placeholder-no-fix" type="text" placeholder="Full Name" name="fullname" value="#{userBean.fullname}"/>
 			</div>
 		</div>
 		<div class="form-group">
@@ -167,21 +167,21 @@ License: You must have a valid license purchased only from themeforest(the above
 			<label class="control-label visible-ie8 visible-ie9">Email</label>
 			<div class="input-icon">
 				<i class="fa fa-envelope"></i>
-				<input class="form-control placeholder-no-fix" type="text" placeholder="Email" name="email"/>
+				<input jsf:id="email" class="form-control placeholder-no-fix" type="text" placeholder="Email" name="email" value="#{userBean.email}"/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label visible-ie8 visible-ie9">Address</label>
 			<div class="input-icon">
 				<i class="fa fa-check"></i>
-				<input class="form-control placeholder-no-fix" type="text" placeholder="Address" name="address"/>
+				<input jsf:id="address" class="form-control placeholder-no-fix" type="text" placeholder="Address" name="address" value="#{userBean.address}"/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label visible-ie8 visible-ie9">City/Town</label>
 			<div class="input-icon">
 				<i class="fa fa-location-arrow"></i>
-				<input class="form-control placeholder-no-fix" type="text" placeholder="City/Town" name="city"/>
+				<input jsf:id="city" class="form-control placeholder-no-fix" type="text" placeholder="City/Town" name="city" value="#{userBean.city}"/>
 			</div>
 		</div>
 		<div class="form-group">
@@ -432,14 +432,14 @@ License: You must have a valid license purchased only from themeforest(the above
 			<label class="control-label visible-ie8 visible-ie9">Username</label>
 			<div class="input-icon">
 				<i class="fa fa-user"></i>
-				<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username"/>
+				<input jsf:id="username" class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="reg_username" value="#{userBean.username}"/>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label visible-ie8 visible-ie9">Password</label>
 			<div class="input-icon">
 				<i class="fa fa-lock"></i>
-				<input jsf:id="password" class="form-control placeholder-no-fix" type="password" autocomplete="off" id="register_password" placeholder="Password" name="password" value="#{userBean.password}"/>                                
+				<input jsf:id="password" class="form-control placeholder-no-fix" type="password" autocomplete="off" id="register_password" placeholder="Password" name="reg_password" value="#{userBean.password}"/>                                
 			</div>
 		</div>
 		<div class="form-group">
@@ -464,12 +464,10 @@ License: You must have a valid license purchased only from themeforest(the above
 		<div class="form-actions">
 			<button id="register-back-btn" type="button" class="btn">
 			<i class="m-icon-swapleft"></i> Back </button>
-			<button jsf:id="register"  type="submit" id="register-submit-btn" class="btn blue pull-right" >
+                        <button  id="register-submit-btn" class="btn blue pull-right" jsf:action="#{userBean.createUser}">
 			Sign Up <i class="m-icon-swapright m-icon-white"></i>
-                        <f:ajax execute="register" onevent="handleAjaxEvent" listener="#{userBean.createUser()}" render="errors"/>
 			</button>
 		</div>
-                <h:messages id="errors"/>
 	</form>
 	<!-- END REGISTRATION FORM -->
 </div>
