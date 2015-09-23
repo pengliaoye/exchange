@@ -46,6 +46,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- END THEME STYLES -->
 <link rel="shortcut icon" href="favicon.ico"/>
 </head>
+<h:outputScript name="jsf.js" library="javax.faces" target="head"/>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
 <body class="page-md login">    
@@ -129,7 +130,7 @@ License: You must have a valid license purchased only from themeforest(the above
 	</form>
 	<!-- END LOGIN FORM -->
 	<!-- BEGIN FORGOT PASSWORD FORM -->
-	<form jsf:id="forgetForm" class="forget-form">
+	<form jsf:id="forgetForm" jsf:prependId="false" class="forget-form">
 		<h3>Forget Password ?</h3>
 		<p>
 			 Enter your e-mail address below to reset your password.
@@ -137,13 +138,16 @@ License: You must have a valid license purchased only from themeforest(the above
 		<div class="form-group">
 			<div class="input-icon">
 				<i class="fa fa-envelope"></i>
-				<input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email"/>
-			</div>
+				<input jsf:id="email" class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="fg_email" value="#{userBean.email}"/>
+			</div>                        
 		</div>
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="6LfB9gMTAAAAAJ-84CYd_KGDuUjO2VdARLsmLcpW"></div>
+                </div>
 		<div class="form-actions">
 			<button type="button" id="back-btn" class="btn">
 			<i class="m-icon-swapleft"></i> Back </button>
-			<button type="submit" class="btn blue pull-right">
+                        <button jsf:id="forgetBtn" type="submit" class="btn blue pull-right" jsf:action="#{userBean.forgetPassword}" onclick="Login.handleForgetForm(this, event);return false">
 			Submit <i class="m-icon-swapright m-icon-white"></i>
 			</button>
 		</div>
@@ -465,9 +469,9 @@ License: You must have a valid license purchased only from themeforest(the above
 			<button id="register-back-btn" type="button" class="btn">
 			<i class="m-icon-swapleft"></i> Back </button>
                         <button  id="register-submit-btn" class="btn blue pull-right" jsf:action="#{userBean.createUser}">
-			Sign Up <i class="m-icon-swapright m-icon-white"></i>
-			</button>
-		</div>
+			Sign Up <i class="m-icon-swapright m-icon-white"></i>    
+			</button>                        
+		</div>                
 	</form>
 	<!-- END REGISTRATION FORM -->
 </div>

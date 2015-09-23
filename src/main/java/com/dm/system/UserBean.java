@@ -102,6 +102,10 @@ public class UserBean {
         }
 
     }
+    
+    public void forgetPassword(){
+        System.out.println(email);
+    }
 
     public void changePwd() {
         // authenticator.getCurrentUser().changePassword(oldPassword, newPassword1, newPassword2)
